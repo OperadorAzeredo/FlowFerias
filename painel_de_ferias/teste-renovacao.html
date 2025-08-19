@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔄 Demo Renovação Automática</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: #f5f5f5; 
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 8px; 
+        }
+        .demo-section {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .button-group {
+            margin: 20px 0;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .success { background: #28a745; }
+        .warning { background: #ffc107; color: #000; }
+        .danger { background: #dc3545; }
+        .info { background: #17a2b8; }
+        
+        .escala-timeline {
+            border-left: 3px solid #007bff;
+            padding-left: 20px;
+            margin: 20px 0;
+        }
+        .timeline-item {
+            background: #f8f9fa;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 10px 0;
+            position: relative;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -26px;
+            top: 15px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #007bff;
+        }
+        .fase-trabalho { border-left: 4px solid #28a745; }
+        .fase-folga { border-left: 4px solid #ffc107; }
+        .fase-proxima { border-left: 4px solid #007bff; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Demonstração: Renovação Automática 14x14</h1>
+        
+        <div class="demo-section">
+            <h3>📋 Como Funciona a Renovação Automática</h3>
+            <p><strong>1. Trabalho:</strong> Funcionário trabalha 14 dias (embarque → desembarque)</p>
+            <p><strong>2. Folga:</strong> Funcionário tem 14 dias de folga após o desembarque</p>
+            <p><strong>3. Renovação:</strong> Sistema cria automaticamente a próxima escala no último dia da folga</p>
+            <p><strong>4. Ciclo:</strong> Repete indefinidamente até o funcionário desativar manualmente</p>
+        </div>
+        
+        <div class="button-group">
+            <button onclick="criarEscalaDemo()" class="success">🚀 Criar Escala Demo</button>
+            <button onclick="simularPassagemTempo()" class="warning">⏰ Simular Passagem do Tempo</button>
+            <button onclick="verificarRenovacao()" class="info">🔄 Verificar Renovação</button>
+            <button onclick="listarEscalas()" class="info">📋 Listar Escalas</button>
+        </div>
+        
+        <div id="status"></div>
+        <div id="timeline"></div>
+        <div id="escalas"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001/api';
+        const funcionarioDemo = { id: 1, nome: 'João Silva (Demo)' };
+        
+        function showStatus(message, type = 'info') {
+            const statusEl = document.getElementById('status');
+            statusEl.innerHTML = `<div class="demo-section" style="background: ${getColorByType(type)};">${message}</div>`;
+        }
+        
+        function getColorByType(type) {
+            const colors = {
+                success: '#d4edda',
+                warning: '#fff3cd', 
+                danger: '#f8d7da',
+                info: '#d1ecf1'
+            };
+            return colors[type] || colors.info;
+        }
+        
+        function formatDateBR(date) {
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+        
+        // Criar escala que termina hoje (para demonstrar renovação)
+        async function criarEscalaDemo() {
+            try {
+                // Escala que termina hoje
+                const hoje = new Date();
+                const embarque = new Date(hoje);
+                embarque.setDate(hoje.getDate() - 13); // Começou há 13 dias
+                
+                const response = await fetch(`${API_BASE}/escalas`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        funcionarioId: funcionarioDemo.id,
+                        dataEmbarque: embarque.toISOString().split('T')[0],
+                        dataDesembarque: hoje.toISOString().split('T')[0]
+                    })
+                });
+                
+                if (response.ok) {
+                    const escala = await response.json();
+                    showStatus(`✅ Escala demo criada! Termina hoje (${formatDateBR(hoje)})`, 'success');
+                    mostrarTimeline(escala);
+                } else {
+                    throw new Error('Erro ao criar escala demo');
+                }
+                
+            } catch (error) {
+                showStatus(`❌ Erro: ${error.message}`, 'danger');
+            }
+        }
+        
+        // Simular passagem do tempo alterando uma escala para terminar "amanhã"
+        async function simularPassagemTempo() {
+            try {
+                // Buscar escalas do funcionário
+                const response = await fetch(`${API_BASE}/escalas/funcionario/${funcionarioDemo.id}`);
+                if (!response.ok) throw new Error('Erro ao buscar escalas');
+                
+                const escalas = await response.json();
+                const escalaAtiva = escalas.find(e => e.ativo);
+                
+                if (!escalaAtiva) {
+                    showStatus('❌ Nenhuma escala ativa encontrada. Crie uma escala demo primeiro.', 'warning');
+                    return;
+                }
+                
+                // Alterar a escala para terminar amanhã
+                const amanha = new Date();
+                amanha.setDate(amanha.getDate() + 1);
+                
+                const embarqueAjustado = new Date(amanha);
+                embarqueAjustado.setDate(amanha.getDate() - 13);
+                
+                const updateResponse = await fetch(`${API_BASE}/escalas/${escalaAtiva.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        dataEmbarque: embarqueAjustado.toISOString().split('T')[0],
+                        dataDesembarque: amanha.toISOString().split('T')[0]
+                    })
+                });
+                
+                if (updateResponse.ok) {
+                    showStatus(`⏰ Escala ajustada para terminar amanhã (${formatDateBR(amanha)})`, 'warning');
+                    mostrarTimeline(await updateResponse.json());
+                }
+                
+            } catch (error) {
+                showStatus(`❌ Erro: ${error.message}`, 'danger');
+            }
+        }
+        
+        async function verificarRenovacao() {
+            try {
+                const response = await fetch(`${API_BASE}/verificar-renovacao`, {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    showStatus('🔄 Verificação de renovação executada! Aguarde...', 'info');
+                    setTimeout(() => {
+                        listarEscalas();
+                        showStatus('✅ Verificação concluída! Veja as escalas abaixo.', 'success');
+                    }, 1000);
+                }
+                
+            } catch (error) {
+                showStatus(`❌ Erro: ${error.message}`, 'danger');
+            }
+        }
+        
+        async function listarEscalas() {
+            try {
+                const response = await fetch(`${API_BASE}/escalas/funcionario/${funcionarioDemo.id}`);
+                if (!response.ok) throw new Error('Erro ao buscar escalas');
+                
+                const escalas = await response.json();
+                const escalasEl = document.getElementById('escalas');
+                
+                if (escalas.length === 0) {
+                    escalasEl.innerHTML = '<p>Nenhuma escala encontrada.</p>';
+                    return;
+                }
+                
+                let html = '<h3>📋 Escalas do Funcionário:</h3>';
+                escalas.forEach((escala, index) => {
+                    const status = escala.ativo ? '🟢 Ativa' : '🔴 Inativa';
+                    const renovacao = escala.renovacaoAutomatica ? '🔄 Renovação Automática' : '⏸️ Manual';
+                    
+                    html += `
+                        <div class="timeline-item">
+                            <strong>Escala ${index + 1}</strong> - ${status}<br>
+                            <strong>Embarque:</strong> ${formatDateBR(new Date(escala.dataEmbarque))}<br>
+                            <strong>Desembarque:</strong> ${formatDateBR(new Date(escala.dataDesembarque))}<br>
+                            <strong>Configuração:</strong> ${renovacao}<br>
+                            <small>ID: ${escala.id} | Cadastro: ${formatDateBR(new Date(escala.dataCadastro))}</small>
+                        </div>
+                    `;
+                });
+                
+                escalasEl.innerHTML = html;
+                
+            } catch (error) {
+                showStatus(`❌ Erro: ${error.message}`, 'danger');
+            }
+        }
+        
+        function mostrarTimeline(escala) {
+            const timelineEl = document.getElementById('timeline');
+            const embarque = new Date(escala.dataEmbarque);
+            const desembarque = new Date(escala.dataDesembarque);
+            
+            // Calcular próximas datas
+            const inicioFolga = new Date(desembarque);
+            inicioFolga.setDate(desembarque.getDate() + 1);
+            
+            const fimFolga = new Date(desembarque);
+            fimFolga.setDate(desembarque.getDate() + 14);
+            
+            const proximoEmbarque = new Date(fimFolga);
+            proximoEmbarque.setDate(fimFolga.getDate() + 1);
+            
+            const proximoDesembarque = new Date(proximoEmbarque);
+            proximoDesembarque.setDate(proximoEmbarque.getDate() + 13);
+            
+            timelineEl.innerHTML = `
+                <h3>📅 Timeline da Escala</h3>
+                <div class="escala-timeline">
+                    <div class="timeline-item fase-trabalho">
+                        <strong>🏢 Período de Trabalho</strong><br>
+                        ${formatDateBR(embarque)} → ${formatDateBR(desembarque)} (14 dias)
+                    </div>
+                    <div class="timeline-item fase-folga">
+                        <strong>🏖️ Período de Folga</strong><br>
+                        ${formatDateBR(inicioFolga)} → ${formatDateBR(fimFolga)} (14 dias)
+                    </div>
+                    <div class="timeline-item fase-proxima">
+                        <strong>🔄 Próxima Escala (Renovação Automática)</strong><br>
+                        ${formatDateBR(proximoEmbarque)} → ${formatDateBR(proximoDesembarque)} (14 dias)
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Carregar escalas ao abrir a página
+        window.addEventListener('load', () => {
+            listarEscalas();
+        });
+    </script>
+</body>
+</html>

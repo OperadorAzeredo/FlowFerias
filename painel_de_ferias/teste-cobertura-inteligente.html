@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔄 Sistema de Cobertura Inteligente</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: #f5f5f5; 
+        }
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 8px; 
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+        }
+        .funcionario-card {
+            border-left: 4px solid #007bff;
+            margin: 10px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+        }
+        .funcionario-extra {
+            border-left-color: #28a745;
+        }
+        .funcionario-limitado {
+            border-left-color: #ffc107;
+        }
+        .funcionario-indisponivel {
+            border-left-color: #dc3545;
+            opacity: 0.6;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+        .btn-success { background: #28a745; }
+        .btn-warning { background: #ffc107; color: #000; }
+        .btn-danger { background: #dc3545; }
+        select, input { 
+            padding: 8px; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+            margin: 5px 0;
+        }
+        .sugestao-otima {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .cobertura-item {
+            background: white;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 5px 0;
+        }
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .status-trabalhando { background: #fff3cd; color: #856404; }
+        .status-folga { background: #cce5ff; color: #004085; }
+        .status-disponivel { background: #d4edda; color: #155724; }
+        .timeline {
+            border-left: 3px solid #007bff;
+            padding-left: 15px;
+            margin: 15px 0;
+        }
+        .timeline-item {
+            background: #f8f9fa;
+            border-radius: 4px;
+            padding: 10px;
+            margin: 8px 0;
+            position: relative;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -18px;
+            top: 15px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔄 Sistema de Cobertura Inteligente</h1>
+        
+        <div class="card">
+            <h3>📋 Criar Dados de Teste</h3>
+            <p>Primeiro, vamos criar algumas escalas e solicitações de férias para testar o sistema:</p>
+            <button onclick="criarDadosTeste()" class="btn-success">🚀 Criar Dados de Teste</button>
+            <button onclick="listarEscalas()" class="btn-warning">📊 Ver Escalas Atuais</button>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3>🏖️ Solicitações de Férias Aprovadas</h3>
+                <div id="solicitacoes-list">Carregando...</div>
+                <button onclick="carregarSolicitacoes()">🔄 Recarregar</button>
+            </div>
+            
+            <div class="card">
+                <h3>👥 Funcionários por Equipe</h3>
+                <div id="funcionarios-equipe">
+                    <button onclick="listarEquipes()">📋 Listar Equipes</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3>🎯 Testar Cobertura Inteligente</h3>
+            <div>
+                <label>Selecione uma solicitação de férias aprovada:</label>
+                <select id="solicitacao-select">
+                    <option value="">Carregue as solicitações primeiro</option>
+                </select>
+                <button onclick="analisarCobertura()">🔍 Analisar Cobertura</button>
+            </div>
+        </div>
+
+        <div id="resultado-analise"></div>
+        <div id="escalas-atuais"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001/api';
+        
+        function showMessage(containerId, message, type = 'info') {
+            const container = document.getElementById(containerId);
+            const colors = {
+                success: '#d4edda',
+                warning: '#fff3cd',
+                error: '#f8d7da',
+                info: '#d1ecf1'
+            };
+            container.innerHTML = `<div style="background: ${colors[type]}; padding: 10px; border-radius: 4px; margin: 10px 0;">${message}</div>`;
+        }
+        
+        function formatDateBR(date) {
+            return new Date(date).toLocaleDateString('pt-BR');
+        }
+        
+        // Criar dados de teste
+        async function criarDadosTeste() {
+            try {
+                // 1. Criar algumas escalas para diferentes funcionários
+                const hoje = new Date();
+                const escalas = [
+                    // João - atualmente trabalhando (dia 10 de 14)
+                    {
+                        funcionarioId: 1,
+                        dataEmbarque: new Date(hoje.getTime() - 9 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                        dataDesembarque: new Date(hoje.getTime() + 4 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+                    },
+                    // Maria - em folga (dia 5 de 14 folga)
+                    {
+                        funcionarioId: 2,
+                        dataEmbarque: new Date(hoje.getTime() - 19 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                        dataDesembarque: new Date(hoje.getTime() - 5 * 24 * 60 * 60 * 1000).toISOString().split('T')[0]
+                    }
+                ];
+                
+                for (const escala of escalas) {
+                    await fetch(`${API_BASE}/escalas`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(escala)
+                    });
+                }
+                
+                // 2. Criar uma solicitação de férias aprovada
+                const solicitacaoFerias = {
+                    funcionarioId: 3, // Pedro
+                    dataInicio: new Date(hoje.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    dataFim: new Date(hoje.getTime() + 26 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+                    diasFerias: 20,
+                    motivo: 'Férias de teste para cobertura'
+                };
+                
+                const responseSolicitacao = await fetch(`${API_BASE}/ferias`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(solicitacaoFerias)
+                });
+                
+                if (responseSolicitacao.ok) {
+                    const solicitacao = await responseSolicitacao.json();
+                    
+                    // 3. Aprovar a solicitação
+                    await fetch(`${API_BASE}/ferias/${solicitacao.id}/aprovar`, {
+                        method: 'PUT'
+                    });
+                }
+                
+                showMessage('resultado-analise', '✅ Dados de teste criados com sucesso! Agora você pode testar o sistema de cobertura.', 'success');
+                
+                // Recarregar listas
+                carregarSolicitacoes();
+                listarEquipes();
+                
+            } catch (error) {
+                showMessage('resultado-analise', `❌ Erro ao criar dados de teste: ${error.message}`, 'error');
+            }
+        }
+        
+        // Carregar solicitações aprovadas
+        async function carregarSolicitacoes() {
+            try {
+                const response = await fetch(`${API_BASE}/ferias`);
+                const solicitacoes = await response.json();
+                
+                const aprovadas = solicitacoes.filter(s => s.status === 'aprovada');
+                const select = document.getElementById('solicitacao-select');
+                const container = document.getElementById('solicitacoes-list');
+                
+                if (aprovadas.length === 0) {
+                    container.innerHTML = '<p>Nenhuma solicitação aprovada encontrada. Crie dados de teste primeiro.</p>';
+                    select.innerHTML = '<option value="">Nenhuma solicitação aprovada</option>';
+                    return;
+                }
+                
+                // Atualizar select
+                select.innerHTML = aprovadas.map(s => 
+                    `<option value="${s.id}">${s.funcionarioNome} - ${formatDateBR(s.dataInicio)} a ${formatDateBR(s.dataFim)} (${s.diasFerias} dias)</option>`
+                ).join('');
+                
+                // Atualizar lista
+                let html = '';
+                aprovadas.forEach(s => {
+                    html += `
+                        <div class="funcionario-card">
+                            <strong>${s.funcionarioNome}</strong><br>
+                            📅 ${formatDateBR(s.dataInicio)} - ${formatDateBR(s.dataFim)}<br>
+                            🏖️ ${s.diasFerias} dias de férias<br>
+                            💰 ${s.diasVendidos} dias vendidos
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+                
+            } catch (error) {
+                showMessage('solicitacoes-list', `Erro ao carregar solicitações: ${error.message}`, 'error');
+            }
+        }
+        
+        // Listar equipes
+        async function listarEquipes() {
+            try {
+                const [responseRegular, responseExtra] = await Promise.all([
+                    fetch(`${API_BASE}/funcionarios/equipe/regular`),
+                    fetch(`${API_BASE}/funcionarios/equipe/extra`)
+                ]);
+                
+                const regular = await responseRegular.json();
+                const extra = await responseExtra.json();
+                
+                const container = document.getElementById('funcionarios-equipe');
+                
+                let html = '<h4>👔 Equipe Regular:</h4>';
+                regular.forEach(f => {
+                    html += `<div class="funcionario-card">${f.nome} - ${f.cargo}</div>`;
+                });
+                
+                html += '<h4>🆘 Equipe Extra (Substitutos):</h4>';
+                extra.forEach(f => {
+                    html += `<div class="funcionario-card funcionario-extra">${f.nome} - ${f.cargo}</div>`;
+                });
+                
+                container.innerHTML = html;
+                
+            } catch (error) {
+                showMessage('funcionarios-equipe', `Erro ao carregar equipes: ${error.message}`, 'error');
+            }
+        }
+        
+        // Analisar cobertura
+        async function analisarCobertura() {
+            const solicitacaoId = document.getElementById('solicitacao-select').value;
+            
+            if (!solicitacaoId) {
+                showMessage('resultado-analise', 'Selecione uma solicitação primeiro', 'warning');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/coberturas/sugestoes/${solicitacaoId}`);
+                if (!response.ok) throw new Error('Erro ao analisar cobertura');
+                
+                const analise = await response.json();
+                const container = document.getElementById('resultado-analise');
+                
+                let html = `
+                    <div class="card">
+                        <h3>🎯 Análise de Cobertura</h3>
+                        <p><strong>Total de dias a cobrir:</strong> ${analise.diasTotal} dias</p>
+                `;
+                
+                // Sugestão ótima
+                if (analise.sugestaoOtima && analise.sugestaoOtima.length > 0) {
+                    html += `
+                        <div class="sugestao-otima">
+                            <h4>✨ Sugestão Ótima de Cobertura:</h4>
+                            <div class="timeline">
+                    `;
+                    
+                    analise.sugestaoOtima.forEach((sugestao, index) => {
+                        const tipoClass = sugestao.tipoCobertura === 'equipe_extra' ? 'funcionario-extra' : 'funcionario-limitado';
+                        html += `
+                            <div class="timeline-item">
+                                <div class="cobertura-item ${tipoClass}">
+                                    <strong>${sugestao.funcionarioNome}</strong><br>
+                                    📅 ${formatDateBR(sugestao.dataInicio)} - ${formatDateBR(sugestao.dataFim)}<br>
+                                    ⏱️ ${sugestao.diasCobertura} dias<br>
+                                    🏷️ ${sugestao.tipoCobertura}<br>
+                                    💡 ${sugestao.observacao}
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += `
+                            </div>
+                            <button onclick="aplicarCobertura(${solicitacaoId})" class="btn-success">
+                                ✅ Aplicar Esta Cobertura
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    html += '<div class="sugestao-otima">❌ Não foi possível encontrar cobertura adequada</div>';
+                }
+                
+                // Funcionários da equipe regular
+                if (analise.equipeRegular.length > 0) {
+                    html += `
+                        <h4>👔 Funcionários da Equipe Regular:</h4>
+                        <div class="grid">
+                    `;
+                    
+                    analise.equipeRegular.forEach(f => {
+                        const statusClass = f.statusAtual === 'trabalhando' ? 'status-trabalhando' : 
+                                          f.statusAtual === 'folga' ? 'status-folga' : 'status-disponivel';
+                        
+                        html += `
+                            <div class="funcionario-card ${f.podeCobrirCompleto ? '' : 'funcionario-limitado'}">
+                                <strong>${f.funcionarioNome}</strong>
+                                <span class="status-badge ${statusClass}">${f.statusAtual}</span><br>
+                                📊 Pode cobrir: ${f.diasDisponiveis} dias<br>
+                                🎯 Necessário: ${f.diasNecessarios} dias<br>
+                                ⚠️ ${f.limitacao}<br>
+                                ${f.podeCobrirCompleto ? '✅ Pode cobrir completo' : '⚠️ Cobertura limitada'}
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                }
+                
+                // Funcionários da equipe extra
+                if (analise.equipeExtra.length > 0) {
+                    html += `
+                        <h4>🆘 Funcionários da Equipe Extra:</h4>
+                        <div class="grid">
+                    `;
+                    
+                    analise.equipeExtra.forEach(f => {
+                        html += `
+                            <div class="funcionario-card funcionario-extra">
+                                <strong>${f.funcionarioNome}</strong><br>
+                                📊 Disponibilidade: ${f.diasDisponiveis} dias<br>
+                                🎯 Necessário: ${f.diasNecessarios} dias<br>
+                                ✅ Sem limitações<br>
+                                ${f.podeCobrirCompleto ? '✅ Pode cobrir completo' : '⚠️ Verificar período'}
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                }
+                
+                html += '</div>';
+                container.innerHTML = html;
+                
+            } catch (error) {
+                showMessage('resultado-analise', `❌ Erro na análise: ${error.message}`, 'error');
+            }
+        }
+        
+        // Aplicar cobertura sugerida
+        async function aplicarCobertura(solicitacaoId) {
+            try {
+                // Buscar sugestão novamente
+                const response = await fetch(`${API_BASE}/coberturas/sugestoes/${solicitacaoId}`);
+                const analise = await response.json();
+                
+                if (!analise.sugestaoOtima) {
+                    throw new Error('Nenhuma sugestão disponível');
+                }
+                
+                // Aplicar cobertura
+                const responseCobertura = await fetch(`${API_BASE}/coberturas`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        solicitacaoId: parseInt(solicitacaoId),
+                        coberturas: analise.sugestaoOtima
+                    })
+                });
+                
+                if (!responseCobertura.ok) {
+                    const error = await responseCobertura.json();
+                    throw new Error(error.erro || 'Erro ao aplicar cobertura');
+                }
+                
+                const resultado = await responseCobertura.json();
+                showMessage('resultado-analise', 
+                    `✅ Cobertura aplicada com sucesso! ID: ${resultado.id}`, 'success');
+                
+                // Recarregar solicitações
+                carregarSolicitacoes();
+                
+            } catch (error) {
+                showMessage('resultado-analise', `❌ Erro ao aplicar cobertura: ${error.message}`, 'error');
+            }
+        }
+        
+        // Listar escalas atuais
+        async function listarEscalas() {
+            try {
+                const response = await fetch(`${API_BASE}/escalas`);
+                const escalas = await response.json();
+                
+                const container = document.getElementById('escalas-atuais');
+                
+                if (escalas.length === 0) {
+                    container.innerHTML = '<p>Nenhuma escala encontrada.</p>';
+                    return;
+                }
+                
+                let html = '<div class="card"><h3>📊 Escalas Atuais:</h3>';
+                escalas.forEach(escala => {
+                    const status = escala.ativo ? '🟢 Ativa' : '🔴 Inativa';
+                    html += `
+                        <div class="funcionario-card">
+                            <strong>${escala.funcionarioNome}</strong> ${status}<br>
+                            📅 ${formatDateBR(escala.dataEmbarque)} - ${formatDateBR(escala.dataDesembarque)}<br>
+                            🔄 Renovação: ${escala.renovacaoAutomatica ? 'Ativa' : 'Desativada'}
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                
+                container.innerHTML = html;
+                
+            } catch (error) {
+                showMessage('escalas-atuais', `Erro ao carregar escalas: ${error.message}`, 'error');
+            }
+        }
+        
+        // Carregar dados iniciais
+        window.addEventListener('load', () => {
+            carregarSolicitacoes();
+            listarEquipes();
+            listarEscalas();
+        });
+    </script>
+</body>
+</html>

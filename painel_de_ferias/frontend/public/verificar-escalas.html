@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificar Escalas - Painel de Férias</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9ff;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #4facfe;
+        }
+
+        .stat-label {
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #333;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #4facfe;
+            padding-bottom: 10px;
+        }
+
+        .funcionario-card {
+            background: #fff;
+            border: 1px solid #e0e6ed;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .funcionario-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            font-weight: bold;
+        }
+
+        .funcionario-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .equipe-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .equipe-regular { background: #e3f2fd; color: #1976d2; }
+        .equipe-extra { background: #fff3e0; color: #f57c00; }
+        .equipe-supervisor { background: #f3e5f5; color: #7b1fa2; }
+
+        .escalas-list {
+            padding: 20px;
+        }
+
+        .escala-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .escala-item:last-child {
+            border-bottom: none;
+        }
+
+        .escala-periodo {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .escala-status {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .status-badge {
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .status-ativa { background: #e8f5e8; color: #2e7d32; }
+        .status-inativa { background: #ffebee; color: #c62828; }
+        .status-auto { background: #e3f2fd; color: #1976d2; }
+        .status-manual { background: #fff3e0; color: #f57c00; }
+
+        .loading {
+            text-align: center;
+            padding: 50px;
+            font-size: 1.2em;
+            color: #666;
+        }
+
+        .error {
+            background: #ffebee;
+            color: #c62828;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .refresh-btn {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin: 20px 0;
+        }
+
+        .refresh-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #666;
+        }
+
+        .empty-state .icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📅 Verificar Escalas Importadas</h1>
+            <p>Visualize todas as escalas 14x14 cadastradas no sistema</p>
+        </div>
+
+        <div class="stats" id="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalFuncionarios">-</div>
+                <div class="stat-label">Funcionários</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalEscalas">-</div>
+                <div class="stat-label">Escalas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="escalasAtivas">-</div>
+                <div class="stat-label">Escalas Ativas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="renovacaoAuto">-</div>
+                <div class="stat-label">Com Renovação Auto</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <button class="refresh-btn" onclick="carregarDados()">🔄 Atualizar Dados</button>
+            
+            <div id="loading" class="loading">
+                ⏳ Carregando dados das escalas...
+            </div>
+
+            <div id="error" class="error" style="display: none;">
+                ❌ Erro ao carregar dados. Certifique-se de que o servidor está rodando na porta 3001.
+            </div>
+
+            <div id="content" style="display: none;">
+                <div class="section">
+                    <h2 class="section-title">📋 Escalas por Funcionário</h2>
+                    <div id="escalasContent"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function fazerRequisicao(url) {
+            const response = await fetch(`http://localhost:3001${url}`);
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status}`);
+            }
+            return await response.json();
+        }
+
+        function formatarData(data) {
+            return new Date(data).toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+        }
+
+        function obterIconeEquipe(equipe) {
+            const icones = {
+                'regular': '👤',
+                'extra': '⭐',
+                'supervisor': '👑'
+            };
+            return icones[equipe] || '👤';
+        }
+
+        function criarFuncionarioCard(funcionario, escalas) {
+            const escalasOrdenadas = escalas.sort((a, b) => new Date(a.dataEmbarque) - new Date(b.dataEmbarque));
+            
+            return `
+                <div class="funcionario-card">
+                    <div class="funcionario-header">
+                        <div class="funcionario-info">
+                            <div>
+                                ${obterIconeEquipe(funcionario.equipe)} ${funcionario.nome}
+                                <small>(SAP: ${funcionario.sapid})</small>
+                            </div>
+                            <div class="equipe-badge equipe-${funcionario.equipe}">
+                                ${funcionario.equipe.toUpperCase()}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="escalas-list">
+                        ${escalasOrdenadas.length > 0 ? 
+                            escalasOrdenadas.map((escala, index) => `
+                                <div class="escala-item">
+                                    <div class="escala-periodo">
+                                        ${index + 1}. ${formatarData(escala.dataEmbarque)} → ${formatarData(escala.dataDesembarque)}
+                                    </div>
+                                    <div class="escala-status">
+                                        <span class="status-badge ${escala.ativo ? 'status-ativa' : 'status-inativa'}">
+                                            ${escala.ativo ? '✅ Ativa' : '❌ Inativa'}
+                                        </span>
+                                        <span class="status-badge ${escala.renovacaoAutomatica ? 'status-auto' : 'status-manual'}">
+                                            ${escala.renovacaoAutomatica ? '🔄 Auto' : '⏸️ Manual'}
+                                        </span>
+                                    </div>
+                                </div>
+                            `).join('') 
+                            : '<div class="empty-state"><div class="icon">📅</div><p>Nenhuma escala cadastrada</p></div>'
+                        }
+                    </div>
+                </div>
+            `;
+        }
+
+        async function carregarDados() {
+            const loadingEl = document.getElementById('loading');
+            const errorEl = document.getElementById('error');
+            const contentEl = document.getElementById('content');
+
+            loadingEl.style.display = 'block';
+            errorEl.style.display = 'none';
+            contentEl.style.display = 'none';
+
+            try {
+                // Carregar dados
+                const [status, funcionarios, escalas] = await Promise.all([
+                    fazerRequisicao('/api/status'),
+                    fazerRequisicao('/api/funcionarios'),
+                    fazerRequisicao('/api/escalas')
+                ]);
+
+                // Atualizar estatísticas
+                document.getElementById('totalFuncionarios').textContent = funcionarios.length;
+                document.getElementById('totalEscalas').textContent = escalas.length;
+                document.getElementById('escalasAtivas').textContent = escalas.filter(e => e.ativo).length;
+                document.getElementById('renovacaoAuto').textContent = escalas.filter(e => e.renovacaoAutomatica).length;
+
+                // Agrupar escalas por funcionário
+                const escalasPorFuncionario = {};
+                escalas.forEach(escala => {
+                    if (!escalasPorFuncionario[escala.funcionarioId]) {
+                        escalasPorFuncionario[escala.funcionarioId] = [];
+                    }
+                    escalasPorFuncionario[escala.funcionarioId].push(escala);
+                });
+
+                // Criar cards dos funcionários
+                const escalasContent = document.getElementById('escalasContent');
+                if (funcionarios.length === 0) {
+                    escalasContent.innerHTML = '<div class="empty-state"><div class="icon">👥</div><p>Nenhum funcionário cadastrado</p></div>';
+                } else {
+                    escalasContent.innerHTML = funcionarios
+                        .sort((a, b) => a.nome.localeCompare(b.nome))
+                        .map(funcionario => 
+                            criarFuncionarioCard(funcionario, escalasPorFuncionario[funcionario.id] || [])
+                        ).join('');
+                }
+
+                loadingEl.style.display = 'none';
+                contentEl.style.display = 'block';
+
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
+                loadingEl.style.display = 'none';
+                errorEl.style.display = 'block';
+            }
+        }
+
+        // Carregar dados ao inicializar a página
+        window.addEventListener('load', carregarDados);
+    </script>
+</body>
+</html>

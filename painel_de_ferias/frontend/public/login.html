@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Flow Férias</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --berkeley-blue: #1E3A5F;
+      --pacific-cyan: #25A3C1;
+      --yellow-green: #94C849;
+      --carrot-orange: #F3921F;
+      --butterscotch: #D89A48;
+      --white: #FFFFFF;
+      --light-gray: #F8F9FA;
+      --text-dark: #2C3E50;
+      --text-light: #6C757D;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, var(--berkeley-blue) 0%, var(--pacific-cyan) 50%, var(--yellow-green) 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .login-container {
+      background: var(--white);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(30, 58, 95, 0.2);
+      overflow: hidden;
+      max-width: 900px;
+      width: 100%;
+      min-height: 600px;
+      display: flex;
+    }
+
+    .login-left {
+      flex: 1;
+      padding: 3rem 3rem 2rem 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      transition: all 0.3s ease;
+      background: var(--white);
+      color: var(--berkeley-blue);
+    }
+
+    .login-left.funcionario {
+      background: linear-gradient(135deg, var(--pacific-cyan) 0%, var(--yellow-green) 100%);
+      color: var(--white);
+    }
+
+    .login-left.funcionario .login-flow-main,
+    .login-left.funcionario .login-flow-sub,
+    .login-left.funcionario .subtitle {
+      color: var(--white);
+    }
+
+    .login-left.funcionario .feature-list {
+      color: var(--white);
+    }
+
+    .login-left.funcionario .feature-list li:before {
+      color: var(--white);
+    }
+
+    .login-left.supervisor {
+      background: linear-gradient(135deg, var(--carrot-orange) 0%, var(--butterscotch) 100%);
+      color: var(--white);
+    }
+
+    .login-left.supervisor .login-flow-main,
+    .login-left.supervisor .login-flow-sub,
+    .login-left.supervisor .subtitle {
+      color: var(--white);
+    }
+
+    .login-left.supervisor .feature-list {
+      color: var(--white);
+    }
+
+    .login-left.supervisor .feature-list li:before {
+      color: var(--white);
+    }
+
+    .logo-img {
+      max-width: 150px;
+      height: auto;
+      margin-bottom: 1rem;
+      filter: brightness(0) invert(1);
+    }
+
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1rem;
+      margin-top: 1rem;
+    }
+
+    .login-logo-flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding: 0.5rem;
+    }
+
+    .login-wave-container {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      width: 40px;
+    }
+
+    .login-wave {
+      height: 4px;
+      border-radius: 3px;
+      animation: login-wave-flow 2s ease-in-out infinite;
+    }
+
+    .login-wave1 {
+      background: var(--pacific-cyan);
+      width: 35px;
+      animation-delay: 0s;
+    }
+
+    .login-wave2 {
+      background: var(--yellow-green);
+      width: 30px;
+      animation-delay: 0.3s;
+    }
+
+    .login-wave3 {
+      background: var(--carrot-orange);
+      width: 25px;
+      animation-delay: 0.6s;
+    }
+
+    .login-flow-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .login-flow-main {
+      font-family: 'Poppins', sans-serif;
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--berkeley-blue);
+      letter-spacing: 2px;
+    }
+
+    .login-flow-sub {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--pacific-cyan);
+      letter-spacing: 4px;
+      margin-top: 5px;
+    }
+
+    @keyframes login-wave-flow {
+      0%, 100% { transform: scaleX(1); opacity: 0.7; }
+      50% { transform: scaleX(1.3); opacity: 1; }
+    }
+
+    .logo {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: var(--berkeley-blue);
+    }
+
+    .feature-list {
+      list-style: none;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      line-height: 1.8;
+      font-weight: 400;
+      color: var(--text-dark);
+    }
+
+    .feature-list li {
+      padding: 0.5rem 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .feature-list li:before {
+      content: '✓';
+      margin-right: 1rem;
+      color: var(--yellow-green);
+      font-weight: bold;
+      font-size: 1.2rem;
+    }
+
+    .login-right {
+      flex: 1;
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .form-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--berkeley-blue);
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+
+    .form-logo-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .form-logo-flow {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .form-wave-container {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      width: 35px;
+    }
+
+    .form-wave {
+      height: 4px;
+      border-radius: 2px;
+      animation: form-wave-flow 2s ease-in-out infinite;
+    }
+
+    .form-wave1 {
+      background: var(--pacific-cyan);
+      width: 32px;
+      animation-delay: 0s;
+    }
+
+    .form-wave2 {
+      background: var(--yellow-green);
+      width: 26px;
+      animation-delay: 0.3s;
+    }
+
+    .form-wave3 {
+      background: var(--carrot-orange);
+      width: 20px;
+      animation-delay: 0.6s;
+    }
+
+    .form-flow-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .form-flow-main {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--berkeley-blue);
+    }
+
+    .form-flow-sub {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--pacific-cyan);
+      letter-spacing: 3px;
+      margin-top: 3px;
+    }
+
+    .form-description {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      font-weight: 400;
+      color: #666;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      line-height: 1.4;
+    }
+
+    @keyframes form-wave-flow {
+      0%, 100% { transform: scaleX(1); opacity: 0.7; }
+      50% { transform: scaleX(1.2); opacity: 1; }
+    }
+
+    .form-subtitle {
+      color: var(--text-light);
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+
+    .access-selector {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .access-option {
+      flex: 1;
+      padding: 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: var(--light-gray);
+    }
+
+    .access-option:hover {
+      border-color: var(--pacific-cyan);
+      background: #e3f2fd;
+    }
+
+    .access-option.selected {
+      border-color: var(--yellow-green);
+      background: rgba(148, 200, 73, 0.1);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(148, 200, 73, 0.3);
+    }
+
+    .access-option.active.funcionario {
+      border-color: var(--pacific-cyan);
+      background: linear-gradient(135deg, var(--pacific-cyan) 0%, var(--yellow-green) 100%);
+      color: var(--white);
+    }
+
+    .access-option.active.supervisor {
+      border-color: var(--carrot-orange);
+      background: linear-gradient(135deg, var(--carrot-orange) 0%, var(--butterscotch) 100%);
+      color: var(--white);
+    }
+
+    .access-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .access-label {
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .access-description {
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--berkeley-blue);
+      font-weight: 500;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--pacific-cyan);
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .demo-credentials {
+      background: rgba(148, 200, 73, 0.1);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(148, 200, 73, 0.3);
+    }
+
+    .credential-item {
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--berkeley-blue);
+    }
+
+    .credential-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .login-btn {
+      font-family: 'Poppins', sans-serif;
+      width: 100%;
+      padding: 1rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 1rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-btn.funcionario {
+      background: linear-gradient(135deg, var(--pacific-cyan) 0%, var(--yellow-green) 100%);
+      color: var(--white);
+    }
+
+    .login-btn.supervisor {
+      background: linear-gradient(135deg, var(--carrot-orange) 0%, var(--butterscotch) 100%);
+      color: var(--white);
+    }
+
+    .login-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(37, 163, 193, 0.3);
+    }
+
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .back-link {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    .back-link a {
+      color: var(--berkeley-blue);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .back-link a:hover {
+      color: var(--pacific-cyan);
+      text-decoration: underline;
+    }
+
+    .error-message {
+      background: #fee;
+      color: #c33;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border: 1px solid #fcc;
+      text-align: center;
+      display: none;
+      white-space: pre-line;
+    }
+
+    .loading {
+      text-align: center;
+      color: #666;
+      margin-top: 1rem;
+      display: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .login-container {
+        flex-direction: column;
+        margin: 1rem;
+      }
+
+      .login-left,
+      .login-right {
+        padding: 2rem;
+      }
+
+      .access-selector {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-container">
+    <div class="login-left" id="loginLeft">
+      <div class="logo-container">
+        <div class="login-logo-flow">
+          <div class="login-wave-container">
+            <div class="login-wave login-wave1"></div>
+            <div class="login-wave login-wave2"></div>
+            <div class="login-wave login-wave3"></div>
+          </div>
+          <div class="login-flow-text">
+            <span class="login-flow-main">Flow</span>
+            <span class="login-flow-sub">FÉRIAS</span>
+          </div>
+        </div>
+      </div>
+      <div class="subtitle">Sistema de Gestão de Férias</div>
+      <ul class="feature-list">
+        <li>Solicitação de férias online</li>
+        <li>Aprovação automática do supervisor</li>
+        <li>Controle de conflitos de datas</li>
+        <li>Histórico completo de solicitações</li>
+        <li>Sistema inteligente de cobertura</li>
+        <li>Importação de planilhas Excel</li>
+      </ul>
+    </div>
+
+    <div class="login-right">
+      <div class="login-form">
+        <h1 class="form-title">Acesso ao Sistema</h1>
+        <p class="form-description">Gerencie solicitações de férias de forma simples e eficiente</p>
+
+        <!-- Seletor de tipo de acesso -->
+        <div class="access-selector">
+          <div class="access-option" data-type="funcionario" onclick="selecionarTipo('funcionario')">
+            <div class="access-icon">👤</div>
+            <div class="access-label">Funcionário</div>
+            <div class="access-description">Solicitar férias</div>
+          </div>
+          <div class="access-option" data-type="supervisor" onclick="selecionarTipo('supervisor')">
+            <div class="access-icon">👔</div>
+            <div class="access-label">Supervisor</div>
+            <div class="access-description">Aprovar solicitações</div>
+          </div>
+        </div>
+
+        <!-- Formulário de login -->
+        <div id="loginForm" class="login-fields" style="display: none;">
+          <div class="form-group">
+            <label class="form-label" for="sapid">SAP ID</label>
+            <input type="text" id="sapid" class="form-input" placeholder="Digite seu SAP ID" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="senha">Senha</label>
+            <input type="password" id="senha" class="form-input" placeholder="Digite sua senha" required>
+          </div>
+
+          <div class="error-message" id="errorMessage" style="display: none;"></div>
+
+          <button type="button" onclick="fazerLogin()" class="login-btn" id="loginBtn">
+            Entrar no Sistema
+          </button>
+        </div>
+
+        <!-- Botões de login rápido -->
+        <div class="quick-login">
+          <h3>🚀 Login Rápido (Demo)</h3>
+          <div class="demo-credentials">
+            <div class="credential-item">
+              <strong>Funcionário:</strong> SAP 12345 | Senha: func123
+            </div>
+            <div class="credential-item">
+              <strong>Supervisor:</strong> SAP 98765 | Senha: super123
+            </div>
+          </div>
+          <div class="buttons">
+            <button onclick="loginAsFuncionario()" class="login-btn funcionario">
+              👤 Demo Funcionário
+            </button>
+            <button onclick="loginAsSupervisor()" class="login-btn supervisor">
+              👔 Demo Supervisor  
+            </button>
+          </div>
+        </div>
+
+        <div class="back-link">
+          <a href="#" onclick="irParaAdmin()">🔧 Administração do Sistema</a>
+        </div>
+      </div>
+
+      <div class="back-link">
+        <a href="/">&larr; Voltar ao início</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:3002';
+    
+    let tipoAcessoSelecionado = null;
+
+    // Elementos DOM
+    const accessOptions = document.querySelectorAll('.access-option');
+    const loginLeft = document.getElementById('loginLeft');
+    const loginBtn = document.getElementById('loginBtn');
+    const sapidInput = document.getElementById('sapid');
+    const senhaInput = document.getElementById('senha');
+    const errorMessage = document.getElementById('errorMessage');
+    const loading = document.getElementById('loading');
+    const loginForm = document.getElementById('loginForm');
+
+    // Verificar se já está logado
+    document.addEventListener('DOMContentLoaded', () => {
+      const token = localStorage.getItem('authToken');
+      if (token) {
+        verificarTokenExistente(token);
+      }
+      
+      // Auto-selecionar funcionário por padrão para demonstração
+      setTimeout(() => {
+        if (accessOptions[0]) {
+          accessOptions[0].click();
+        }
+      }, 500);
+    });
+
+    async function verificarTokenExistente(token) {
+      try {
+        const response = await fetch(`${API_BASE}/auth/verificar`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          // Redirecionar baseado no tipo de usuário
+          if (data.usuario.tipo === 'supervisor') {
+            window.location.href = '/supervisor.html';
+          } else {
+            window.location.href = '/funcionario.html';
+          }
+        } else {
+          // Token inválido, remover
+          localStorage.removeItem('authToken');
+        }
+      } catch (error) {
+        console.error('Erro ao verificar token:', error);
+        localStorage.removeItem('authToken');
+      }
+    }
+
+    // Seleção do tipo de acesso
+    accessOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        // Remove seleção anterior
+        accessOptions.forEach(opt => {
+          opt.classList.remove('active', 'funcionario', 'supervisor');
+        });
+
+        // Adiciona seleção atual
+        const tipo = option.dataset.type;
+        option.classList.add('active', tipo);
+        tipoAcessoSelecionado = tipo;
+
+        // Atualiza cores do painel esquerdo
+        loginLeft.className = `login-left ${tipo}`;
+
+        // Atualiza botão de login
+        loginBtn.className = `login-btn ${tipo}`;
+        loginBtn.textContent = tipo === 'funcionario' ? 'Entrar como Funcionário' : 'Entrar como Supervisor';
+
+        // Atualiza placeholder do SAP ID baseado no tipo
+        if (tipo === 'funcionario') {
+          sapidInput.placeholder = 'SAP ID (ex: 12345)';
+        } else {
+          sapidInput.placeholder = 'SAP ID (ex: 98765)';
+        }
+
+        hideError();
+      });
+    });
+
+    // Validação para SAP ID (apenas números inteiros)
+    sapidInput.addEventListener('input', (e) => {
+      let value = e.target.value.replace(/\D/g, ''); // Remove tudo que não é dígito
+      e.target.value = value;
+    });
+
+    // Função para mostrar erro
+    function showError(message) {
+      errorMessage.textContent = message;
+      errorMessage.style.display = 'block';
+    }
+
+    // Função para esconder erro
+    function hideError() {
+      errorMessage.style.display = 'none';
+    }
+
+    // Função para mostrar/esconder loading
+    function setLoading(show) {
+      loading.style.display = show ? 'block' : 'none';
+      loginBtn.disabled = show;
+    }
+
+    // Validação e login
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      hideError();
+
+      if (!tipoAcessoSelecionado) {
+        showError('Por favor, selecione o tipo de acesso (Funcionário ou Supervisor)');
+        return;
+      }
+
+      const sapid = sapidInput.value.trim();
+      const senha = senhaInput.value.trim();
+
+      if (!sapid || !senha) {
+        showError('Por favor, preencha SAP ID e senha');
+        return;
+      }
+
+      if (!sapid || isNaN(sapid)) {
+        showError('SAP ID deve conter apenas números');
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        const response = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            sapid: sapid,
+            senha: senha
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          // Salvar token no localStorage
+          localStorage.setItem('authToken', data.token);
+          
+          // Verificar se é primeiro login
+          if (data.primeiroLogin) {
+            showError('Senha definida com sucesso! Redirecionando...');
+            setTimeout(() => {
+              if (data.usuario.tipo === 'supervisor') {
+                window.location.href = '/supervisor.html';
+              } else {
+                window.location.href = '/funcionario.html';
+              }
+            }, 2000);
+          } else {
+            // Verificar se o tipo corresponde ao selecionado
+            if (data.usuario.tipo !== tipoAcessoSelecionado) {
+              throw new Error(`Este SAP ID é de um ${data.usuario.tipo}, mas você selecionou ${tipoAcessoSelecionado}`);
+            }
+            
+            // Redirecionar para a página apropriada
+            if (data.usuario.tipo === 'supervisor') {
+              window.location.href = '/supervisor.html';
+            } else {
+              window.location.href = '/funcionario.html';
+            }
+          }
+        } else {
+          throw new Error(data.erro || 'Erro no login');
+        }
+
+      } catch (error) {
+        console.error('Erro no login:', error);
+        let errorMsg = error.message || 'Erro ao fazer login. Tente novamente.';
+        
+        // Sugestões de login para demonstração
+        if (errorMsg.includes('SAP ID não encontrado')) {
+          errorMsg += '\n\nPara teste, use:\nFuncionário: SAP 12345, senha: qualquer\nSupervisor: SAP 98765, senha: qualquer';
+        }
+        
+        showError(errorMsg);
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    // Função para selecionar tipo de acesso
+    function selecionarTipo(tipo) {
+      tipoAcessoSelecionado = tipo;
+      
+      // Atualizar visual das opções
+      document.querySelectorAll('.access-option').forEach(option => {
+        option.classList.remove('selected');
+      });
+      
+      document.querySelector(`[data-type="${tipo}"]`).classList.add('selected');
+      
+      // Mostrar formulário de login
+      document.getElementById('loginForm').style.display = 'block';
+      
+      // Atualizar cor do lado esquerdo baseado na seleção
+      const loginLeft = document.getElementById('loginLeft');
+      if (tipo === 'funcionario') {
+        loginLeft.style.background = 'linear-gradient(135deg, var(--pacific-cyan) 0%, var(--yellow-green) 100%)';
+      } else {
+        loginLeft.style.background = 'linear-gradient(135deg, var(--carrot-orange) 0%, var(--butterscotch) 100%)';
+      }
+    }
+
+    // Função para mostrar erro
+    function showError(message) {
+      const errorElement = document.getElementById('errorMessage');
+      errorElement.textContent = message;
+      errorElement.style.display = 'block';
+      
+      // Esconder erro após 5 segundos
+      setTimeout(() => {
+        errorElement.style.display = 'none';
+      }, 5000);
+    }
+
+    // Banco de dados local de usuários para validação
+    const usuarios = {
+      '12345': { senha: 'func123', tipo: 'funcionario', nome: 'João Silva' },
+      '98765': { senha: 'super123', tipo: 'supervisor', nome: 'Maria Santos' },
+      '11122': { senha: 'func456', tipo: 'funcionario', nome: 'Pedro Costa' },
+      '55566': { senha: 'func789', tipo: 'funcionario', nome: 'Ana Lima' }
+    };
+
+    // Função para fazer login com credenciais
+    function fazerLogin() {
+      if (!tipoAcessoSelecionado) {
+        showError('Por favor, selecione o tipo de acesso primeiro');
+        return;
+      }
+
+      const sapid = document.getElementById('sapid').value.trim();
+      const senha = document.getElementById('senha').value.trim();
+
+      if (!sapid || !senha) {
+        showError('Por favor, preencha SAP ID e senha');
+        return;
+      }
+
+      // Verificar credenciais
+      const usuario = usuarios[sapid];
+      
+      if (!usuario) {
+        showError('SAP ID não encontrado');
+        return;
+      }
+
+      if (usuario.senha !== senha) {
+        showError('Senha incorreta');
+        return;
+      }
+
+      if (usuario.tipo !== tipoAcessoSelecionado) {
+        showError(`Este SAP ID pertence a um ${usuario.tipo}, mas você selecionou ${tipoAcessoSelecionado}`);
+        return;
+      }
+
+      // Login bem-sucedido
+      localStorage.setItem('userType', usuario.tipo);
+      localStorage.setItem('userId', sapid);
+      localStorage.setItem('userName', usuario.nome);
+      localStorage.setItem('userSapId', sapid);
+
+      // Redirecionar para a página apropriada
+      if (usuario.tipo === 'supervisor') {
+        window.location.href = '/supervisor.html';
+      } else {
+        window.location.href = '/funcionario.html';
+      }
+    }
+
+    // Link para administração
+    function irParaAdmin() {
+      window.location.href = '/admin.html';
+    }
+
+    // Funções de login simples (como funcionava antes)
+    function loginAsFuncionario() {
+      // Login direto do funcionário
+      localStorage.setItem('userType', 'funcionario');
+      localStorage.setItem('userId', '1');
+      localStorage.setItem('userName', 'João Silva');
+      localStorage.setItem('userSapId', '12345');
+      window.location.href = '/funcionario.html';
+    }
+
+    function loginAsSupervisor() {
+      // Login direto do supervisor
+      localStorage.setItem('userType', 'supervisor');
+      localStorage.setItem('userId', '2');
+      localStorage.setItem('userName', 'Maria Santos');
+      localStorage.setItem('userSapId', '98765');
+      window.location.href = '/supervisor.html';
+    }
+
+    // Função para logout
+    function logout() {
+      localStorage.clear();
+      window.location.href = '/';
+    }
+  </script>
+</body>
+
+</html>

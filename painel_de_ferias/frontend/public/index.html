@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flow Férias - Sistema de Gestão</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --berkeley-blue: #1E3A5F;
+      --pacific-cyan: #25A3C1;
+      --yellow-green: #94C849;
+      --carrot-orange: #F3921F;
+      --butterscotch: #D89A48;
+      --white: #FFFFFF;
+      --light-gray: #F8F9FA;
+      --text-dark: #2C3E50;
+      --text-light: #6C757D;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, var(--berkeley-blue) 0%, var(--pacific-cyan) 50%, var(--yellow-green) 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: var(--white);
+      padding: 3rem;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(30, 58, 95, 0.2);
+      text-align: center;
+      max-width: 500px;
+      width: 90%;
+    }
+
+    .logo-container {
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .logo-flow {
+      display: flex;
+      align-items: center;
+      gap: 1.2rem;
+    }
+
+    .wave-container {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      width: 40px;
+    }
+
+    .wave {
+      height: 5px;
+      border-radius: 3px;
+      animation: wave-flow 2s ease-in-out infinite;
+    }
+
+    .wave1 {
+      background: var(--pacific-cyan);
+      width: 38px;
+      animation-delay: 0s;
+    }
+
+    .wave2 {
+      background: var(--yellow-green);
+      width: 32px;
+      animation-delay: 0.3s;
+    }
+
+    .wave3 {
+      background: var(--carrot-orange);
+      width: 26px;
+      animation-delay: 0.6s;
+    }
+
+    .flow-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .flow-main {
+      font-family: 'Poppins', sans-serif;
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--berkeley-blue);
+    }
+
+    .flow-sub {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      color: var(--pacific-cyan);
+      letter-spacing: 3px;
+      margin-top: 3px;
+    }
+
+    @keyframes wave-flow {
+      0%, 100% { transform: scaleX(1); opacity: 0.7; }
+      50% { transform: scaleX(1.3); opacity: 1; }
+    }
+
+    .logo {
+      max-width: 200px;
+      height: auto;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      color: var(--berkeley-blue);
+      margin-bottom: 1rem;
+      font-size: 2rem;
+      font-weight: 700;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .subtitle {
+      color: var(--text-light);
+      margin-bottom: 3rem;
+      font-size: 1.1rem;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 400;
+    }
+
+    .profile-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .login-button {
+      background: linear-gradient(135deg, var(--pacific-cyan) 0%, var(--yellow-green) 100%);
+      color: var(--white);
+      padding: 1.2rem 2rem;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, var(--carrot-orange) 0%, var(--butterscotch) 100%);
+      transition: left 0.3s ease;
+      z-index: 1;
+    }
+
+    .login-button:hover::before {
+      left: 0;
+    }
+
+    .login-button span {
+      position: relative;
+      z-index: 2;
+    }
+
+    .login-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(37, 163, 193, 0.3);
+    }
+
+    .features {
+      margin-top: 3rem;
+      text-align: left;
+    }
+
+    .features h3 {
+      color: var(--berkeley-blue);
+      margin-bottom: 1rem;
+      text-align: center;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 600;
+    }
+
+    .feature-list {
+      list-style: none;
+    }
+
+    .feature-list li {
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      color: #666;
+      font-family: 'Poppins', sans-serif;
+      font-weight: 400;
+    }
+
+    .feature-list li::before {
+      content: "✓";
+      background: linear-gradient(135deg, var(--yellow-green) 0%, var(--pacific-cyan) 100%);
+      color: var(--white);
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="logo-container">
+      <div class="logo-flow">
+        <div class="wave-container">
+          <div class="wave wave1"></div>
+          <div class="wave wave2"></div>
+          <div class="wave wave3"></div>
+        </div>
+        <div class="flow-text">
+          <span class="flow-main">Flow</span>
+          <span class="flow-sub">FÉRIAS</span>
+        </div>
+      </div>
+    </div>
+    <h1>Sistema de Gestão</h1>
+    <p class="subtitle">Gerencie solicitações de férias de forma simples e eficiente</p>
+
+    <div class="profile-buttons">
+      <a href="/login.html" class="login-button">
+        <span>🔐 Fazer Login</span>
+      </a>
+    </div>
+
+    <div class="features">
+      <h3>Funcionalidades do Sistema</h3>
+      <ul class="feature-list">
+        <li>Solicitação de férias online pelos funcionários</li>
+        <li>Aprovação/rejeição pelo supervisor</li>
+        <li>Controle automático de conflitos de datas</li>
+        <li>Dashboard em tempo real para supervisores</li>
+        <li>Histórico completo de todas as solicitações</li>
+      </ul>
+    </div>
+  </div>
+</body>
+
+</html>

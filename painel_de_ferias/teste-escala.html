@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Escala - Debug</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: #f5f5f5; 
+        }
+        .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 8px; 
+        }
+        .form-group { 
+            margin-bottom: 15px; 
+        }
+        label { 
+            display: block; 
+            margin-bottom: 5px; 
+            font-weight: bold; 
+        }
+        input { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+        }
+        button { 
+            background: #007bff; 
+            color: white; 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .message { 
+            padding: 10px; 
+            margin: 10px 0; 
+            border-radius: 4px; 
+        }
+        .error { 
+            background: #f8d7da; 
+            color: #721c24; 
+            border: 1px solid #f5c6cb; 
+        }
+        .success { 
+            background: #d4edda; 
+            color: #155724; 
+            border: 1px solid #c3e6cb; 
+        }
+        .escala-item {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .escala-ativa {
+            border-left: 4px solid #28a745;
+        }
+        .escala-inativa {
+            border-left: 4px solid #dc3545;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Teste Completo - Escala 14x14 com Renovação Automática</h1>
+        
+        <div id="message"></div>
+        
+        <!-- Configuração de Renovação Automática -->
+        <div class="form-group">
+            <h3>⚙️ Configuração de Renovação</h3>
+            <label>
+                <input type="checkbox" id="renovacao-automatica" checked> 
+                Renovação Automática Ativa
+            </label>
+            <p style="font-size: 12px; color: #666;">
+                Quando ativada, uma nova escala será criada automaticamente após o término da folga (14 dias).
+            </p>
+        </div>
+        
+        <form id="test-form">
+            <div class="form-group">
+                <label for="data-embarque">Data do Embarque:</label>
+                <input type="date" id="data-embarque" name="dataEmbarque" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="data-desembarque">Data do Desembarque:</label>
+                <input type="date" id="data-desembarque" name="dataDesembarque" required>
+            </div>
+            
+            <button type="submit">Cadastrar Escala</button>
+        </form>
+        
+        <div style="margin: 20px 0;">
+            <button id="btn-verificar" type="button">🔄 Verificar Renovação Manual</button>
+            <button id="btn-listar" type="button">📋 Listar Escalas</button>
+        </div>
+        
+        <div id="result"></div>
+        <div id="escalas-list"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001/api';
+        
+        // Simular funcionário logado
+        const funcionarioTeste = { id: 1, nome: 'João Silva' };
+        
+        function showMessage(message, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.className = `message ${type}`;
+            messageEl.textContent = message;
+        }
+        
+        function formatDateBR(date) {
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+        
+        // Carregar configuração de renovação automática
+        async function carregarConfigRenovacao() {
+            try {
+                const response = await fetch(`${API_BASE}/renovacao/${funcionarioTeste.id}`);
+                if (response.ok) {
+                    const config = await response.json();
+                    document.getElementById('renovacao-automatica').checked = config.renovacaoAutomatica;
+                }
+            } catch (error) {
+                console.error('Erro ao carregar configuração:', error);
+            }
+        }
+        
+        // Salvar configuração de renovação automática
+        async function salvarConfigRenovacao() {
+            try {
+                const renovacaoAtiva = document.getElementById('renovacao-automatica').checked;
+                
+                const response = await fetch(`${API_BASE}/renovacao/${funcionarioTeste.id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ renovacaoAutomatica: renovacaoAtiva })
+                });
+                
+                if (response.ok) {
+                    showMessage(`Renovação automática ${renovacaoAtiva ? 'ativada' : 'desativada'}!`, 'success');
+                }
+            } catch (error) {
+                console.error('Erro ao salvar configuração:', error);
+                showMessage('Erro ao salvar configuração', 'error');
+            }
+        }
+        
+        // Listar escalas do funcionário
+        async function listarEscalas() {
+            try {
+                const response = await fetch(`${API_BASE}/escalas/funcionario/${funcionarioTeste.id}`);
+                if (response.ok) {
+                    const escalas = await response.json();
+                    
+                    const listEl = document.getElementById('escalas-list');
+                    if (escalas.length === 0) {
+                        listEl.innerHTML = '<p>Nenhuma escala encontrada.</p>';
+                        return;
+                    }
+                    
+                    let html = '<h3>📋 Escalas do Funcionário:</h3>';
+                    escalas.forEach(escala => {
+                        const status = escala.ativo ? 'Ativa' : 'Inativa';
+                        const cssClass = escala.ativo ? 'escala-ativa' : 'escala-inativa';
+                        
+                        html += `
+                            <div class="escala-item ${cssClass}">
+                                <strong>ID:</strong> ${escala.id} | 
+                                <strong>Status:</strong> ${status}<br>
+                                <strong>Embarque:</strong> ${formatDateBR(new Date(escala.dataEmbarque))} | 
+                                <strong>Desembarque:</strong> ${formatDateBR(new Date(escala.dataDesembarque))}<br>
+                                <strong>Cadastro:</strong> ${formatDateBR(new Date(escala.dataCadastro))}
+                                ${escala.renovacaoAutomatica ? ' | 🔄 Renovação Automática' : ''}
+                            </div>
+                        `;
+                    });
+                    
+                    listEl.innerHTML = html;
+                }
+            } catch (error) {
+                console.error('Erro ao listar escalas:', error);
+                showMessage('Erro ao listar escalas', 'error');
+            }
+        }
+        
+        // Verificar renovação manual
+        async function verificarRenovacao() {
+            try {
+                const response = await fetch(`${API_BASE}/verificar-renovacao`, {
+                    method: 'POST'
+                });
+                
+                if (response.ok) {
+                    showMessage('Verificação de renovação executada!', 'success');
+                    listarEscalas(); // Recarregar lista
+                }
+            } catch (error) {
+                console.error('Erro ao verificar renovação:', error);
+                showMessage('Erro ao verificar renovação', 'error');
+            }
+        }
+        
+        // Auto-completar data de desembarque
+        document.getElementById('data-embarque').addEventListener('change', (e) => {
+            if (e.target.value) {
+                const embarque = new Date(e.target.value);
+                const desembarque = new Date(embarque);
+                desembarque.setDate(embarque.getDate() + 13);
+                
+                document.getElementById('data-desembarque').value = desembarque.toISOString().split('T')[0];
+            }
+        });
+        
+        // Definir data mínima como hoje
+        const hoje = new Date().toISOString().split('T')[0];
+        document.getElementById('data-embarque').min = hoje;
+        document.getElementById('data-desembarque').min = hoje;
+        
+        // Event listeners
+        document.getElementById('renovacao-automatica').addEventListener('change', salvarConfigRenovacao);
+        document.getElementById('btn-verificar').addEventListener('click', verificarRenovacao);
+        document.getElementById('btn-listar').addEventListener('click', listarEscalas);
+        
+        document.getElementById('test-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const dataEmbarque = formData.get('dataEmbarque');
+            const dataDesembarque = formData.get('dataDesembarque');
+            
+            if (!dataEmbarque || !dataDesembarque) {
+                showMessage('Por favor, preencha todas as datas', 'error');
+                return;
+            }
+            
+            // Validar 14 dias
+            const embarque = new Date(dataEmbarque);
+            const desembarque = new Date(dataDesembarque);
+            const diferencaDias = Math.ceil((desembarque - embarque) / (1000 * 60 * 60 * 24)) + 1;
+            
+            console.log('Teste de validação:', {
+                dataEmbarque,
+                dataDesembarque,
+                embarque: embarque.toISOString(),
+                desembarque: desembarque.toISOString(),
+                diferencaDias
+            });
+            
+            if (diferencaDias !== 14) {
+                showMessage(`A escala deve ter exatamente 14 dias. Período informado: ${diferencaDias} dias`, 'error');
+                return;
+            }
+            
+            try {
+                console.log('Enviando dados para API...');
+                const response = await fetch(`${API_BASE}/escalas`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        funcionarioId: funcionarioTeste.id,
+                        dataEmbarque,
+                        dataDesembarque
+                    })
+                });
+                
+                console.log('Resposta recebida:', response);
+                
+                if (!response.ok) {
+                    let errorMessage = 'Erro ao cadastrar escala';
+                    try {
+                        const error = await response.json();
+                        errorMessage = error.erro || errorMessage;
+                    } catch (parseError) {
+                        console.error('Erro ao fazer parse da resposta:', parseError);
+                        errorMessage = `Erro do servidor (${response.status})`;
+                    }
+                    throw new Error(errorMessage);
+                }
+                
+                const resultado = await response.json();
+                console.log('Escala criada:', resultado);
+                
+                showMessage('✅ Escala cadastrada com sucesso!', 'success');
+                document.getElementById('result').innerHTML = `
+                    <h3>Resultado:</h3>
+                    <p><strong>ID:</strong> ${resultado.id}</p>
+                    <p><strong>Embarque:</strong> ${formatDateBR(new Date(resultado.dataEmbarque))}</p>
+                    <p><strong>Desembarque:</strong> ${formatDateBR(new Date(resultado.dataDesembarque))}</p>
+                    <p><strong>Status:</strong> ${resultado.ativo ? 'Ativa' : 'Inativa'}</p>
+                    <p><strong>Renovação Automática:</strong> ${resultado.renovacaoAutomatica ? '✅ Sim' : '❌ Não'}</p>
+                `;
+                
+                event.target.reset();
+                listarEscalas(); // Recarregar lista
+                
+            } catch (error) {
+                console.error('Erro completo:', error);
+                showMessage(`❌ Erro: ${error.message}`, 'error');
+            }
+        });
+        
+        // Carregar dados iniciais
+        window.addEventListener('load', () => {
+            carregarConfigRenovacao();
+            listarEscalas();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏖️ Teste Dias de Férias</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: #f5f5f5; 
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 8px; 
+        }
+        .form-group { 
+            margin-bottom: 15px; 
+        }
+        label { 
+            display: block; 
+            margin-bottom: 5px; 
+            font-weight: bold; 
+        }
+        select, input, textarea { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+        }
+        button {
+            background: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .info-box {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .message { 
+            padding: 10px; 
+            margin: 10px 0; 
+            border-radius: 4px; 
+        }
+        .error { 
+            background: #f8d7da; 
+            color: #721c24; 
+            border: 1px solid #f5c6cb; 
+        }
+        .success { 
+            background: #d4edda; 
+            color: #155724; 
+            border: 1px solid #c3e6cb; 
+        }
+        .ferias-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .ferias-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .status-pendente { background: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 4px; }
+        .status-aprovada { background: #d4edda; color: #155724; padding: 4px 8px; border-radius: 4px; }
+        .status-rejeitada { background: #f8d7da; color: #721c24; padding: 4px 8px; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏖️ Teste: Sistema de Dias de Férias</h1>
+        
+        <div class="info-box">
+            <h3>📋 Como Funciona</h3>
+            <ul>
+                <li><strong>Direito:</strong> 30 dias de férias por ano</li>
+                <li><strong>Venda:</strong> Pode vender até 10 dias para a empresa</li>
+                <li><strong>Combinação:</strong> Férias + 14 dias de folga da escala normal</li>
+                <li><strong>Flexibilidade:</strong> Escolha quantos dias quer tirar (20-30)</li>
+            </ul>
+        </div>
+        
+        <div id="message"></div>
+        
+        <form id="ferias-form">
+            <div class="form-group">
+                <label for="dias-ferias">Quantos dias de férias você vai tirar?</label>
+                <select id="dias-ferias" name="diasFerias" required>
+                    <option value="">Selecione a quantidade de dias</option>
+                    <option value="20">20 dias (vendeu 10 dias para a empresa) - 💰 Máximo pagamento extra</option>
+                    <option value="21">21 dias (vendeu 9 dias)</option>
+                    <option value="22">22 dias (vendeu 8 dias)</option>
+                    <option value="23">23 dias (vendeu 7 dias)</option>
+                    <option value="24">24 dias (vendeu 6 dias)</option>
+                    <option value="25">25 dias (vendeu 5 dias)</option>
+                    <option value="26">26 dias (vendeu 4 dias)</option>
+                    <option value="27">27 dias (vendeu 3 dias)</option>
+                    <option value="28">28 dias (vendeu 2 dias)</option>
+                    <option value="29">29 dias (vendeu 1 dia)</option>
+                    <option value="30">30 dias (não vendeu nenhum dia) - 🏖️ Máximo descanso</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="data-inicio">Data de Início:</label>
+                <input type="date" id="data-inicio" name="dataInicio" required>
+            </div>
+
+            <div class="form-group">
+                <label for="data-fim">Data de Fim:</label>
+                <input type="date" id="data-fim" name="dataFim" required readonly>
+                <small style="color: #666; font-size: 12px;">A data final será calculada automaticamente</small>
+            </div>
+
+            <div class="form-group">
+                <label for="motivo">Motivo das Férias:</label>
+                <textarea id="motivo" name="motivo" required placeholder="Ex: Férias de verão, viagem em família, descanso..."></textarea>
+            </div>
+
+            <button type="submit">🏖️ Solicitar Férias</button>
+        </form>
+        
+        <div style="margin: 20px 0;">
+            <button onclick="listarFerias()" type="button">📋 Listar Minhas Férias</button>
+            <button onclick="simularAprovacao()" type="button">✅ Simular Aprovação</button>
+        </div>
+        
+        <div id="ferias-list"></div>
+        
+        <div class="info-box" style="margin-top: 30px;">
+            <h3>🧮 Calculadora de Benefícios</h3>
+            <div id="calculadora">
+                <p>Selecione a quantidade de dias acima para ver os benefícios</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001/api';
+        const funcionarioTeste = { id: 1, nome: 'João Silva (Teste)' };
+        
+        function showMessage(message, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.className = `message ${type}`;
+            messageEl.textContent = message;
+        }
+        
+        function formatDateBR(date) {
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+        
+        // Calcular data final automaticamente
+        function calcularDataFinal() {
+            const diasFeriasSelect = document.getElementById('dias-ferias');
+            const dataInicioInput = document.getElementById('data-inicio');
+            const dataFimInput = document.getElementById('data-fim');
+            const calculadoraDiv = document.getElementById('calculadora');
+            
+            const diasFerias = parseInt(diasFeriasSelect.value);
+            const dataInicio = dataInicioInput.value;
+            
+            if (diasFerias && dataInicio) {
+                const inicio = new Date(dataInicio);
+                const fim = new Date(inicio);
+                fim.setDate(inicio.getDate() + diasFerias - 1);
+                
+                dataFimInput.value = fim.toISOString().split('T')[0];
+                
+                // Atualizar calculadora
+                const diasVendidos = 30 - diasFerias;
+                const valorEstimado = diasVendidos * 150; // R$ 150 por dia (exemplo)
+                
+                calculadoraDiv.innerHTML = `
+                    <p><strong>📊 Resumo da Sua Escolha:</strong></p>
+                    <p>🏖️ Dias de férias: <strong>${diasFerias} dias</strong></p>
+                    <p>💰 Dias vendidos: <strong>${diasVendidos} dias</strong></p>
+                    <p>💵 Valor estimado: <strong>R$ ${valorEstimado.toLocaleString('pt-BR')}</strong></p>
+                    <p>🎯 Total de descanso: <strong>${diasFerias + 14} dias</strong> (férias + folga da escala)</p>
+                `;
+            }
+        }
+        
+        // Event listeners
+        document.getElementById('dias-ferias').addEventListener('change', calcularDataFinal);
+        document.getElementById('data-inicio').addEventListener('change', calcularDataFinal);
+        
+        // Definir data mínima como hoje
+        const hoje = new Date().toISOString().split('T')[0];
+        document.getElementById('data-inicio').min = hoje;
+        
+        // Submit do formulário
+        document.getElementById('ferias-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const dados = {
+                funcionarioId: funcionarioTeste.id,
+                dataInicio: formData.get('dataInicio'),
+                dataFim: formData.get('dataFim'),
+                diasFerias: parseInt(formData.get('diasFerias')),
+                motivo: formData.get('motivo').trim()
+            };
+            
+            if (!dados.diasFerias || dados.diasFerias < 20 || dados.diasFerias > 30) {
+                showMessage('Selecione uma quantidade válida de dias (20-30)', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/ferias`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dados)
+                });
+                
+                if (!response.ok) {
+                    const error = await response.json();
+                    throw new Error(error.erro || 'Erro ao solicitar férias');
+                }
+                
+                const resultado = await response.json();
+                showMessage(`✅ Férias solicitadas com sucesso! ${resultado.diasVendidos} dias vendidos.`, 'success');
+                event.target.reset();
+                listarFerias();
+                
+            } catch (error) {
+                showMessage(`❌ Erro: ${error.message}`, 'error');
+            }
+        });
+        
+        // Listar férias
+        async function listarFerias() {
+            try {
+                const response = await fetch(`${API_BASE}/ferias/funcionario/${funcionarioTeste.id}`);
+                if (!response.ok) throw new Error('Erro ao buscar férias');
+                
+                const ferias = await response.json();
+                const listEl = document.getElementById('ferias-list');
+                
+                if (ferias.length === 0) {
+                    listEl.innerHTML = '<p>Nenhuma solicitação de férias encontrada.</p>';
+                    return;
+                }
+                
+                let html = '<h3>📋 Minhas Solicitações de Férias:</h3>';
+                ferias.forEach(f => {
+                    html += `
+                        <div class="ferias-card">
+                            <div class="ferias-header">
+                                <strong>${formatDateBR(new Date(f.dataInicio))} - ${formatDateBR(new Date(f.dataFim))}</strong>
+                                <span class="status-${f.status}">${f.status}</span>
+                            </div>
+                            <p><strong>Dias de férias:</strong> ${f.diasFerias || 'N/A'} dias</p>
+                            <p><strong>Dias vendidos:</strong> ${f.diasVendidos || 0} dias</p>
+                            <p><strong>Motivo:</strong> ${f.motivo}</p>
+                            <p><strong>Solicitado em:</strong> ${formatDateBR(new Date(f.dataSolicitacao))}</p>
+                        </div>
+                    `;
+                });
+                
+                listEl.innerHTML = html;
+                
+            } catch (error) {
+                showMessage(`Erro ao listar férias: ${error.message}`, 'error');
+            }
+        }
+        
+        // Simular aprovação (para teste)
+        async function simularAprovacao() {
+            try {
+                // Buscar primeira solicitação pendente
+                const response = await fetch(`${API_BASE}/ferias`);
+                if (!response.ok) throw new Error('Erro ao buscar solicitações');
+                
+                const todasFerias = await response.json();
+                const pendente = todasFerias.find(f => f.funcionarioId === funcionarioTeste.id && f.status === 'pendente');
+                
+                if (!pendente) {
+                    showMessage('Nenhuma solicitação pendente encontrada', 'error');
+                    return;
+                }
+                
+                const aprovarResponse = await fetch(`${API_BASE}/ferias/${pendente.id}/aprovar`, {
+                    method: 'PUT'
+                });
+                
+                if (aprovarResponse.ok) {
+                    showMessage('✅ Solicitação aprovada com sucesso!', 'success');
+                    listarFerias();
+                }
+                
+            } catch (error) {
+                showMessage(`Erro na simulação: ${error.message}`, 'error');
+            }
+        }
+        
+        // Carregar dados iniciais
+        window.addEventListener('load', listarFerias);
+    </script>
+</body>
+</html>

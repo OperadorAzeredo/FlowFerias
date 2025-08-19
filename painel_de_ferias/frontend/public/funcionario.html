@@ -1,0 +1,1642 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flow Férias - Painel do Funcionário</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --berkeley-blue: #1E3A5F;
+      --pacific-cyan: #25A3C1;
+      --yellow-green: #94C849;
+      --carrot-orange: #F3921F;
+      --butterscotch: #D89A48;
+      --white: #FFFFFF;
+      --light-gray: #F8F9FA;
+      --medium-gray: #E9ECEF;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--light-gray);
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--berkeley-blue) 0%, var(--pacific-cyan) 100%);
+      color: white;
+      padding: 1.5rem 0;
+      box-shadow: 0 2px 10px rgba(30, 58, 95, 0.2);
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-img {
+      height: 40px;
+      width: 120px;
+      display: block;
+    }
+
+    .logo-flow {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      height: 40px;
+    }
+
+    .wave-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      width: 30px;
+    }
+
+    .wave {
+      height: 3px;
+      border-radius: 2px;
+      animation: wave-flow 2s ease-in-out infinite;
+    }
+
+    .wave1 {
+      background: var(--pacific-cyan);
+      width: 25px;
+      animation-delay: 0s;
+    }
+
+    .wave2 {
+      background: var(--yellow-green);
+      width: 20px;
+      animation-delay: 0.3s;
+    }
+
+    .wave3 {
+      background: var(--carrot-orange);
+      width: 15px;
+      animation-delay: 0.6s;
+    }
+
+    .flow-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .flow-main {
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'Poppins', sans-serif;
+      color: white;
+    }
+
+    .flow-sub {
+      font-size: 10px;
+      font-weight: 500;
+      font-family: 'Poppins', sans-serif;
+      color: var(--pacific-cyan);
+      margin-top: 2px;
+    }
+
+    @keyframes wave-flow {
+      0%, 100% { transform: scaleX(1); opacity: 0.7; }
+      50% { transform: scaleX(1.2); opacity: 1; }
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .back-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .section {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(30, 58, 95, 0.1);
+    }
+
+    .section-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: var(--berkeley-blue);
+      border-bottom: 2px solid var(--yellow-green);
+      padding-bottom: 0.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      color: var(--berkeley-blue);
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--pacific-cyan);
+      box-shadow: 0 0 0 3px rgba(37, 163, 193, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, var(--yellow-green) 0%, var(--pacific-cyan) 100%);
+      color: var(--white);
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(148, 200, 73, 0.3);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-cancelar {
+      background: var(--carrot-orange);
+      color: var(--white);
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn-cancelar:hover {
+      background: var(--butterscotch);
+      transform: translateY(-1px);
+    }
+
+    .btn-cancelar:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .ferias-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .ferias-card {
+      border: 1px solid #e1e8ed;
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: transform 0.2s ease;
+    }
+
+    .ferias-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .ferias-aprovada {
+      border-left: 4px solid #27ae60;
+      background: linear-gradient(to right, #d4edda, #ffffff);
+    }
+
+    .ferias-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .ferias-periodo {
+      font-weight: bold;
+      color: #333;
+    }
+
+    .status-badge {
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .status-pendente {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-aprovada {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-rejeitada {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .ferias-details {
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+
+    .ferias-motivo {
+      color: #333;
+      font-style: italic;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #666;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+    }
+
+    .error-message {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      border: 1px solid #f5c6cb;
+    }
+
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      border: 1px solid #c3e6cb;
+    }
+
+    .info-box {
+      background: #e7f3ff;
+      border: 1px solid #b8daff;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      color: #004085;
+    }
+
+    .info-box h4 {
+      margin-bottom: 0.5rem;
+      color: #003d82;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      transform: scale(0.7);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .modal {
+      transform: scale(1);
+    }
+
+    .modal-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .modal-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .modal-message {
+      color: #666;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .modal-btn {
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      min-width: 80px;
+    }
+
+    .modal-btn-primary {
+      background: #4facfe;
+      color: white;
+    }
+
+    .modal-btn-primary:hover {
+      background: #3d8bfe;
+    }
+
+    .modal-btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .modal-btn-secondary:hover {
+      background: #5a6268;
+    }
+
+    .modal-btn-danger {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .modal-btn-danger:hover {
+      background: #c0392b;
+    }
+
+    .modal.error .modal-icon {
+      color: #e74c3c;
+    }
+
+    .modal.success .modal-icon {
+      color: #27ae60;
+    }
+
+    .modal.warning .modal-icon {
+      color: #f39c12;
+    }
+
+    .modal.confirm .modal-icon {
+      color: #4facfe;
+    }
+
+    /* Estilos para Escala 14x14 */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .subsection-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #333;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #e1e8ed;
+    }
+
+    .section-divider {
+      height: 1px;
+      background: #e1e8ed;
+      margin: 2rem 0;
+    }
+
+    .escala-card {
+      border: 1px solid #e1e8ed;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      transition: transform 0.2s ease;
+      position: relative;
+    }
+
+    .escala-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .escala-card.ativa {
+      border-left: 4px solid #27ae60;
+      background: #f8fff9;
+    }
+
+    .escala-card.inativa {
+      border-left: 4px solid #e74c3c;
+      background: #fdf8f8;
+      opacity: 0.8;
+    }
+
+    .escala-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .escala-periodo {
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    .escala-status {
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .status-ativa {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-inativa {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .escala-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .escala-detail-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .escala-detail-label {
+      font-size: 0.8rem;
+      color: #666;
+      margin-bottom: 0.2rem;
+    }
+
+    .escala-detail-value {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .escala-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+
+    .btn-escala-editar {
+      background: #f39c12;
+      color: white;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: background 0.3s ease;
+    }
+
+    .btn-escala-editar:hover {
+      background: #e67e22;
+    }
+
+    .btn-escala-desativar {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: background 0.3s ease;
+    }
+
+    .btn-escala-desativar:hover {
+      background: #c0392b;
+    }
+
+    .escala-countdown {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: #4facfe;
+      color: white;
+      padding: 0.3rem 0.6rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+
+    .escala-countdown.proximo {
+      background: #f39c12;
+    }
+
+    .escala-countdown.ativo {
+      background: #27ae60;
+    }
+
+    .escala-countdown.finalizado {
+      background: #95a5a6;
+    }
+
+    @media (max-width: 768px) {
+      .form-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <div class="header-content">
+      <div class="logo-container">
+        <div class="logo-flow">
+          <div class="wave-container">
+            <div class="wave wave1"></div>
+            <div class="wave wave2"></div>
+            <div class="wave wave3"></div>
+          </div>
+          <div class="flow-text">
+            <span class="flow-main">Flow</span>
+            <span class="flow-sub">Férias</span>
+          </div>
+        </div>
+        <span class="logo-text">Painel do Funcionário</span>
+      </div>
+      <div class="user-info">
+        <span id="funcionario-nome">Funcionário</span>
+        <button class="back-btn" onclick="logout()">🚪 Sair</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="main-content" id="main-content">
+      <div class="section">
+        <h2 class="section-title">📝 Solicitar Férias</h2>
+
+        <div class="info-box">
+          <h4>ℹ️ Regras Importantes</h4>
+          <ul>
+            <li>Você tem direito a <strong>30 dias de férias</strong> por ano</li>
+            <li>Pode vender até <strong>10 dias</strong> para a empresa (ficando com 20 dias)</li>
+            <li>Suas férias são <strong>adicionais</strong> aos 14 dias de folga da escala normal</li>
+            <li>Não é permitido ter férias de dois funcionários no mesmo mês</li>
+            <li>Todas as solicitações precisam de aprovação do supervisor</li>
+          </ul>
+        </div>
+
+        <div id="form-message"></div>
+
+        <form id="ferias-form">
+          <div class="form-group">
+            <label for="dias-ferias">Quantos dias de férias você vai tirar?</label>
+            <select id="dias-ferias" name="diasFerias" required>
+              <option value="">Selecione a quantidade de dias</option>
+              <option value="20">20 dias (vendeu 10 dias para a empresa)</option>
+              <option value="21">21 dias (vendeu 9 dias)</option>
+              <option value="22">22 dias (vendeu 8 dias)</option>
+              <option value="23">23 dias (vendeu 7 dias)</option>
+              <option value="24">24 dias (vendeu 6 dias)</option>
+              <option value="25">25 dias (vendeu 5 dias)</option>
+              <option value="26">26 dias (vendeu 4 dias)</option>
+              <option value="27">27 dias (vendeu 3 dias)</option>
+              <option value="28">28 dias (vendeu 2 dias)</option>
+              <option value="29">29 dias (vendeu 1 dia)</option>
+              <option value="30">30 dias (não vendeu nenhum dia)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="data-inicio">Data de Início:</label>
+            <input type="date" id="data-inicio" name="dataInicio" required>
+          </div>
+
+          <div class="form-group">
+            <label for="data-fim">Data de Fim:</label>
+            <input type="date" id="data-fim" name="dataFim" required readonly>
+            <small style="color: #666; font-size: 12px;">A data final será calculada automaticamente baseada na quantidade de dias selecionada</small>
+          </div>
+
+          <div class="form-group">
+            <label for="motivo">Motivo das Férias:</label>
+            <textarea id="motivo" name="motivo" required
+              placeholder="Ex: Férias de verão, viagem em família, descanso..."></textarea>
+          </div>
+
+          <button type="submit" class="btn" id="submit-btn">
+            ✈️ Solicitar Férias
+          </button>
+        </form>
+      </div>
+
+      <div class="section">
+        <h2 class="section-title">📋 Minhas Solicitações</h2>
+        <div id="status-message"></div>
+        <div id="ferias-container" class="loading">
+          Carregando suas solicitações...
+        </div>
+      </div>
+
+      <!-- Nova Seção: Escala 14x14 -->
+      <div class="section">
+        <h2 class="section-title">⏰ Minha Escala 14x14</h2>
+
+        <div class="info-box">
+          <h4>📅 Sobre a Escala 14x14</h4>
+          <ul>
+            <li>Cada período de trabalho é de <strong>14 dias corridos</strong></li>
+            <li>Data de Embarque: Primeiro dia de trabalho</li>
+            <li>Data de Desembarque: Último dia de trabalho</li>
+            <li>Após 14 dias de folga, uma nova escala pode ser criada automaticamente</li>
+          </ul>
+          
+          <div style="margin-top: 15px; padding: 10px; background: #e7f3ff; border-radius: 5px;">
+            <label style="display: flex; align-items: center; gap: 10px;">
+              <input type="checkbox" id="renovacao-automatica" style="transform: scale(1.2);">
+              <span>🔄 <strong>Renovação Automática Ativa</strong></span>
+            </label>
+            <small style="color: #666; margin-top: 5px; display: block;">
+              Quando ativada, o sistema criará automaticamente a próxima escala após o término da folga (14 dias).
+            </small>
+          </div>
+        </div>
+
+        <div id="escala-message"></div>
+
+        <form id="escala-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="data-embarque">📅 Data do Embarque:</label>
+              <input type="date" id="data-embarque" name="dataEmbarque" required>
+            </div>
+
+            <div class="form-group">
+              <label for="data-desembarque">📅 Data do Desembarque:</label>
+              <input type="date" id="data-desembarque" name="dataDesembarque" required>
+            </div>
+          </div>
+
+          <button type="submit" class="btn" id="escala-submit-btn">
+            💼 Cadastrar Escala 14x14
+          </button>
+        </form>
+
+        <div class="section-divider"></div>
+
+        <h3 class="subsection-title">📊 Histórico de Escalas</h3>
+        <div id="escalas-container" class="loading">
+          Carregando escalas...
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:3002/api';
+
+    let funcionarioSelecionado = null;
+    let minhasFerias = [];
+    let minhasEscalas = [];
+
+    // Funções para Modal
+    function showModal(type, title, message, buttons = []) {
+      const overlay = document.getElementById('modal-overlay');
+      const modal = document.getElementById('modal');
+      const icon = document.getElementById('modal-icon');
+      const titleEl = document.getElementById('modal-title');
+      const messageEl = document.getElementById('modal-message');
+      const buttonsEl = document.getElementById('modal-buttons');
+
+      // Configurar tipo do modal
+      modal.className = `modal ${type}`;
+
+      // Configurar ícone baseado no tipo
+      const icons = {
+        success: '✅',
+        error: '❌',
+        warning: '⚠️',
+        confirm: '❓'
+      };
+      icon.textContent = icons[type] || '💬';
+
+      // Configurar conteúdo
+      titleEl.textContent = title;
+      messageEl.textContent = message;
+
+      // Configurar botões
+      buttonsEl.innerHTML = '';
+      buttons.forEach(button => {
+        const btn = document.createElement('button');
+        btn.className = `modal-btn ${button.class || 'modal-btn-primary'}`;
+        btn.textContent = button.text;
+        btn.onclick = () => {
+          hideModal();
+          if (button.action) button.action();
+        };
+        buttonsEl.appendChild(btn);
+      });
+
+      // Mostrar modal
+      overlay.classList.add('active');
+
+      // Fechar modal ao clicar no overlay
+      overlay.onclick = (e) => {
+        if (e.target === overlay) {
+          hideModal();
+        }
+      };
+    }
+
+    function hideModal() {
+      const overlay = document.getElementById('modal-overlay');
+      overlay.classList.remove('active');
+    }
+
+    function showConfirmModal(title, message, onConfirm, onCancel) {
+      showModal('confirm', title, message, [
+        {
+          text: 'Cancelar',
+          class: 'modal-btn-secondary',
+          action: onCancel
+        },
+        {
+          text: 'Confirmar',
+          class: 'modal-btn-primary',
+          action: onConfirm
+        }
+      ]);
+    }
+
+    function showSuccessModal(title, message) {
+      showModal('success', title, message, [
+        {
+          text: 'OK',
+          class: 'modal-btn-primary'
+        }
+      ]);
+    }
+
+    function showErrorModal(title, message) {
+      showModal('error', title, message, [
+        {
+          text: 'OK',
+          class: 'modal-btn-danger'
+        }
+      ]);
+    }
+
+    function showWarningModal(title, message) {
+      showModal('warning', title, message, [
+        {
+          text: 'OK',
+          class: 'modal-btn-primary'
+        }
+      ]);
+    }
+
+    // Função para exibir mensagens
+    function showMessage(message, type = 'success', containerId = 'form-message') {
+      const messageEl = document.getElementById(containerId);
+      messageEl.innerHTML = `<div class="${type}-message">${message}</div>`;
+      setTimeout(() => {
+        messageEl.innerHTML = '';
+      }, 5000);
+    }
+
+    // Função para formatar data no formato brasileiro (dd/mm/aaaa)
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    }
+
+    // Função auxiliar para formatar data brasileira
+    function formatDateBR(date) {
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}/${month}/${year}`;
+    }
+
+    // Função para configurar funcionário logado
+    async function configurarFuncionarioLogado() {
+      try {
+        const userType = localStorage.getItem('userType');
+        const userName = localStorage.getItem('userName');
+        const userId = localStorage.getItem('userId');
+        
+        if (!userType || userType !== 'funcionario') {
+          window.location.href = '/login.html';
+          return;
+        }
+
+        if (userName) {
+          document.getElementById('funcionario-nome').textContent = userName;
+        }
+        
+        funcionarioAtual = {
+          id: parseInt(userId) || 1,
+          nome: userName || 'Funcionário'
+        };
+
+        // Buscar dados completos do funcionário no backend
+        const response = await fetch(`${API_BASE}/funcionarios`);
+        if (!response.ok) {
+          throw new Error('Erro ao carregar dados do funcionário');
+        }
+
+        const funcionarios = await response.json();
+
+        // Encontrar o funcionário pelo SAP ID
+        funcionarioSelecionado = funcionarios.find(f => f.sapid === userId);
+
+        if (!funcionarioSelecionado) {
+          showErrorModal('Funcionário Não Encontrado', 'Seu SAP ID não foi encontrado no sistema. Entre em contato com o administrador.');
+          return;
+        }
+
+        // Carregar as férias do funcionário
+        carregarMinhasFerias();
+        
+        // Carregar escalas do funcionário  
+        carregarEscalas();
+        
+        // Carregar configuração de renovação automática
+        carregarConfigRenovacao();
+
+      } catch (error) {
+        console.error('Erro ao configurar funcionário:', error);
+        showErrorModal('Erro de Conexão', 'Erro ao carregar dados do funcionário. Verifique sua conexão e tente novamente.');
+      }
+    }
+
+    // Função para carregar férias do funcionário
+    async function carregarMinhasFerias() {
+      if (!funcionarioSelecionado) return;
+
+      try {
+        const response = await fetch(`${API_BASE}/ferias/funcionario/${funcionarioSelecionado.id}`);
+
+        if (!response.ok) {
+          throw new Error('Erro ao carregar férias');
+        }
+
+        const novasFerias = await response.json();
+
+        // Verificar se houve mudanças de status
+        if (minhasFerias.length > 0) {
+          novasFerias.forEach(novaFerias => {
+            const feriaAnterior = minhasFerias.find(f => f.id === novaFerias.id);
+            if (feriaAnterior && feriaAnterior.status !== novaFerias.status) {
+              // Status mudou - mostrar notificação
+              if (novaFerias.status === 'aprovada') {
+                showMessage(`🎉 Suas férias de ${formatDate(novaFerias.dataInicio)} a ${formatDate(novaFerias.dataFim)} foram APROVADAS!`, 'success', 'status-message');
+              } else if (novaFerias.status === 'rejeitada') {
+                showMessage(`❌ Suas férias de ${formatDate(novaFerias.dataInicio)} a ${formatDate(novaFerias.dataFim)} foram rejeitadas.`, 'error', 'status-message');
+              }
+            }
+          });
+        }
+
+        minhasFerias = novasFerias;
+        renderizarMinhasFerias();
+        
+        // Carregar escalas também
+        await carregarEscalas();
+      } catch (error) {
+        console.error('Erro:', error);
+        document.getElementById('ferias-container').innerHTML =
+          '<div class="error-message">Erro ao carregar suas férias.</div>';
+      }
+    }
+
+    // Função para renderizar férias
+    function renderizarMinhasFerias() {
+      const container = document.getElementById('ferias-container');
+
+      if (minhasFerias.length === 0) {
+        container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>📭 Nenhuma solicitação encontrada</h3>
+                        <p>Você ainda não fez nenhuma solicitação de férias.</p>
+                    </div>
+                `;
+        return;
+      }
+
+      const feriasHtml = minhasFerias
+        .sort((a, b) => new Date(b.dataSolicitacao) - new Date(a.dataSolicitacao))
+        .map(ferias => {
+          const isAprovada = ferias.status === 'aprovada';
+          const isRejeitada = ferias.status === 'rejeitada';
+          const isPendente = ferias.status === 'pendente';
+          const statusIcon = isAprovada ? '🎉' : (isRejeitada ? '❌' : '⏳');
+
+          return `
+                    <div class="ferias-card ${isAprovada ? 'ferias-aprovada' : ''}">
+                        <div class="ferias-header">
+                            <div class="ferias-periodo">
+                                ${statusIcon} ${formatDate(ferias.dataInicio)} - ${formatDate(ferias.dataFim)}
+                            </div>
+                            <div class="status-badge status-${ferias.status}">
+                                ${ferias.status}
+                            </div>
+                        </div>
+                        
+                        <div class="ferias-details">
+                            <div>📅 Solicitado em: ${formatDate(ferias.dataSolicitacao)}</div>
+                            ${ferias.diasFerias ? `
+                                <div>🏖️ Dias de férias: ${ferias.diasFerias} dias</div>
+                                ${ferias.diasVendidos > 0 ? `<div>💰 Dias vendidos: ${ferias.diasVendidos} dias</div>` : ''}
+                            ` : ''}
+                        </div>
+                        
+                        <div class="ferias-motivo">
+                            "${ferias.motivo}"
+                        </div>
+
+                        ${isPendente ? `
+                            <div class="ferias-actions" style="margin-top: 1rem; text-align: right;">
+                                <button class="btn-cancelar" onclick="cancelarSolicitacao(${ferias.id})" title="Cancelar esta solicitação">
+                                    🗑️ Cancelar Solicitação
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+        }).join('');
+
+      container.innerHTML = `<div class="ferias-list">${feriasHtml}</div>`;
+    }
+
+    // Função para solicitar férias
+    async function solicitarFerias(event) {
+      event.preventDefault();
+
+      if (!funcionarioSelecionado) {
+        showMessage('Por favor, selecione um funcionário.', 'error');
+        return;
+      }
+
+      const formData = new FormData(event.target);
+      const dados = {
+        funcionarioId: funcionarioSelecionado.id,
+        dataInicio: formData.get('dataInicio'),
+        dataFim: formData.get('dataFim'),
+        diasFerias: parseInt(formData.get('diasFerias')),
+        motivo: formData.get('motivo').trim()
+      };
+
+      // Validações no frontend
+      if (!dados.dataInicio || !dados.dataFim || !dados.diasFerias || !dados.motivo) {
+        showMessage('Todos os campos são obrigatórios.', 'error', 'form-message');
+        return;
+      }
+
+      if (dados.diasFerias < 20 || dados.diasFerias > 30) {
+        showMessage('A quantidade de dias deve estar entre 20 e 30.', 'error', 'form-message');
+        return;
+      }
+
+      // Verificar se o período corresponde aos dias selecionados
+      const inicio = new Date(dados.dataInicio);
+      const fim = new Date(dados.dataFim);
+      const diferencaDias = Math.ceil((fim - inicio) / (1000 * 60 * 60 * 24)) + 1;
+      
+      if (diferencaDias !== dados.diasFerias) {
+        showMessage(`O período selecionado tem ${diferencaDias} dias, mas você escolheu ${dados.diasFerias} dias.`, 'error', 'form-message');
+        return;
+      }
+
+      if (new Date(dados.dataInicio) >= new Date(dados.dataFim)) {
+        showMessage('A data de início deve ser anterior à data de fim.', 'error');
+        return;
+      }
+
+      if (new Date(dados.dataInicio) < new Date()) {
+        showMessage('A data de início não pode ser no passado.', 'error');
+        return;
+      }
+
+      const submitBtn = document.getElementById('submit-btn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Enviando...';
+
+      try {
+        const response = await fetch(`${API_BASE}/ferias`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(dados)
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.erro || 'Erro ao solicitar férias');
+        }
+
+        showSuccessModal('Solicitação Enviada!', 'Sua solicitação de férias foi enviada com sucesso! Aguarde a aprovação do supervisor.');
+        document.getElementById('ferias-form').reset();
+        carregarMinhasFerias();
+
+      } catch (error) {
+        console.error('Erro:', error);
+        showErrorModal('Erro na Solicitação', error.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = '✈️ Solicitar Férias';
+      }
+    }
+
+    // Função para cancelar solicitação de férias
+    async function cancelarSolicitacao(solicitacaoId) {
+      if (!funcionarioSelecionado) {
+        showErrorModal('Erro', 'Funcionário não identificado.');
+        return;
+      }
+
+      // Confirmar cancelamento
+      const solicitacao = minhasFerias.find(f => f.id === solicitacaoId);
+      if (!solicitacao) {
+        showErrorModal('Erro', 'Solicitação não encontrada.');
+        return;
+      }
+
+      const confirmar = confirm(
+        `Tem certeza que deseja cancelar a solicitação de férias?\n\n` +
+        `Período: ${formatDate(solicitacao.dataInicio)} - ${formatDate(solicitacao.dataFim)}\n` +
+        `Esta ação não pode ser desfeita.`
+      );
+
+      if (!confirmar) {
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/ferias/${solicitacaoId}/cancelar`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            funcionarioId: funcionarioSelecionado.id
+          })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.erro || 'Erro ao cancelar solicitação');
+        }
+
+        showSuccessModal('Solicitação Cancelada!', 'Sua solicitação de férias foi cancelada com sucesso.');
+        carregarMinhasFerias();
+
+      } catch (error) {
+        console.error('Erro:', error);
+        showErrorModal('Erro no Cancelamento', error.message);
+      }
+    }
+
+    // ===== FUNÇÕES PARA ESCALAS 14x14 =====
+
+    // Carregar escalas do funcionário
+    async function carregarEscalas() {
+      if (!funcionarioSelecionado) {
+        console.log('Funcionário não selecionado, aguardando...');
+        return;
+      }
+
+      try {
+        console.log('Carregando escalas para funcionário:', funcionarioSelecionado.id);
+        const response = await fetch(`${API_BASE}/escalas/funcionario/${funcionarioSelecionado.id}`);
+        
+        if (!response.ok) {
+          throw new Error(`Erro HTTP: ${response.status}`);
+        }
+        
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+          throw new Error('Resposta não é JSON válido');
+        }
+        
+        minhasEscalas = await response.json();
+        console.log('Escalas carregadas:', minhasEscalas);
+        renderizarEscalas();
+      } catch (error) {
+        console.error('Erro ao carregar escalas:', error);
+        document.getElementById('escalas-container').innerHTML = 
+          `<div class="error-message">Erro ao carregar escalas: ${error.message}</div>`;
+      }
+    }
+
+    // Renderizar escalas na interface
+    function renderizarEscalas() {
+      const container = document.getElementById('escalas-container');
+      
+      if (minhasEscalas.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h3>📭 Nenhuma escala cadastrada</h3>
+            <p>Cadastre sua primeira escala de trabalho 14x14.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const escalasHtml = minhasEscalas
+        .sort((a, b) => new Date(b.dataEmbarque) - new Date(a.dataEmbarque))
+        .map(escala => {
+          const embarque = new Date(escala.dataEmbarque);
+          const desembarque = new Date(escala.dataDesembarque);
+          const hoje = new Date();
+          
+          let statusCountdown = '';
+          let countdownClass = '';
+          
+          if (hoje < embarque) {
+            const diasAteEmbarque = Math.ceil((embarque - hoje) / (1000 * 60 * 60 * 24));
+            statusCountdown = `Embarque em ${diasAteEmbarque} dias`;
+            countdownClass = 'proximo';
+          } else if (hoje >= embarque && hoje <= desembarque) {
+            const diasRestantes = Math.ceil((desembarque - hoje) / (1000 * 60 * 60 * 24));
+            statusCountdown = `${diasRestantes} dias restantes`;
+            countdownClass = 'ativo';
+          } else {
+            statusCountdown = 'Finalizada';
+            countdownClass = 'finalizado';
+          }
+
+          return `
+            <div class="escala-card ${escala.ativo ? 'ativa' : 'inativa'}">
+              <div class="escala-countdown ${countdownClass}">
+                ${statusCountdown}
+              </div>
+              
+              <div class="escala-header">
+                <div class="escala-periodo">
+                  ${formatDateBR(embarque)} - ${formatDateBR(desembarque)}
+                </div>
+                <div class="escala-status ${escala.ativo ? 'status-ativa' : 'status-inativa'}">
+                  ${escala.ativo ? 'Ativa' : 'Inativa'}
+                </div>
+              </div>
+
+              <div class="escala-details">
+                <div class="escala-detail-item">
+                  <div class="escala-detail-label">Data de Embarque</div>
+                  <div class="escala-detail-value">📅 ${formatDateBR(embarque)}</div>
+                </div>
+                <div class="escala-detail-item">
+                  <div class="escala-detail-label">Data de Desembarque</div>
+                  <div class="escala-detail-value">📅 ${formatDateBR(desembarque)}</div>
+                </div>
+                <div class="escala-detail-item">
+                  <div class="escala-detail-label">Duração</div>
+                  <div class="escala-detail-value">⏱️ 14 dias</div>
+                </div>
+                <div class="escala-detail-item">
+                  <div class="escala-detail-label">Cadastrado em</div>
+                  <div class="escala-detail-value">📋 ${formatDateBR(new Date(escala.dataCadastro))}</div>
+                </div>
+                <div class="escala-detail-item">
+                  <div class="escala-detail-label">Renovação Automática</div>
+                  <div class="escala-detail-value">
+                    ${escala.renovacaoAutomatica ? '🔄 Ativa' : '⏸️ Desativada'}
+                  </div>
+                </div>
+              </div>
+
+              ${escala.ativo ? `
+                <div class="escala-actions">
+                  <button class="btn-escala-editar" onclick="editarEscala(${escala.id})">
+                    ✏️ Editar
+                  </button>
+                  <button class="btn-escala-desativar" onclick="desativarEscala(${escala.id})">
+                    ❌ Desativar
+                  </button>
+                </div>
+              ` : ''}
+            </div>
+          `;
+        }).join('');
+
+      container.innerHTML = escalasHtml;
+    }
+
+    // Cadastrar nova escala
+    async function cadastrarEscala(event) {
+      console.log('Função cadastrarEscala chamada');
+      event.preventDefault();
+      
+      if (!funcionarioSelecionado) {
+        console.error('Funcionário não selecionado');
+        showErrorMessage('Funcionário não identificado', 'escala-message');
+        return;
+      }
+
+      console.log('Funcionário selecionado:', funcionarioSelecionado);
+
+      const formData = new FormData(event.target);
+      const dataEmbarque = formData.get('dataEmbarque');
+      const dataDesembarque = formData.get('dataDesembarque');
+
+      if (!dataEmbarque || !dataDesembarque) {
+        showErrorMessage('Por favor, preencha todas as datas', 'escala-message');
+        return;
+      }
+
+      // Validar se o período é de 14 dias
+      const embarque = new Date(dataEmbarque);
+      const desembarque = new Date(dataDesembarque);
+      const diferencaDias = Math.ceil((desembarque - embarque) / (1000 * 60 * 60 * 24)) + 1;
+      
+      console.log('Validação de data:', {
+        dataEmbarque,
+        dataDesembarque,
+        embarque: embarque.toISOString(),
+        desembarque: desembarque.toISOString(),
+        diferencaDias
+      });
+      
+      if (diferencaDias !== 14) {
+        showErrorMessage(`A escala deve ter exatamente 14 dias. Período informado: ${diferencaDias} dias`, 'escala-message');
+        return;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/escalas`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            funcionarioId: funcionarioSelecionado.id,
+            dataEmbarque,
+            dataDesembarque
+          })
+        });
+
+        if (!response.ok) {
+          let errorMessage = 'Erro ao cadastrar escala';
+          try {
+            const error = await response.json();
+            errorMessage = error.erro || errorMessage;
+          } catch (parseError) {
+            // Se não conseguir fazer parse do JSON, usar mensagem genérica
+            console.error('Erro ao fazer parse da resposta:', parseError);
+            errorMessage = `Erro do servidor (${response.status})`;
+          }
+          throw new Error(errorMessage);
+        }
+
+        const resultado = await response.json();
+        showSuccessMessage('Escala cadastrada com sucesso!', 'escala-message');
+        event.target.reset();
+        await carregarEscalas();
+
+      } catch (error) {
+        console.error('Erro ao cadastrar escala:', error);
+        showErrorMessage(error.message, 'escala-message');
+      }
+    }
+
+    // Carregar configuração de renovação automática
+    async function carregarConfigRenovacao() {
+      if (!funcionarioSelecionado) return;
+      
+      try {
+        const response = await fetch(`${API_BASE}/renovacao/${funcionarioSelecionado.id}`);
+        if (response.ok) {
+          const config = await response.json();
+          document.getElementById('renovacao-automatica').checked = config.renovacaoAutomatica;
+        }
+      } catch (error) {
+        console.error('Erro ao carregar configuração de renovação:', error);
+      }
+    }
+
+    // Salvar configuração de renovação automática
+    async function salvarConfigRenovacao() {
+      if (!funcionarioSelecionado) return;
+      
+      try {
+        const renovacaoAtiva = document.getElementById('renovacao-automatica').checked;
+        
+        const response = await fetch(`${API_BASE}/renovacao/${funcionarioSelecionado.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ renovacaoAutomatica: renovacaoAtiva })
+        });
+        
+        if (response.ok) {
+          const status = renovacaoAtiva ? 'ativada' : 'desativada';
+          showSuccessMessage(`Renovação automática ${status}!`, 'escala-message');
+        }
+      } catch (error) {
+        console.error('Erro ao salvar configuração:', error);
+        showErrorMessage('Erro ao salvar configuração de renovação', 'escala-message');
+      }
+    }
+
+    // Desativar escala
+    async function desativarEscala(escalaId) {
+      if (!confirm('Tem certeza que deseja desativar esta escala?')) return;
+
+      try {
+        const response = await fetch(`${API_BASE}/escalas/${escalaId}`, {
+          method: 'DELETE'
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.erro);
+        }
+
+        showSuccessMessage('Escala desativada com sucesso!', 'escala-message');
+        await carregarEscalas();
+
+      } catch (error) {
+        console.error('Erro ao desativar escala:', error);
+        showErrorMessage(error.message, 'escala-message');
+      }
+    }
+
+    // Editar escala (função simplificada - pode ser expandida)
+    function editarEscala(escalaId) {
+      const escala = minhasEscalas.find(e => e.id === escalaId);
+      if (!escala) return;
+
+      // Preencher formulário com dados da escala
+      document.getElementById('data-embarque').value = escala.dataEmbarque;
+      document.getElementById('data-desembarque').value = escala.dataDesembarque;
+      
+      // Scroll para o formulário
+      document.getElementById('escala-form').scrollIntoView({ behavior: 'smooth' });
+      
+      showMessage('Dados carregados no formulário. Altere as datas e cadastre novamente.', 'info', 'escala-message');
+    }
+
+    // Função para mostrar mensagens específicas de escala
+    function showErrorMessage(message, containerId) {
+      showMessage(message, 'error', containerId);
+    }
+
+    function showSuccessMessage(message, containerId) {
+      showMessage(message, 'success', containerId);
+    }
+
+    // Event listeners
+    document.addEventListener('DOMContentLoaded', () => {
+      carregarFuncionarios();
+
+      // Configurar data mínima como hoje
+      const hoje = new Date().toISOString().split('T')[0];
+      document.getElementById('data-inicio').min = hoje;
+      document.getElementById('data-fim').min = hoje;
+      document.getElementById('data-embarque').min = hoje;
+      document.getElementById('data-desembarque').min = hoje;
+
+      // Atualizar data mínima de fim quando início muda
+      document.getElementById('data-inicio').addEventListener('change', (e) => {
+        document.getElementById('data-fim').min = e.target.value;
+      });
+
+      // Atualizar data de desembarque automaticamente quando embarque muda (14 dias)
+      document.getElementById('data-embarque').addEventListener('change', (e) => {
+        if (e.target.value) {
+          const embarque = new Date(e.target.value);
+          const desembarque = new Date(embarque);
+          desembarque.setDate(embarque.getDate() + 13); // 13 dias depois = 14 dias total
+          
+          document.getElementById('data-desembarque').value = desembarque.toISOString().split('T')[0];
+          document.getElementById('data-desembarque').min = desembarque.toISOString().split('T')[0];
+        }
+      });
+    });
+
+    document.getElementById('ferias-form').addEventListener('submit', solicitarFerias);
+    document.getElementById('escala-form').addEventListener('submit', cadastrarEscala);
+
+    // Atualização automática a cada 15 segundos
+    setInterval(() => {
+      if (funcionarioSelecionado) {
+        carregarMinhasFerias(); // Esta função já carrega as escalas também
+      }
+    }, 15000);
+
+    // Verificação de autenticação
+    function verificarAutenticacao() {
+      const userType = localStorage.getItem('userType');
+      const userId = localStorage.getItem('userId');
+      const userName = localStorage.getItem('userName');
+      
+      if (!userType || !userId || !userName) {
+        window.location.href = '/login.html';
+        return;
+      }
+
+      if (userType !== 'funcionario') {
+        showErrorModal('Acesso Negado', 'Esta área é restrita a funcionários.');
+        setTimeout(() => {
+          window.location.href = '/login.html';
+        }, 2000);
+        return;
+      }
+
+      // Atualizar nome do usuário no header
+      document.getElementById('funcionario-nome').textContent = userName;
+    }
+
+    // Função de logout
+    function logout() {
+      showConfirmModal(
+        'Confirmar Logout',
+        'Tem certeza que deseja sair do sistema?',
+        () => {
+          localStorage.clear();
+          window.location.href = '/login.html';
+        }
+      );
+    }
+
+    // Verificar autenticação ao carregar a página
+    document.addEventListener('DOMContentLoaded', () => {
+      verificarAutenticacao();
+      configurarFuncionarioLogado();
+      
+      // Event listener para renovação automática
+      document.getElementById('renovacao-automatica').addEventListener('change', salvarConfigRenovacao);
+      
+      // Event listeners para cálculo automático da data final
+      document.getElementById('dias-ferias').addEventListener('change', calcularDataFinal);
+      document.getElementById('data-inicio').addEventListener('change', calcularDataFinal);
+    });
+
+    // Função para calcular automaticamente a data final baseada nos dias selecionados
+    function calcularDataFinal() {
+      const diasFeriasSelect = document.getElementById('dias-ferias');
+      const dataInicioInput = document.getElementById('data-inicio');
+      const dataFimInput = document.getElementById('data-fim');
+      
+      const diasFerias = parseInt(diasFeriasSelect.value);
+      const dataInicio = dataInicioInput.value;
+      
+      if (diasFerias && dataInicio) {
+        const inicio = new Date(dataInicio);
+        const fim = new Date(inicio);
+        fim.setDate(inicio.getDate() + diasFerias - 1);
+        
+        dataFimInput.value = fim.toISOString().split('T')[0];
+        
+        // Mostrar informação sobre dias vendidos
+        const diasVendidos = 30 - diasFerias;
+        const infoDiv = document.getElementById('info-dias-vendidos');
+        if (infoDiv) {
+          infoDiv.remove();
+        }
+        
+        if (diasVendidos > 0) {
+          const novaInfo = document.createElement('div');
+          novaInfo.id = 'info-dias-vendidos';
+          novaInfo.style.cssText = 'margin-top: 10px; padding: 10px; background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 4px; font-size: 14px;';
+          novaInfo.innerHTML = `💰 <strong>Dias vendidos:</strong> ${diasVendidos} dias (você receberá pagamento adicional)`;
+          dataFimInput.parentNode.appendChild(novaInfo);
+        }
+      }
+    }
+  </script>
+
+  <!-- Modais -->
+  <div id="modal-overlay" class="modal-overlay">
+    <div id="modal" class="modal">
+      <div id="modal-icon" class="modal-icon"></div>
+      <div id="modal-title" class="modal-title"></div>
+      <div id="modal-message" class="modal-message"></div>
+      <div id="modal-buttons" class="modal-buttons"></div>
+    </div>
+  </div>
+</body>
+
+</html>

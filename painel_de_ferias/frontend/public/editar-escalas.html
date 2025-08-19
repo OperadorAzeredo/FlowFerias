@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Escalas - Supervisor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #FF0000;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .navigation {
+            background: #f8f9ff;
+            padding: 20px 30px;
+            border-bottom: 1px solid #e0e6ed;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .nav-btn, .action-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn {
+            background: #667eea;
+            color: white;
+        }
+
+        .nav-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+
+        .action-btn.primary {
+            background: #4facfe;
+            color: white;
+        }
+
+        .action-btn.success {
+            background: #48bb78;
+            color: white;
+        }
+
+        .action-btn.danger {
+            background: #f56565;
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .funcionario-selector {
+            margin-bottom: 30px;
+        }
+
+        .funcionario-selector h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .funcionario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .funcionario-card {
+            padding: 15px;
+            border: 2px solid #e0e6ed;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            background: white;
+        }
+
+        .funcionario-card:hover {
+            border-color: #4facfe;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .funcionario-card.selected {
+            border-color: #FF0000;
+            background: #ffe0e0;
+        }
+
+        .funcionario-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .funcionario-info {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .escala-editor {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .escala-editor.active {
+            display: block;
+        }
+
+        .editor-header {
+            background: linear-gradient(135deg, #FF0000 0%, #cc0000 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+            margin-bottom: 0;
+        }
+
+        .editor-content {
+            background: #f8f9ff;
+            border: 1px solid #e0e6ed;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            padding: 20px;
+        }
+
+        .escalas-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .escala-item {
+            background: white;
+            border: 1px solid #e0e6ed;
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+        }
+
+        .escala-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .escala-number {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #FF0000;
+        }
+
+        .delete-escala {
+            background: #f56565;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+
+        .escala-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr 120px 120px;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .field-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .field-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .field-input {
+            padding: 10px;
+            border: 1px solid #e0e6ed;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+
+        .field-input:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+
+        .checkbox-field {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .checkbox-field input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+        }
+
+        .add-escala-btn {
+            background: #48bb78;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            width: 100%;
+            font-size: 1.1em;
+        }
+
+        .add-escala-btn:hover {
+            background: #38a169;
+        }
+
+        .save-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #e6fffa;
+            border-left: 4px solid #48bb78;
+            border-radius: 8px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            display: none;
+        }
+
+        .error, .success {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .error {
+            background: #fed7d7;
+            color: #c53030;
+            border: 1px solid #feb2b2;
+        }
+
+        .success {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 1px solid #9ae6b4;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #e0e6ed;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #4facfe;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .funcionario-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .escala-fields {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📅 Editar Escalas - Supervisor</h1>
+            <p>Gerencie as escalas 14x14 de todos os funcionários</p>
+        </div>
+
+        <div class="navigation">
+            <div class="nav-buttons">
+                <a href="/supervisor.html" class="nav-btn">
+                    ← Voltar ao Painel
+                </a>
+                <button class="nav-btn" onclick="carregarDados()">
+                    🔄 Atualizar Dados
+                </button>
+                <button class="action-btn success" onclick="salvarTodasEscalas()">
+                    💾 Salvar Todas as Alterações
+                </button>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="loading" id="loading">⏳ Carregando dados...</div>
+            <div class="error" id="error"></div>
+            <div class="success" id="success"></div>
+
+            <div class="funcionario-selector">
+                <h3>📋 Selecione um Funcionário para Editar</h3>
+                <div class="stats-grid" id="statsGrid"></div>
+                <div class="funcionario-grid" id="funcionarioGrid"></div>
+            </div>
+
+            <div class="escala-editor" id="escalaEditor">
+                <div class="editor-header">
+                    <h3 id="editorTitle">Editando Escalas</h3>
+                    <p id="editorSubtitle">Configure as escalas 14x14</p>
+                </div>
+                
+                <div class="editor-content">
+                    <div class="escalas-container" id="escalasContainer"></div>
+                    
+                    <button class="add-escala-btn" onclick="adicionarNovaEscala()">
+                        ➕ Adicionar Nova Escala
+                    </button>
+
+                    <div class="save-section">
+                        <h4>💾 Salvar Alterações</h4>
+                        <p>As alterações serão aplicadas imediatamente no sistema.</p>
+                        <div style="margin-top: 15px;">
+                            <button class="action-btn success" onclick="salvarEscalasFuncionario()">
+                                Salvar Escalas deste Funcionário
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001/api';
+        
+        let funcionarios = [];
+        let escalasOriginais = {};
+        let funcionarioSelecionado = null;
+        let proximoTempId = -1;
+
+        // Elementos DOM
+        const loading = document.getElementById('loading');
+        const error = document.getElementById('error');
+        const success = document.getElementById('success');
+        const funcionarioGrid = document.getElementById('funcionarioGrid');
+        const escalaEditor = document.getElementById('escalaEditor');
+        const escalasContainer = document.getElementById('escalasContainer');
+        const editorTitle = document.getElementById('editorTitle');
+        const editorSubtitle = document.getElementById('editorSubtitle');
+        const statsGrid = document.getElementById('statsGrid');
+
+        // Carregar dados iniciais
+        document.addEventListener('DOMContentLoaded', carregarDados);
+
+        async function fazerRequisicao(url, options = {}) {
+            const response = await fetch(`${API_BASE}${url}`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...options.headers
+                },
+                ...options
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({}));
+                throw new Error(errorData.erro || `Erro HTTP: ${response.status}`);
+            }
+
+            return await response.json();
+        }
+
+        function mostrarLoading(show) {
+            loading.style.display = show ? 'block' : 'none';
+        }
+
+        function mostrarErro(mensagem) {
+            error.textContent = mensagem;
+            error.style.display = 'block';
+            setTimeout(() => {
+                error.style.display = 'none';
+            }, 5000);
+        }
+
+        function mostrarSucesso(mensagem) {
+            success.textContent = mensagem;
+            success.style.display = 'block';
+            setTimeout(() => {
+                success.style.display = 'none';
+            }, 3000);
+        }
+
+        async function carregarDados() {
+            mostrarLoading(true);
+            try {
+                // Carregar funcionários e escalas
+                const [funcionariosData, escalasData] = await Promise.all([
+                    fazerRequisicao('/funcionarios'),
+                    fazerRequisicao('/escalas')
+                ]);
+
+                funcionarios = funcionariosData;
+                
+                // Organizar escalas por funcionário
+                escalasOriginais = {};
+                escalasData.forEach(escala => {
+                    if (!escalasOriginais[escala.funcionarioId]) {
+                        escalasOriginais[escala.funcionarioId] = [];
+                    }
+                    escalasOriginais[escala.funcionarioId].push(escala);
+                });
+
+                // Ordenar escalas por data
+                Object.keys(escalasOriginais).forEach(funcionarioId => {
+                    escalasOriginais[funcionarioId].sort((a, b) => 
+                        new Date(a.dataEmbarque) - new Date(b.dataEmbarque)
+                    );
+                });
+
+                renderizarFuncionarios();
+                renderizarEstatisticas();
+
+            } catch (error) {
+                console.error('Erro ao carregar dados:', error);
+                mostrarErro('Erro ao carregar dados: ' + error.message);
+            } finally {
+                mostrarLoading(false);
+            }
+        }
+
+        function renderizarEstatisticas() {
+            const totalFuncionarios = funcionarios.length;
+            const totalEscalas = Object.values(escalasOriginais).flat().length;
+            const escalasAtivas = Object.values(escalasOriginais).flat().filter(e => e.ativo).length;
+            const funcionariosComEscala = Object.keys(escalasOriginais).length;
+
+            statsGrid.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-number">${totalFuncionarios}</div>
+                    <div class="stat-label">Funcionários</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${totalEscalas}</div>
+                    <div class="stat-label">Total Escalas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${escalasAtivas}</div>
+                    <div class="stat-label">Escalas Ativas</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">${funcionariosComEscala}</div>
+                    <div class="stat-label">Com Escalas</div>
+                </div>
+            `;
+        }
+
+        function renderizarFuncionarios() {
+            funcionarioGrid.innerHTML = funcionarios.map(funcionario => {
+                const escalasCount = escalasOriginais[funcionario.id]?.length || 0;
+                const escalasAtivas = escalasOriginais[funcionario.id]?.filter(e => e.ativo).length || 0;
+                
+                return `
+                    <div class="funcionario-card" onclick="selecionarFuncionario(${funcionario.id})">
+                        <div class="funcionario-name">${funcionario.nome}</div>
+                        <div class="funcionario-info">
+                            ${funcionario.cargo}<br>
+                            ${escalasCount} escalas (${escalasAtivas} ativas)
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function selecionarFuncionario(funcionarioId) {
+            funcionarioSelecionado = funcionarioId;
+            
+            // Atualizar seleção visual
+            document.querySelectorAll('.funcionario-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.target.closest('.funcionario-card').classList.add('selected');
+
+            // Carregar escalas do funcionário
+            const funcionario = funcionarios.find(f => f.id === funcionarioId);
+            editorTitle.textContent = `Editando Escalas: ${funcionario.nome}`;
+            editorSubtitle.textContent = `${funcionario.cargo} - SAP ID: ${funcionario.sapid}`;
+
+            renderizarEscalasFuncionario();
+            escalaEditor.classList.add('active');
+        }
+
+        function renderizarEscalasFuncionario() {
+            const escalas = escalasOriginais[funcionarioSelecionado] || [];
+            
+            escalasContainer.innerHTML = escalas.map((escala, index) => `
+                <div class="escala-item" data-escala-id="${escala.id}">
+                    <div class="escala-header">
+                        <div class="escala-number">Escala ${index + 1}</div>
+                        <button class="delete-escala" onclick="removerEscala(${escala.id})">
+                            🗑️ Remover
+                        </button>
+                    </div>
+                    
+                    <div class="escala-fields">
+                        <div class="field-group">
+                            <label class="field-label">Data Embarque</label>
+                            <input type="date" class="field-input" 
+                                   value="${escala.dataEmbarque}"
+                                   onchange="atualizarEscala(${escala.id}, 'dataEmbarque', this.value)">
+                        </div>
+                        
+                        <div class="field-group">
+                            <label class="field-label">Data Desembarque</label>
+                            <input type="date" class="field-input" 
+                                   value="${escala.dataDesembarque}"
+                                   onchange="atualizarEscala(${escala.id}, 'dataDesembarque', this.value)">
+                        </div>
+                        
+                        <div class="field-group">
+                            <label class="field-label">Status</label>
+                            <select class="field-input" 
+                                    onchange="atualizarEscala(${escala.id}, 'ativo', this.value === 'true')">
+                                <option value="true" ${escala.ativo ? 'selected' : ''}>Ativa</option>
+                                <option value="false" ${!escala.ativo ? 'selected' : ''}>Inativa</option>
+                            </select>
+                        </div>
+                        
+                        <div class="field-group">
+                            <label class="field-label">Renovação</label>
+                            <select class="field-input" 
+                                    onchange="atualizarEscala(${escala.id}, 'renovacaoAutomatica', this.value === 'true')">
+                                <option value="true" ${escala.renovacaoAutomatica ? 'selected' : ''}>Auto</option>
+                                <option value="false" ${!escala.renovacaoAutomatica ? 'selected' : ''}>Manual</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function atualizarEscala(escalaId, campo, valor) {
+            const escalas = escalasOriginais[funcionarioSelecionado];
+            const escala = escalas.find(e => e.id === escalaId);
+            
+            if (escala) {
+                escala[campo] = valor;
+                
+                // Validar período de 14 dias se ambas as datas estão definidas
+                if (campo === 'dataEmbarque' || campo === 'dataDesembarque') {
+                    if (escala.dataEmbarque && escala.dataDesembarque) {
+                        const embarque = new Date(escala.dataEmbarque);
+                        const desembarque = new Date(escala.dataDesembarque);
+                        const diferencaDias = Math.ceil((desembarque - embarque) / (1000 * 60 * 60 * 24));
+                        
+                        if (diferencaDias !== 13) {
+                            mostrarErro(`Atenção: Escala deve ter exatamente 14 dias. Atual: ${diferencaDias + 1} dias.`);
+                        }
+                    }
+                }
+            }
+        }
+
+        function adicionarNovaEscala() {
+            if (!funcionarioSelecionado) return;
+
+            const novaEscala = {
+                id: proximoTempId--,
+                funcionarioId: funcionarioSelecionado,
+                dataEmbarque: '',
+                dataDesembarque: '',
+                ativo: true,
+                renovacaoAutomatica: true,
+                nova: true
+            };
+
+            if (!escalasOriginais[funcionarioSelecionado]) {
+                escalasOriginais[funcionarioSelecionado] = [];
+            }
+            
+            escalasOriginais[funcionarioSelecionado].push(novaEscala);
+            renderizarEscalasFuncionario();
+        }
+
+        async function removerEscala(escalaId) {
+            if (!confirm('Tem certeza que deseja remover esta escala?')) return;
+
+            try {
+                if (escalaId > 0) {
+                    // Escala existente no servidor
+                    await fazerRequisicao(`/escalas/funcionario/${funcionarioSelecionado}/escala/${escalaId}`, {
+                        method: 'DELETE'
+                    });
+                }
+
+                // Remover do array local
+                escalasOriginais[funcionarioSelecionado] = escalasOriginais[funcionarioSelecionado]
+                    .filter(e => e.id !== escalaId);
+                
+                renderizarEscalasFuncionario();
+                mostrarSucesso('Escala removida com sucesso!');
+
+            } catch (error) {
+                console.error('Erro ao remover escala:', error);
+                mostrarErro('Erro ao remover escala: ' + error.message);
+            }
+        }
+
+        async function salvarEscalasFuncionario() {
+            if (!funcionarioSelecionado) return;
+
+            try {
+                mostrarLoading(true);
+                
+                const escalas = escalasOriginais[funcionarioSelecionado] || [];
+                const escalasParaSalvar = escalas.map(escala => ({
+                    id: escala.id > 0 ? escala.id : undefined,
+                    dataEmbarque: escala.dataEmbarque,
+                    dataDesembarque: escala.dataDesembarque,
+                    ativo: escala.ativo,
+                    renovacaoAutomatica: escala.renovacaoAutomatica
+                })).filter(escala => escala.dataEmbarque && escala.dataDesembarque);
+
+                await fazerRequisicao(`/escalas/funcionario/${funcionarioSelecionado}/batch`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ escalas: escalasParaSalvar })
+                });
+
+                mostrarSucesso('Escalas salvas com sucesso!');
+                
+                // Recarregar dados para sincronizar
+                await carregarDados();
+                
+                // Reselecionar funcionário
+                if (funcionarioSelecionado) {
+                    selecionarFuncionario(funcionarioSelecionado);
+                }
+
+            } catch (error) {
+                console.error('Erro ao salvar escalas:', error);
+                mostrarErro('Erro ao salvar escalas: ' + error.message);
+            } finally {
+                mostrarLoading(false);
+            }
+        }
+
+        async function salvarTodasEscalas() {
+            if (!confirm('Salvar alterações de todos os funcionários? Esta ação não pode ser desfeita.')) return;
+
+            try {
+                mostrarLoading(true);
+                let sucessos = 0;
+                let erros = 0;
+
+                for (const funcionarioId in escalasOriginais) {
+                    try {
+                        const escalas = escalasOriginais[funcionarioId];
+                        const escalasParaSalvar = escalas.map(escala => ({
+                            id: escala.id > 0 ? escala.id : undefined,
+                            dataEmbarque: escala.dataEmbarque,
+                            dataDesembarque: escala.dataDesembarque,
+                            ativo: escala.ativo,
+                            renovacaoAutomatica: escala.renovacaoAutomatica
+                        })).filter(escala => escala.dataEmbarque && escala.dataDesembarque);
+
+                        if (escalasParaSalvar.length > 0) {
+                            await fazerRequisicao(`/escalas/funcionario/${funcionarioId}/batch`, {
+                                method: 'PUT',
+                                body: JSON.stringify({ escalas: escalasParaSalvar })
+                            });
+                            sucessos++;
+                        }
+                    } catch (error) {
+                        console.error(`Erro ao salvar funcionário ${funcionarioId}:`, error);
+                        erros++;
+                    }
+                }
+
+                if (sucessos > 0) {
+                    mostrarSucesso(`${sucessos} funcionário(s) salvos com sucesso! ${erros > 0 ? `${erros} erro(s).` : ''}`);
+                }
+                
+                if (erros > 0 && sucessos === 0) {
+                    mostrarErro(`Erro ao salvar. ${erros} funcionário(s) com problemas.`);
+                }
+
+                // Recarregar dados
+                await carregarDados();
+
+            } catch (error) {
+                console.error('Erro geral:', error);
+                mostrarErro('Erro ao salvar todas as escalas: ' + error.message);
+            } finally {
+                mostrarLoading(false);
+            }
+        }
+    </script>
+</body>
+</html>

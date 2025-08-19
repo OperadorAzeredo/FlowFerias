@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Histórico de Escalas</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            padding: 20px; 
+            background: #f5f5f5; 
+        }
+        .container { 
+            max-width: 800px; 
+            margin: 0 auto; 
+            background: white; 
+            padding: 20px; 
+            border-radius: 8px; 
+        }
+        .form-group { 
+            margin-bottom: 15px; 
+        }
+        label { 
+            display: block; 
+            margin-bottom: 5px; 
+            font-weight: bold; 
+        }
+        input, select { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ddd; 
+            border-radius: 4px; 
+        }
+        button { 
+            background: #007bff; 
+            color: white; 
+            padding: 10px 20px; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .escala-item {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .escala-ativa {
+            border-left: 4px solid #28a745;
+        }
+        .escala-inativa {
+            border-left: 4px solid #dc3545;
+            opacity: 0.7;
+        }
+        .message { 
+            padding: 10px; 
+            margin: 10px 0; 
+            border-radius: 4px; 
+        }
+        .error { 
+            background: #f8d7da; 
+            color: #721c24; 
+            border: 1px solid #f5c6cb; 
+        }
+        .success { 
+            background: #d4edda; 
+            color: #155724; 
+            border: 1px solid #c3e6cb; 
+        }
+        .debug-info {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: monospace;
+            white-space: pre-wrap;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧪 Teste - Histórico de Escalas</h1>
+        
+        <div id="message"></div>
+        
+        <div class="form-group">
+            <label for="funcionario-select">Selecionar Funcionário:</label>
+            <select id="funcionario-select">
+                <option value="">Carregando funcionários...</option>
+            </select>
+        </div>
+        
+        <div style="margin: 20px 0;">
+            <button onclick="cadastrarEscalaTeste()">Cadastrar Escala de Teste</button>
+            <button onclick="carregarHistorico()">Carregar Histórico</button>
+            <button onclick="listarTodasEscalas()">Listar Todas as Escalas</button>
+            <button onclick="testarAPI()">Testar API</button>
+        </div>
+        
+        <div id="debug-info" class="debug-info"></div>
+        
+        <h3>📊 Histórico de Escalas</h3>
+        <div id="escalas-container">
+            <p>Selecione um funcionário e clique em "Carregar Histórico"</p>
+        </div>
+        
+        <h3>📋 Todas as Escalas</h3>
+        <div id="todas-escalas-container">
+            <p>Clique em "Listar Todas as Escalas" para ver</p>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001/api';
+        let funcionarios = [];
+        let funcionarioSelecionado = null;
+        
+        function showMessage(message, type) {
+            const messageEl = document.getElementById('message');
+            messageEl.className = `message ${type}`;
+            messageEl.textContent = message;
+        }
+        
+        function showDebugInfo(info) {
+            document.getElementById('debug-info').textContent = JSON.stringify(info, null, 2);
+        }
+        
+        function formatDateBR(date) {
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        }
+        
+        // Carregar funcionários
+        async function carregarFuncionarios() {
+            try {
+                const response = await fetch(`${API_BASE}/funcionarios`);
+                if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+                
+                funcionarios = await response.json();
+                
+                const select = document.getElementById('funcionario-select');
+                select.innerHTML = '<option value="">Selecione um funcionário</option>';
+                
+                funcionarios.forEach(func => {
+                    const option = document.createElement('option');
+                    option.value = func.id;
+                    option.textContent = `${func.id} - ${func.nome}`;
+                    select.appendChild(option);
+                });
+                
+                showMessage(`${funcionarios.length} funcionários carregados!`, 'success');
+                
+            } catch (error) {
+                showMessage(`Erro ao carregar funcionários: ${error.message}`, 'error');
+                showDebugInfo({ error: error.message });
+            }
+        }
+        
+        // Testar conexão com API
+        async function testarAPI() {
+            try {
+                const response = await fetch(`${API_BASE}/status`);
+                if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
+                
+                const status = await response.json();
+                showDebugInfo(status);
+                showMessage('✅ API funcionando corretamente!', 'success');
+                
+            } catch (error) {
+                showMessage(`❌ Erro na API: ${error.message}`, 'error');
+                showDebugInfo({ error: error.message });
+            }
+        }
+        
+        // Cadastrar escala de teste
+        async function cadastrarEscalaTeste() {
+            const select = document.getElementById('funcionario-select');
+            const funcionarioId = parseInt(select.value);
+            
+            if (!funcionarioId) {
+                showMessage('Selecione um funcionário primeiro', 'error');
+                return;
+            }
+            
+            // Datas de teste (hoje + 14 dias)
+            const hoje = new Date();
+            const embarque = new Date(hoje);
+            embarque.setDate(hoje.getDate() + 1); // Amanhã
+            
+            const desembarque = new Date(embarque);
+            desembarque.setDate(embarque.getDate() + 13); // 14 dias de trabalho
+            
+            const dadosEscala = {
+                funcionarioId,
+                dataEmbarque: embarque.toISOString().split('T')[0],
+                dataDesembarque: desembarque.toISOString().split('T')[0]
+            };
+            
+            try {
+                showMessage('Cadastrando escala de teste...', 'success');
+                showDebugInfo({ message: 'Enviando dados', dados: dadosEscala });
+                
+                const response = await fetch(`${API_BASE}/escalas`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(dadosEscala)
+                });
+                
+                const resultado = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(resultado.erro || `Erro HTTP: ${response.status}`);
+                }
+                
+                showMessage('✅ Escala cadastrada com sucesso!', 'success');
+                showDebugInfo({ message: 'Escala criada', resultado });
+                
+                // Recarregar histórico automaticamente
+                if (funcionarioSelecionado && funcionarioSelecionado.id === funcionarioId) {
+                    setTimeout(carregarHistorico, 1000);
+                }
+                
+            } catch (error) {
+                showMessage(`❌ Erro ao cadastrar escala: ${error.message}`, 'error');
+                showDebugInfo({ error: error.message });
+            }
+        }
+        
+        // Carregar histórico de escalas do funcionário selecionado
+        async function carregarHistorico() {
+            const select = document.getElementById('funcionario-select');
+            const funcionarioId = parseInt(select.value);
+            
+            if (!funcionarioId) {
+                showMessage('Selecione um funcionário primeiro', 'error');
+                return;
+            }
+            
+            funcionarioSelecionado = funcionarios.find(f => f.id === funcionarioId);
+            
+            try {
+                showMessage('Carregando histórico de escalas...', 'success');
+                
+                // URL corrigida
+                const url = `${API_BASE}/escalas/funcionario/${funcionarioId}`;
+                showDebugInfo({ message: 'Fazendo requisição para', url });
+                
+                const response = await fetch(url);
+                
+                showDebugInfo({ 
+                    message: 'Resposta recebida',
+                    status: response.status,
+                    ok: response.ok,
+                    url
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP: ${response.status}`);
+                }
+                
+                const escalas = await response.json();
+                
+                showDebugInfo({ 
+                    message: 'Escalas carregadas',
+                    quantidade: escalas.length,
+                    escalas
+                });
+                
+                renderizarEscalas(escalas);
+                showMessage(`✅ ${escalas.length} escalas carregadas para ${funcionarioSelecionado.nome}!`, 'success');
+                
+            } catch (error) {
+                showMessage(`❌ Erro ao carregar histórico: ${error.message}`, 'error');
+                showDebugInfo({ error: error.message });
+                document.getElementById('escalas-container').innerHTML = 
+                    `<div class="error">Erro ao carregar escalas: ${error.message}</div>`;
+            }
+        }
+        
+        // Renderizar escalas na interface
+        function renderizarEscalas(escalas) {
+            const container = document.getElementById('escalas-container');
+            
+            if (escalas.length === 0) {
+                container.innerHTML = '<p>Nenhuma escala encontrada para este funcionário.</p>';
+                return;
+            }
+            
+            let html = '';
+            escalas.forEach(escala => {
+                const status = escala.ativo ? 'Ativa' : 'Inativa';
+                const cssClass = escala.ativo ? 'escala-ativa' : 'escala-inativa';
+                
+                html += `
+                    <div class="escala-item ${cssClass}">
+                        <strong>ID:</strong> ${escala.id} | 
+                        <strong>Status:</strong> ${status}<br>
+                        <strong>Embarque:</strong> ${formatDateBR(new Date(escala.dataEmbarque))} | 
+                        <strong>Desembarque:</strong> ${formatDateBR(new Date(escala.dataDesembarque))}<br>
+                        <strong>Funcionário:</strong> ${escala.funcionarioNome || funcionarioSelecionado.nome}<br>
+                        <strong>Cadastro:</strong> ${formatDateBR(new Date(escala.dataCadastro))}
+                        ${escala.renovacaoAutomatica ? ' | 🔄 Renovação Automática' : ''}
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Listar todas as escalas
+        async function listarTodasEscalas() {
+            try {
+                showMessage('Carregando todas as escalas...', 'success');
+                
+                const response = await fetch(`${API_BASE}/escalas`);
+                
+                if (!response.ok) {
+                    throw new Error(`Erro HTTP: ${response.status}`);
+                }
+                
+                const todasEscalas = await response.json();
+                
+                showDebugInfo({ 
+                    message: 'Todas as escalas',
+                    quantidade: todasEscalas.length,
+                    escalas: todasEscalas
+                });
+                
+                const container = document.getElementById('todas-escalas-container');
+                
+                if (todasEscalas.length === 0) {
+                    container.innerHTML = '<p>Nenhuma escala encontrada no sistema.</p>';
+                    return;
+                }
+                
+                let html = '';
+                todasEscalas.forEach(escala => {
+                    const status = escala.ativo ? 'Ativa' : 'Inativa';
+                    const cssClass = escala.ativo ? 'escala-ativa' : 'escala-inativa';
+                    
+                    html += `
+                        <div class="escala-item ${cssClass}">
+                            <strong>ID:</strong> ${escala.id} | 
+                            <strong>Status:</strong> ${status}<br>
+                            <strong>Funcionário:</strong> ${escala.funcionarioNome} (ID: ${escala.funcionarioId})<br>
+                            <strong>Embarque:</strong> ${formatDateBR(new Date(escala.dataEmbarque))} | 
+                            <strong>Desembarque:</strong> ${formatDateBR(new Date(escala.dataDesembarque))}<br>
+                            <strong>Cadastro:</strong> ${formatDateBR(new Date(escala.dataCadastro))}
+                            ${escala.renovacaoAutomatica ? ' | 🔄 Renovação Automática' : ''}
+                        </div>
+                    `;
+                });
+                
+                container.innerHTML = html;
+                showMessage(`✅ ${todasEscalas.length} escalas encontradas no sistema!`, 'success');
+                
+            } catch (error) {
+                showMessage(`❌ Erro ao listar todas as escalas: ${error.message}`, 'error');
+                showDebugInfo({ error: error.message });
+            }
+        }
+        
+        // Event listener para seleção de funcionário
+        document.getElementById('funcionario-select').addEventListener('change', (e) => {
+            const funcionarioId = parseInt(e.target.value);
+            funcionarioSelecionado = funcionarios.find(f => f.id === funcionarioId);
+            
+            if (funcionarioSelecionado) {
+                showMessage(`Funcionário selecionado: ${funcionarioSelecionado.nome}`, 'success');
+            }
+        });
+        
+        // Carregar dados iniciais
+        window.addEventListener('load', () => {
+            testarAPI();
+            carregarFuncionarios();
+        });
+    </script>
+</body>
+</html>

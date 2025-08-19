@@ -1,0 +1,2291 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flow Férias - Painel do Supervisor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --berkeley-blue: #1E3A5F;
+      --pacific-cyan: #25A3C1;
+      --yellow-green: #94C849;
+      --carrot-orange: #F3921F;
+      --butterscotch: #D89A48;
+      --white: #FFFFFF;
+      --light-gray: #F8F9FA;
+      --medium-gray: #E9ECEF;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--light-gray);
+      min-height: 100vh;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--carrot-orange) 0%, var(--butterscotch) 100%);
+      color: white;
+      padding: 1.5rem 0;
+      box-shadow: 0 2px 10px rgba(243, 146, 31, 0.2);
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-img {
+      height: 40px;
+      width: 120px;
+      display: block;
+    }
+
+    .logo-flow {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      height: 40px;
+    }
+
+    .wave-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      width: 30px;
+    }
+
+    .wave {
+      height: 3px;
+      border-radius: 2px;
+      animation: wave-flow 2s ease-in-out infinite;
+    }
+
+    .wave1 {
+      background: var(--pacific-cyan);
+      width: 25px;
+      animation-delay: 0s;
+    }
+
+    .wave2 {
+      background: var(--yellow-green);
+      width: 20px;
+      animation-delay: 0.3s;
+    }
+
+    .wave3 {
+      background: var(--carrot-orange);
+      width: 15px;
+      animation-delay: 0.6s;
+    }
+
+    .flow-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .flow-main {
+      font-size: 16px;
+      font-weight: 700;
+      font-family: 'Poppins', sans-serif;
+      color: white;
+    }
+
+    .flow-sub {
+      font-size: 10px;
+      font-weight: 500;
+      font-family: 'Poppins', sans-serif;
+      color: var(--pacific-cyan);
+      margin-top: 2px;
+    }
+
+    @keyframes wave-flow {
+      0%, 100% { transform: scaleX(1); opacity: 0.7; }
+      50% { transform: scaleX(1.2); opacity: 1; }
+    }
+
+    .logo-text {
+      font-size: 1.5rem;
+      font-weight: 600;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .back-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.3s ease;
+    }
+
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+
+    .stat-label {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .pendentes {
+      color: #f39c12;
+    }
+
+    .aprovadas {
+      color: #27ae60;
+    }
+
+    .rejeitadas {
+      color: #e74c3c;
+    }
+
+    .section {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+
+    .section-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      color: var(--berkeley-blue);
+      border-bottom: 2px solid var(--yellow-green);
+      padding-bottom: 0.5rem;
+    }
+
+    .solicitacoes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .solicitacao-card {
+      border: 1px solid #e1e8ed;
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: transform 0.2s ease;
+    }
+
+    .solicitacao-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .solicitacao-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .funcionario-nome {
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    .status-badge {
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .status-pendente {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status-aprovada {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status-rejeitada {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .solicitacao-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .detail-label {
+      font-size: 0.8rem;
+      color: #666;
+      margin-bottom: 0.2rem;
+    }
+
+    .detail-value {
+      font-weight: 500;
+      color: #333;
+    }
+
+    .actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-aprovar {
+      background: #27ae60;
+      color: white;
+    }
+
+    .btn-aprovar:hover {
+      background: #229954;
+    }
+
+    .btn-rejeitar {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .btn-rejeitar:hover {
+      background: #c0392b;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    /* Estilos para Cobertura de Férias */
+    .cobertura-card {
+      border: 1px solid #e1e8ed;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      background: #f8f9fa;
+    }
+
+    .cobertura-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .cobertura-info {
+      flex: 1;
+    }
+
+    .cobertura-funcionario {
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 0.5rem;
+    }
+
+    .cobertura-periodo {
+      color: #666;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .cobertura-atual {
+      color: #43e97b;
+      font-weight: 500;
+    }
+
+    .cobertura-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .select-cobertura {
+      padding: 0.5rem;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      min-width: 150px;
+    }
+
+    .btn-definir-cobertura {
+      background: #3498db;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .btn-definir-cobertura:hover {
+      background: #2980b9;
+    }
+
+    .btn-editar-cobertura {
+      background: #f39c12;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .btn-editar-cobertura:hover {
+      background: #e67e22;
+    }
+
+    .btn-definir-cobertura-inteligente {
+      background: #9b59b6;
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .btn-definir-cobertura-inteligente:hover {
+      background: #8e44ad;
+    }
+
+    .btn-remover-cobertura {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      margin-left: 0.5rem;
+    }
+
+    .btn-remover-cobertura:hover {
+      background: #c0392b;
+    }
+
+    .cobertura-definida {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .funcionarios-cobertura {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .funcionario-tag {
+      background: #ecf0f1;
+      color: #2c3e50;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      border: 1px solid #bdc3c7;
+    }
+
+    /* Modal do Selector de Cobertura */
+    .cobertura-modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .cobertura-modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      padding: 2rem;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .cobertura-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid #ecf0f1;
+    }
+
+    .cobertura-modal-header h2 {
+      margin: 0;
+      color: #2c3e50;
+    }
+
+    .close-modal {
+      color: #aaa;
+      font-size: 2rem;
+      font-weight: bold;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .close-modal:hover {
+      color: #000;
+    }
+
+    .sugestao-section {
+      margin-bottom: 2rem;
+    }
+
+    .sugestao-section h3 {
+      color: #3498db;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .sugestao-otima {
+      background: #e8f5e8;
+      border: 2px solid #27ae60;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .sugestao-item {
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .funcionario-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .funcionario-nome {
+      font-weight: 500;
+      color: #2c3e50;
+    }
+
+    .funcionario-detalhes {
+      font-size: 0.85rem;
+      color: #7f8c8d;
+    }
+
+    .dias-badge {
+      background: #3498db;
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .limitacao-badge {
+      background: #e74c3c;
+      color: white;
+      padding: 0.25rem 0.5rem;
+      border-radius: 12px;
+      font-size: 0.8rem;
+    }
+
+    .selector-manual {
+      margin-top: 2rem;
+      padding-top: 2rem;
+      border-top: 2px solid #ecf0f1;
+    }
+
+    .funcionarios-disponiveis {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .funcionario-card {
+      border: 2px solid #ecf0f1;
+      border-radius: 8px;
+      padding: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .funcionario-card:hover {
+      border-color: #3498db;
+    }
+
+    .funcionario-card.selected {
+      border-color: #27ae60;
+      background: #e8f5e8;
+    }
+
+    .funcionario-card.limitado {
+      border-color: #e74c3c;
+      background: #fdf2f2;
+    }
+
+    .funcionarios-selecionados {
+      background: #f8f9fa;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .funcionarios-selecionados h4 {
+      margin: 0 0 0.5rem 0;
+      color: #2c3e50;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn-modal {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      background: #3498db;
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: #2980b9;
+    }
+
+    .btn-secondary {
+      background: #95a5a6;
+      color: white;
+    }
+
+    .btn-secondary:hover {
+      background: #7f8c8d;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #666;
+    }
+
+    /* Estilos do Calendário */
+    .legend-container {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+
+    .legend-container h3 {
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .legend {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .legend-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+      border: 2px solid #ddd;
+    }
+
+    .legend-color.pendente {
+      background: #fff3cd;
+      border-color: #ffeaa7;
+    }
+
+    .legend-color.aprovada {
+      background: #d4edda;
+      border-color: #00b894;
+    }
+
+    .legend-color.rejeitada {
+      background: #f8d7da;
+      border-color: #e17055;
+    }
+
+    .legend-color.hoje {
+      background: #e3f2fd;
+      border-color: #2196F3;
+    }
+
+    .calendar-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      padding: 1rem 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+
+    .calendar-nav-btn {
+      background: #FF0000;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background 0.3s ease;
+    }
+
+    .calendar-nav-btn:hover {
+      background: #E60000;
+    }
+
+    #calendar-title {
+      font-size: 1.5rem;
+      color: #333;
+      margin: 0;
+    }
+
+    .calendar-section {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+
+    .calendar-container {
+      max-width: 100%;
+      overflow-x: auto;
+    }
+
+    .calendar-header {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1px;
+      margin-bottom: 1px;
+    }
+
+    .calendar-day-header {
+      background: #f8f9fa;
+      padding: 1rem;
+      text-align: center;
+      font-weight: bold;
+      color: #495057;
+      border-radius: 4px 4px 0 0;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1px;
+      background: #dee2e6;
+    }
+
+    .calendar-day {
+      background: white;
+      min-height: 120px;
+      padding: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      border-radius: 0;
+    }
+
+    .calendar-day:hover {
+      background: #f8f9fa;
+      transform: scale(1.02);
+      z-index: 1;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .calendar-day.other-month {
+      background: #f8f9fa;
+      color: #adb5bd;
+    }
+
+    .calendar-day.today {
+      background: #e3f2fd;
+      border: 2px solid #2196F3;
+    }
+
+    .calendar-day.selected {
+      background: #fff3e0;
+      border: 2px solid #ff9800;
+    }
+
+    .day-number {
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .day-events {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .day-event {
+      font-size: 0.75rem;
+      padding: 2px 4px;
+      border-radius: 3px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+
+    .day-event.pendente {
+      background: #fff3cd;
+      color: #856404;
+      border-left: 3px solid #ffc107;
+    }
+
+    .day-event.aprovada {
+      background: #d4edda;
+      color: #155724;
+      border-left: 3px solid #28a745;
+    }
+
+    .day-event.rejeitada {
+      background: #f8d7da;
+      color: #721c24;
+      border-left: 3px solid #dc3545;
+    }
+
+    .selection-details {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+
+    .selection-details h3 {
+      margin-bottom: 1rem;
+      color: #333;
+      border-bottom: 2px solid #FF0000;
+      padding-bottom: 0.5rem;
+    }
+
+    .day-detail-card {
+      border: 1px solid #e1e8ed;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      transition: transform 0.2s ease;
+    }
+
+    .day-detail-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .detail-funcionario {
+      font-weight: bold;
+      font-size: 1.1rem;
+      color: #333;
+    }
+
+    .detail-periodo {
+      color: #666;
+      margin-bottom: 0.5rem;
+    }
+
+    .detail-motivo {
+      color: #333;
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+
+    .detail-actions {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .btn-calendar-aprovar {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-calendar-aprovar:hover {
+      background: #218838;
+    }
+
+    .btn-calendar-rejeitar {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .btn-calendar-rejeitar:hover {
+      background: #c82333;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+    }
+
+    .error-message {
+      background: #f8d7da;
+      color: #721c24;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      border: 1px solid #f5c6cb;
+    }
+
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 1rem;
+      border-radius: 6px;
+      margin-bottom: 1rem;
+      border: 1px solid #c3e6cb;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .modal {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      transform: scale(0.7);
+      transition: transform 0.3s ease;
+    }
+
+    .modal-overlay.active .modal {
+      transform: scale(1);
+    }
+
+    .modal-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .modal-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .modal-message {
+      color: #666;
+      margin-bottom: 2rem;
+      line-height: 1.5;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+    }
+
+    .modal-btn {
+      padding: 0.7rem 1.5rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      min-width: 80px;
+    }
+
+    .modal-btn-primary {
+      background: #667eea;
+      color: white;
+    }
+
+    .modal-btn-primary:hover {
+      background: #5a6fd8;
+    }
+
+    .modal-btn-success {
+      background: #27ae60;
+      color: white;
+    }
+
+    .modal-btn-success:hover {
+      background: #229954;
+    }
+
+    .modal-btn-danger {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .modal-btn-danger:hover {
+      background: #c0392b;
+    }
+
+    .modal-btn-secondary {
+      background: #6c757d;
+      color: white;
+    }
+
+    .modal-btn-secondary:hover {
+      background: #5a6268;
+    }
+
+    .modal.error .modal-icon {
+      color: #e74c3c;
+    }
+
+    .modal.success .modal-icon {
+      color: #27ae60;
+    }
+
+    .modal.warning .modal-icon {
+      color: #f39c12;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <div class="header-content">
+      <div class="logo-container">
+        <div class="logo-flow">
+          <div class="wave-container">
+            <div class="wave wave1"></div>
+            <div class="wave wave2"></div>
+            <div class="wave wave3"></div>
+          </div>
+          <div class="flow-text">
+            <span class="flow-main">Flow</span>
+            <span class="flow-sub">Férias</span>
+          </div>
+        </div>
+        <span class="logo-text">Painel do Supervisor</span>
+      </div>
+      <div class="user-info">
+        <span id="supervisor-nome">Supervisor</span>
+        <button class="back-btn" onclick="logout()">🚪 Sair</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- Menu de Navegação -->
+    <div style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+      <h3 style="margin-bottom: 15px; color: #333;">🎯 Ações do Supervisor</h3>
+      <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+        <button onclick="window.location.href='/editar-escalas.html'" 
+                style="background: #FF0000; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;"
+                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(0,0,0,0.2)'"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+          📅 Editar Escalas dos Funcionários
+        </button>
+        <button onclick="mostrarRelatorioCoberturas()" 
+                style="background: #4facfe; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;"
+                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(0,0,0,0.2)'"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+          📊 Relatório de Coberturas
+        </button>
+        <button onclick="atualizarDados()" 
+                style="background: #48bb78; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;"
+                onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(0,0,0,0.2)'"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+          🔄 Atualizar Dados
+        </button>
+      </div>
+    </div>
+
+    <div class="stats" id="stats">
+      <div class="stat-card">
+        <div class="stat-number pendentes" id="pendentes-count">-</div>
+        <div class="stat-label">Solicitações Pendentes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number aprovadas" id="aprovadas-count">-</div>
+        <div class="stat-label">Férias Aprovadas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number rejeitadas" id="rejeitadas-count">-</div>
+        <div class="stat-label">Solicitações Rejeitadas</div>
+      </div>
+    </div>
+
+    <!-- Legenda do Calendário -->
+    <div class="legend-container">
+      <h3>📋 Legenda do Calendário</h3>
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-color pendente"></div>
+          <span>Férias Pendentes</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color aprovada"></div>
+          <span>Férias Aprovadas</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color rejeitada"></div>
+          <span>Férias Rejeitadas</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color hoje"></div>
+          <span>Hoje</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controles do Calendário -->
+    <div class="calendar-controls">
+      <button class="calendar-nav-btn" onclick="previousMonth()">‹ Anterior</button>
+      <h2 id="calendar-title">Janeiro 2025</h2>
+      <button class="calendar-nav-btn" onclick="nextMonth()">Próximo ›</button>
+    </div>
+
+    <!-- Calendário Principal -->
+    <div class="calendar-section">
+      <div class="calendar-container">
+        <div class="calendar-header">
+          <div class="calendar-day-header">Dom</div>
+          <div class="calendar-day-header">Seg</div>
+          <div class="calendar-day-header">Ter</div>
+          <div class="calendar-day-header">Qua</div>
+          <div class="calendar-day-header">Qui</div>
+          <div class="calendar-day-header">Sex</div>
+          <div class="calendar-day-header">Sáb</div>
+        </div>
+        <div class="calendar-grid" id="calendar-grid">
+          <!-- Dias do calendário serão gerados dinamicamente -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Detalhes da Seleção -->
+    <div class="selection-details" id="selection-details" style="display: none;">
+      <h3>📅 Detalhes do Dia</h3>
+      <div id="date-details">
+        <!-- Conteúdo será preenchido dinamicamente -->
+      </div>
+    </div>
+
+    <!-- Lista de Solicitações (Formato Tradicional) -->
+    <div class="section">
+      <h2 class="section-title">📋 Solicitações de Férias</h2>
+      <div id="solicitacoes-container" class="loading">
+        Carregando solicitações...
+      </div>
+    </div>
+
+    <!-- Seção de Cobertura (mantida) -->
+    <div class="section">
+      <h2 class="section-title">🔄 Cobertura de Férias</h2>
+      <div id="cobertura-message"></div>
+      <div id="coberturas-container" class="loading">
+        Carregando coberturas...
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal do Selector de Cobertura -->
+  <div id="cobertura-modal" class="cobertura-modal">
+    <div class="cobertura-modal-content">
+      <div class="cobertura-modal-header">
+        <h2>🧠 Cobertura Inteligente de Férias</h2>
+        <span class="close-modal" onclick="fecharSelectorCobertura()">&times;</span>
+      </div>
+      
+      <div id="loading-sugestoes" style="text-align: center; padding: 2rem;">
+        <div>🔄 Analisando disponibilidade dos funcionários...</div>
+      </div>
+      
+      <div id="conteudo-sugestoes" style="display: none;">
+        <!-- Sugestão Ótima -->
+        <div class="sugestao-section">
+          <h3>⭐ Sugestão Ótima do Sistema</h3>
+          <div id="sugestao-otima-container"></div>
+          <button id="btn-aplicar-sugestao" class="btn-modal btn-primary" onclick="aplicarSugestaoOtima()">
+            ✨ Aplicar Sugestão Ótima
+          </button>
+        </div>
+
+        <!-- Seleção Manual -->
+        <div class="selector-manual">
+          <h3>🎯 Ou Selecione Manualmente (até 3 funcionários)</h3>
+          
+          <div class="funcionarios-selecionados" id="funcionarios-selecionados-display" style="display: none;">
+            <h4>Funcionários Selecionados:</h4>
+            <div id="lista-selecionados"></div>
+            <div id="resumo-cobertura"></div>
+          </div>
+          
+          <div class="funcionarios-disponiveis" id="funcionarios-disponiveis">
+            <!-- Funcionários serão carregados aqui -->
+          </div>
+          
+          <div class="modal-actions">
+            <button class="btn-modal btn-secondary" onclick="fecharSelectorCobertura()">
+              Cancelar
+            </button>
+            <button id="btn-aplicar-manual" class="btn-modal btn-primary" onclick="aplicarSelecaoManual()" disabled>
+              Aplicar Seleção Manual
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modais -->
+  <div id="modal-overlay" class="modal-overlay">
+    <div id="modal" class="modal">
+      <div id="modal-icon" class="modal-icon"></div>
+      <div id="modal-title" class="modal-title"></div>
+      <div id="modal-message" class="modal-message"></div>
+      <div id="modal-buttons" class="modal-buttons"></div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:3002/api';
+
+    let solicitacoes = [];
+    let coberturas = [];
+    let funcionarios = [];
+
+    // Variáveis do calendário
+    let currentDate = new Date();
+    let selectedDate = null;
+
+    // Função para carregar dados iniciais
+    async function loadInitialData() {
+      await carregarSolicitacoes();
+      renderCalendar();
+    }
+
+    // Navegação do calendário
+    function previousMonth() {
+      currentDate.setMonth(currentDate.getMonth() - 1);
+      renderCalendar();
+    }
+
+    function nextMonth() {
+      currentDate.setMonth(currentDate.getMonth() + 1);
+      renderCalendar();
+    }
+
+    // Função para renderizar o calendário
+    function renderCalendar() {
+      console.log('Renderizando calendário com solicitações:', solicitacoes);
+      const monthNames = [
+        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+      ];
+
+      const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+
+      document.getElementById('calendar-title').textContent = 
+        `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+
+      const firstDay = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+      const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
+      const startDate = new Date(firstDay);
+      startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+      const calendarGrid = document.getElementById('calendar-grid');
+      calendarGrid.innerHTML = '';
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      for (let i = 0; i < 42; i++) {
+        const cellDate = new Date(startDate);
+        cellDate.setDate(startDate.getDate() + i);
+
+        const dayCell = document.createElement('div');
+        dayCell.className = 'calendar-day';
+        dayCell.onclick = () => selectDate(cellDate);
+
+        if (cellDate.getMonth() !== currentDate.getMonth()) {
+          dayCell.classList.add('other-month');
+        }
+
+        if (cellDate.getTime() === today.getTime()) {
+          dayCell.classList.add('today');
+        }
+
+        const dayNumber = document.createElement('div');
+        dayNumber.className = 'day-number';
+        dayNumber.textContent = cellDate.getDate();
+
+        const dayEvents = document.createElement('div');
+        dayEvents.className = 'day-events';
+
+        // Buscar solicitações para esta data
+        const dayRequests = getSolicitacoesForDate(cellDate);
+        dayRequests.forEach(solicitacao => {
+          const event = document.createElement('div');
+          event.className = `day-event ${solicitacao.status}`;
+          event.textContent = solicitacao.funcionarioNome.split(' ')[0];
+          event.title = `${solicitacao.funcionarioNome} - ${solicitacao.motivo}`;
+          dayEvents.appendChild(event);
+        });
+
+        dayCell.appendChild(dayNumber);
+        dayCell.appendChild(dayEvents);
+        calendarGrid.appendChild(dayCell);
+      }
+    }
+
+    // Função para obter solicitações de uma data específica
+    function getSolicitacoesForDate(date) {
+      return solicitacoes.filter(solicitacao => {
+        const inicio = new Date(solicitacao.dataInicio);
+        const fim = new Date(solicitacao.dataFim);
+        
+        // Ajustar para timezone local
+        inicio.setHours(0, 0, 0, 0);
+        fim.setHours(23, 59, 59, 999);
+        date.setHours(12, 0, 0, 0);
+        
+        return date >= inicio && date <= fim;
+      });
+    }
+
+    // Função para selecionar uma data
+    function selectDate(date) {
+      selectedDate = date;
+      
+      // Remover seleção anterior
+      document.querySelectorAll('.calendar-day.selected').forEach(day => {
+        day.classList.remove('selected');
+      });
+
+      // Adicionar seleção à nova data - usar event atual
+      event.target.closest('.calendar-day').classList.add('selected');
+
+      // Mostrar detalhes da data selecionada
+      showDateDetails(date);
+    }
+
+    // Função para mostrar detalhes da data selecionada
+    function showDateDetails(date) {
+      const dayRequests = getSolicitacoesForDate(date);
+      const detailsContainer = document.getElementById('date-details');
+      const selectionContainer = document.getElementById('selection-details');
+      
+      // Mostrar o container de detalhes
+      selectionContainer.style.display = 'block';
+      
+      if (dayRequests.length === 0) {
+        detailsContainer.innerHTML = `
+          <div class="empty-state">
+            <p>Nenhuma solicitação de férias para ${date.toLocaleDateString('pt-BR')}</p>
+          </div>
+        `;
+        return;
+      }
+
+      let detailsHTML = `<h3>Solicitações para ${date.toLocaleDateString('pt-BR')}</h3>`;
+      
+      dayRequests.forEach(solicitacao => {
+        const statusClass = solicitacao.status;
+        const statusText = {
+          'pendente': 'Pendente',
+          'aprovada': 'Aprovada',
+          'rejeitada': 'Rejeitada'
+        }[solicitacao.status];
+
+        detailsHTML += `
+          <div class="day-detail-card">
+            <div class="detail-header">
+              <div>
+                <div class="detail-funcionario">${solicitacao.funcionarioNome}</div>
+                <div class="detail-periodo">
+                  ${new Date(solicitacao.dataInicio).toLocaleDateString('pt-BR')} - 
+                  ${new Date(solicitacao.dataFim).toLocaleDateString('pt-BR')}
+                </div>
+                <div class="detail-motivo">"${solicitacao.motivo}"</div>
+              </div>
+              <span class="status-badge status-${statusClass}">${statusText}</span>
+            </div>
+            
+            ${solicitacao.status === 'pendente' ? `
+              <div class="detail-actions">
+                <button class="btn-calendar-aprovar" onclick="aprovar(${solicitacao.id})">
+                  ✓ Aprovar
+                </button>
+                <button class="btn-calendar-rejeitar" onclick="rejeitar(${solicitacao.id})">
+                  ✗ Rejeitar
+                </button>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      });
+
+      detailsContainer.innerHTML = detailsHTML;
+    }
+
+    // Funções para calendário
+    window.aprovar = function(id) {
+      aprovarSolicitacao(id);
+    }
+
+    window.rejeitar = function(id) {
+      rejeitarSolicitacao(id);
+    }
+
+    // Funções para Modal
+    function showModal(type, title, message, buttons = []) {
+      const overlay = document.getElementById('modal-overlay');
+      const modal = document.getElementById('modal');
+      const icon = document.getElementById('modal-icon');
+      const titleEl = document.getElementById('modal-title');
+      const messageEl = document.getElementById('modal-message');
+      const buttonsEl = document.getElementById('modal-buttons');
+
+      // Configurar tipo do modal
+      modal.className = `modal ${type}`;
+
+      // Configurar ícone baseado no tipo
+      const icons = {
+        success: '✅',
+        error: '❌',
+        warning: '⚠️',
+        confirm: '❓'
+      };
+      icon.textContent = icons[type] || '💬';
+
+      // Configurar conteúdo
+      titleEl.textContent = title;
+      messageEl.textContent = message;
+
+      // Configurar botões
+      buttonsEl.innerHTML = '';
+      buttons.forEach(button => {
+        const btn = document.createElement('button');
+        btn.className = `modal-btn ${button.class || 'modal-btn-primary'}`;
+        btn.textContent = button.text;
+        btn.onclick = () => {
+          hideModal();
+          if (button.action) button.action();
+        };
+        buttonsEl.appendChild(btn);
+      });
+
+      // Mostrar modal
+      overlay.classList.add('active');
+
+      // Fechar modal ao clicar no overlay
+      overlay.onclick = (e) => {
+        if (e.target === overlay) {
+          hideModal();
+        }
+      };
+    }
+
+    function hideModal() {
+      const overlay = document.getElementById('modal-overlay');
+      overlay.classList.remove('active');
+    }
+
+    function showConfirmModal(title, message, onConfirm, onCancel) {
+      showModal('confirm', title, message, [
+        {
+          text: 'Cancelar',
+          class: 'modal-btn-secondary',
+          action: onCancel
+        },
+        {
+          text: 'Confirmar',
+          class: 'modal-btn-primary',
+          action: onConfirm
+        }
+      ]);
+    }
+
+    function showSuccessModal(title, message) {
+      showModal('success', title, message, [
+        {
+          text: 'OK',
+          class: 'modal-btn-success'
+        }
+      ]);
+    }
+
+    function showErrorModal(title, message) {
+      showModal('error', title, message, [
+        {
+          text: 'OK',
+          class: 'modal-btn-danger'
+        }
+      ]);
+    }
+
+    // Função para aprovar solicitação
+    window.aprovarSolicitacao = async function (id) {
+      showConfirmModal(
+        'Confirmar Aprovação',
+        'Tem certeza que deseja aprovar esta solicitação de férias?',
+        async () => {
+          try {
+            const response = await fetch(`${API_BASE}/ferias/${id}/aprovar`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            });
+
+            if (!response.ok) {
+              const error = await response.json();
+              throw new Error(error.erro || 'Erro ao aprovar solicitação');
+            }
+
+            showSuccessModal('Sucesso!', 'Solicitação aprovada com sucesso!');
+            await carregarSolicitacoes();
+
+          } catch (error) {
+            console.error('Erro ao aprovar:', error);
+            showErrorModal('Erro na Aprovação', error.message);
+          }
+        }
+      );
+    }
+
+    // Função para rejeitar solicitação
+    window.rejeitarSolicitacao = async function (id) {
+      showConfirmModal(
+        'Confirmar Rejeição',
+        'Tem certeza que deseja rejeitar esta solicitação de férias?',
+        async () => {
+          try {
+            const response = await fetch(`${API_BASE}/ferias/${id}/rejeitar`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            });
+
+            if (!response.ok) {
+              const error = await response.json();
+              throw new Error(error.erro || 'Erro ao rejeitar solicitação');
+            }
+
+            showSuccessModal('Solicitação Rejeitada', 'A solicitação foi rejeitada com sucesso.');
+            await carregarSolicitacoes();
+
+          } catch (error) {
+            console.error('Erro ao rejeitar:', error);
+            showErrorModal('Erro na Rejeição', error.message);
+          }
+        }
+      );
+    }
+
+    // Função para exibir mensagens
+    function showMessage(message, type = 'success') {
+      const messageEl = document.getElementById('message');
+      messageEl.innerHTML = `<div class="${type}-message">${message}</div>`;
+      setTimeout(() => {
+        messageEl.innerHTML = '';
+      }, 5000);
+    }
+
+    // Função para formatar data
+    function formatDate(dateString) {
+      return new Date(dateString).toLocaleDateString('pt-BR');
+    }
+
+    // Função para calcular estatísticas
+    function updateStats() {
+      const pendentes = solicitacoes.filter(s => s.status === 'pendente').length;
+      const aprovadas = solicitacoes.filter(s => s.status === 'aprovada').length;
+      const rejeitadas = solicitacoes.filter(s => s.status === 'rejeitada').length;
+
+      document.getElementById('pendentes-count').textContent = pendentes;
+      document.getElementById('aprovadas-count').textContent = aprovadas;
+      document.getElementById('rejeitadas-count').textContent = rejeitadas;
+    }
+
+    // Função para carregar solicitações
+    async function carregarSolicitacoes() {
+      try {
+        console.log('Carregando solicitações...');
+        const response = await fetch(`${API_BASE}/ferias`);
+
+        if (!response.ok) {
+          throw new Error('Erro ao carregar solicitações');
+        }
+
+        solicitacoes = await response.json();
+        console.log('Solicitações carregadas:', solicitacoes);
+        renderizarSolicitacoes();
+        updateStats();
+        renderCalendar(); // Atualizar calendário após carregar dados
+      } catch (error) {
+        console.error('Erro:', error);
+        showErrorModal('Erro de Conexão', 'Erro ao carregar solicitações. Verifique se o backend está rodando.');
+        document.getElementById('solicitacoes-container').innerHTML =
+          '<div class="error-message">Erro ao carregar dados. Verifique a conexão com o servidor.</div>';
+      }
+    }    // Função para renderizar solicitações
+    function renderizarSolicitacoes() {
+      const container = document.getElementById('solicitacoes-container');
+
+      if (solicitacoes.length === 0) {
+        container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>📭 Nenhuma solicitação encontrada</h3>
+                        <p>Não há solicitações de férias no momento.</p>
+                    </div>
+                `;
+        return;
+      }
+
+      const solicitacoesHtml = solicitacoes
+        .sort((a, b) => {
+          // Ordena por status (pendentes primeiro) e depois por data
+          if (a.status === 'pendente' && b.status !== 'pendente') return -1;
+          if (a.status !== 'pendente' && b.status === 'pendente') return 1;
+          return new Date(b.dataSolicitacao) - new Date(a.dataSolicitacao);
+        })
+        .map(solicitacao => {
+          return `
+                    <div class="solicitacao-card">
+                        <div class="solicitacao-header">
+                            <div class="funcionario-nome">${solicitacao.funcionarioNome}</div>
+                            <div class="status-badge status-${solicitacao.status}">
+                                ${solicitacao.status}
+                            </div>
+                        </div>
+                        
+                        <div class="solicitacao-details">
+                            <div class="detail-item">
+                                <div class="detail-label">Data de Início</div>
+                                <div class="detail-value">${formatDate(solicitacao.dataInicio)}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Data de Fim</div>
+                                <div class="detail-value">${formatDate(solicitacao.dataFim)}</div>
+                            </div>
+                            ${solicitacao.diasFerias ? `
+                            <div class="detail-item">
+                                <div class="detail-label">Dias de Férias</div>
+                                <div class="detail-value">🏖️ ${solicitacao.diasFerias} dias</div>
+                            </div>
+                            ` : ''}
+                            ${solicitacao.diasVendidos > 0 ? `
+                            <div class="detail-item">
+                                <div class="detail-label">Dias Vendidos</div>
+                                <div class="detail-value">💰 ${solicitacao.diasVendidos} dias</div>
+                            </div>
+                            ` : ''}
+                            <div class="detail-item">
+                                <div class="detail-label">Motivo</div>
+                                <div class="detail-value">${solicitacao.motivo}</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Data da Solicitação</div>
+                                <div class="detail-value">${formatDate(solicitacao.dataSolicitacao)}</div>
+                            </div>
+                        </div>
+
+                        ${solicitacao.status === 'pendente' ? `
+                            <div class="actions">
+                                <button class="btn btn-aprovar" onclick="aprovarSolicitacao(${solicitacao.id})" data-id="${solicitacao.id}">
+                                    ✅ Aprovar
+                                </button>
+                                <button class="btn btn-rejeitar" onclick="rejeitarSolicitacao(${solicitacao.id})" data-id="${solicitacao.id}">
+                                    ❌ Rejeitar
+                                </button>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+        }).join('');
+
+      container.innerHTML = `<div class="solicitacoes-list">${solicitacoesHtml}</div>`;
+    }
+
+    // Atualizar dados a cada 20 segundos
+    setInterval(() => {
+      carregarSolicitacoes();
+      carregarCoberturas();
+    }, 20000);
+
+    // Funções para Cobertura de Férias
+    async function carregarFuncionarios() {
+      try {
+        const response = await fetch(`${API_BASE}/funcionarios`);
+        if (!response.ok) throw new Error('Erro ao carregar funcionários');
+        funcionarios = await response.json();
+      } catch (error) {
+        console.error('Erro ao carregar funcionários:', error);
+      }
+    }
+
+    async function carregarCoberturas() {
+      try {
+        const response = await fetch(`${API_BASE}/coberturas`);
+        if (!response.ok) throw new Error('Erro ao carregar coberturas');
+        coberturas = await response.json();
+        renderizarCoberturas();
+      } catch (error) {
+        console.error('Erro:', error);
+        document.getElementById('coberturas-container').innerHTML =
+          '<div class="error-message">Erro ao carregar coberturas. Verifique a conexão com o servidor.</div>';
+      }
+    }
+
+    function renderizarCoberturas() {
+      const container = document.getElementById('coberturas-container');
+      
+      // Filtrar apenas solicitações aprovadas que podem ter cobertura
+      const solicitacoesAprovadas = solicitacoes.filter(s => s.status === 'aprovada');
+      
+      if (solicitacoesAprovadas.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <h3>📭 Nenhuma solicitação aprovada</h3>
+            <p>Não há solicitações aprovadas que precisem de cobertura.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const coberturasHtml = solicitacoesAprovadas.map(solicitacao => {
+        const dataInicio = new Date(solicitacao.dataInicio);
+        const dataFim = new Date(solicitacao.dataFim);
+        const cobertura = coberturas.find(c => c.solicitacaoId === solicitacao.id);
+        
+        return `
+          <div class="cobertura-card">
+            <div class="cobertura-header">
+              <div class="cobertura-info">
+                <div class="cobertura-funcionario">👤 ${solicitacao.funcionarioNome}</div>
+                <div class="cobertura-periodo">📅 ${formatDate(solicitacao.dataInicio)} até ${formatDate(solicitacao.dataFim)}</div>
+                ${cobertura ? `<div class="cobertura-atual">🔄 Cobertura: ${cobertura.funcionarioCoberturaNome}</div>` : '<div style="color: #e74c3c;">⚠️ Sem cobertura definida</div>'}
+              </div>
+              <div class="cobertura-actions">
+                ${!cobertura ? `
+                  <button class="btn-definir-cobertura-inteligente" onclick="abrirSelectorCobertura(${solicitacao.id})">
+                    🧠 Definir Cobertura Inteligente
+                  </button>
+                ` : `
+                  <div class="cobertura-definida">
+                    <div class="funcionarios-cobertura">
+                      ${Array.isArray(cobertura.coberturas) ? 
+                        cobertura.coberturas.map(c => `
+                          <span class="funcionario-tag">${c.funcionarioNome} (${c.diasCobertura} dias)</span>
+                        `).join('') : 
+                        `<span class="funcionario-tag">${cobertura.coberturaNome || 'Cobertura definida'}</span>`
+                      }
+                    </div>
+                    <button class="btn-editar-cobertura" onclick="abrirSelectorCobertura(${solicitacao.id})">
+                      ✏️ Editar
+                    </button>
+                    <button class="btn-remover-cobertura" onclick="removerCobertura(${cobertura.id}, ${solicitacao.id})">
+                      🗑️ Remover
+                    </button>
+                  </div>
+                `}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      container.innerHTML = coberturasHtml;
+    }
+
+    // Função auxiliar para formatar datas
+    function formatDate(dateString) {
+      return new Date(dateString + 'T00:00:00').toLocaleDateString('pt-BR');
+    }
+
+    // Variáveis globais para o selector de cobertura
+    let solicitacaoAtual = null;
+    let sugestoesDisponiveis = null;
+    let funcionariosSelecionados = [];
+    let funcionariosDisponiveis = [];
+
+    // Função para abrir o selector de cobertura inteligente
+    async function abrirSelectorCobertura(solicitacaoId) {
+      solicitacaoAtual = solicitacaoId;
+      funcionariosSelecionados = [];
+      
+      const modal = document.getElementById('cobertura-modal');
+      const loading = document.getElementById('loading-sugestoes');
+      const conteudo = document.getElementById('conteudo-sugestoes');
+      
+      modal.style.display = 'block';
+      loading.style.display = 'block';
+      conteudo.style.display = 'none';
+      
+      try {
+        // Buscar sugestões do sistema
+        const response = await fetch(`${API_BASE}/coberturas/sugestoes/${solicitacaoId}`);
+        if (!response.ok) throw new Error('Erro ao buscar sugestões');
+        
+        sugestoesDisponiveis = await response.json();
+        
+        // Renderizar sugestões
+        renderizarSugestoes();
+        renderizarFuncionariosDisponiveis();
+        
+        loading.style.display = 'none';
+        conteudo.style.display = 'block';
+        
+      } catch (error) {
+        console.error('Erro:', error);
+        loading.innerHTML = `<div style="color: #e74c3c;">❌ Erro ao carregar sugestões: ${error.message}</div>`;
+      }
+    }
+
+    // Função para fechar o modal
+    function fecharSelectorCobertura() {
+      document.getElementById('cobertura-modal').style.display = 'none';
+      solicitacaoAtual = null;
+      sugestoesDisponiveis = null;
+      funcionariosSelecionados = [];
+    }
+
+    // Função para renderizar as sugestões ótimas
+    function renderizarSugestoes() {
+      const container = document.getElementById('sugestao-otima-container');
+      
+      if (!sugestoesDisponiveis.sugestaoOtima || sugestoesDisponiveis.sugestaoOtima.length === 0) {
+        container.innerHTML = `
+          <div class="sugestao-item" style="background: #fdf2f2; border-color: #e74c3c;">
+            <div class="funcionario-info">
+              <div class="funcionario-nome">❌ Nenhuma sugestão disponível</div>
+              <div class="funcionario-detalhes">Não há funcionários suficientes para cobrir todo o período</div>
+            </div>
+          </div>
+        `;
+        document.getElementById('btn-aplicar-sugestao').disabled = true;
+        return;
+      }
+
+      const sugestaoHtml = sugestoesDisponiveis.sugestaoOtima.map(s => `
+        <div class="sugestao-item">
+          <div class="funcionario-info">
+            <div class="funcionario-nome">👤 ${s.funcionarioNome}</div>
+            <div class="funcionario-detalhes">
+              📅 ${formatDate(s.dataInicio)} até ${formatDate(s.dataFim)} 
+              | 💼 ${s.tipoCobertura.replace('_', ' ')}
+            </div>
+            <div class="funcionario-detalhes" style="font-style: italic; color: #7f8c8d;">
+              ${s.observacao}
+            </div>
+          </div>
+          <div>
+            <span class="dias-badge">${s.diasCobertura} dias</span>
+          </div>
+        </div>
+      `).join('');
+
+      container.innerHTML = `
+        <div class="sugestao-otima">
+          ${sugestaoHtml}
+          <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #27ae60; text-align: center; color: #27ae60; font-weight: 500;">
+            ✅ Cobertura completa para ${sugestoesDisponiveis.diasTotal} dias
+          </div>
+        </div>
+      `;
+    }
+
+    // Função para renderizar funcionários disponíveis para seleção manual
+    function renderizarFuncionariosDisponiveis() {
+      const container = document.getElementById('funcionarios-disponiveis');
+      funcionariosDisponiveis = [...sugestoesDisponiveis.equipeExtra, ...sugestoesDisponiveis.equipeRegular];
+      
+      const funcionariosHtml = funcionariosDisponiveis.map(func => {
+        const isLimitado = func.diasMaximos <= 7;
+        const equipeText = func.equipe === 'extra' ? '⭐ Equipe Extra' : '👥 Regular';
+        const statusText = func.statusAtual === 'trabalhando' ? ' (Trabalhando)' : '';
+        
+        return `
+          <div class="funcionario-card ${isLimitado ? 'limitado' : ''}" onclick="toggleFuncionario(${func.funcionarioId})">
+            <div class="funcionario-info">
+              <div class="funcionario-nome">${func.funcionarioNome}</div>
+              <div class="funcionario-detalhes">${equipeText}${statusText}</div>
+              <div class="funcionario-detalhes">
+                💪 Pode cobrir: ${func.diasDisponiveis} dias (máx: ${func.diasMaximos})
+              </div>
+              ${isLimitado ? 
+                `<span class="limitacao-badge">Limitado</span>` : 
+                `<span class="dias-badge">Disponível</span>`
+              }
+            </div>
+          </div>
+        `;
+      }).join('');
+      
+      container.innerHTML = funcionariosHtml;
+    }
+
+    // Função para alternar seleção de funcionário
+    function toggleFuncionario(funcionarioId) {
+      const funcionario = funcionariosDisponiveis.find(f => f.funcionarioId === funcionarioId);
+      const card = document.querySelector(`.funcionario-card[onclick="toggleFuncionario(${funcionarioId})"]`);
+      
+      if (funcionariosSelecionados.find(f => f.funcionarioId === funcionarioId)) {
+        // Remover da seleção
+        funcionariosSelecionados = funcionariosSelecionados.filter(f => f.funcionarioId !== funcionarioId);
+        card.classList.remove('selected');
+      } else {
+        // Adicionar à seleção (máximo 3)
+        if (funcionariosSelecionados.length >= 3) {
+          showErrorModal('Limite de Seleção', 'Você pode selecionar no máximo 3 funcionários para cobertura.');
+          return;
+        }
+        
+        funcionariosSelecionados.push(funcionario);
+        card.classList.add('selected');
+      }
+      
+      atualizarResumoSelecao();
+    }
+
+    // Função para atualizar o resumo da seleção manual
+    function atualizarResumoSelecao() {
+      const display = document.getElementById('funcionarios-selecionados-display');
+      const lista = document.getElementById('lista-selecionados');
+      const resumo = document.getElementById('resumo-cobertura');
+      const btnAplicar = document.getElementById('btn-aplicar-manual');
+      
+      if (funcionariosSelecionados.length === 0) {
+        display.style.display = 'none';
+        btnAplicar.disabled = true;
+        return;
+      }
+      
+      display.style.display = 'block';
+      
+      const listaHtml = funcionariosSelecionados.map(f => `
+        <span class="funcionario-tag">
+          ${f.funcionarioNome} (máx: ${f.diasDisponiveis} dias)
+        </span>
+      `).join('');
+      
+      const totalDias = funcionariosSelecionados.reduce((sum, f) => sum + f.diasDisponiveis, 0);
+      const diasNecessarios = sugestoesDisponiveis.diasTotal;
+      
+      lista.innerHTML = listaHtml;
+      resumo.innerHTML = `
+        <div style="margin-top: 0.5rem; padding: 0.5rem; background: ${totalDias >= diasNecessarios ? '#e8f5e8' : '#fdf2f2'}; border-radius: 4px;">
+          📊 Total disponível: ${totalDias} dias | Necessário: ${diasNecessarios} dias
+          ${totalDias >= diasNecessarios ? 
+            '✅ Cobertura suficiente' : 
+            '⚠️ Cobertura insuficiente'
+          }
+        </div>
+      `;
+      
+      btnAplicar.disabled = totalDias < diasNecessarios;
+    }
+
+    // Função para aplicar a sugestão ótima
+    async function aplicarSugestaoOtima() {
+      try {
+        const response = await fetch(`${API_BASE}/coberturas`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            solicitacaoId: solicitacaoAtual,
+            coberturas: sugestoesDisponiveis.sugestaoOtima
+          })
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.erro);
+        }
+
+        showSuccessModal('Sucesso', 'Cobertura aplicada com sucesso usando a sugestão ótima!');
+        fecharSelectorCobertura();
+        carregarCoberturas();
+      } catch (error) {
+        console.error('Erro:', error);
+        showErrorModal('Erro', error.message);
+      }
+    }
+
+    // Função para aplicar seleção manual
+    async function aplicarSelecaoManual() {
+      try {
+        // Calcular as coberturas baseado na seleção manual
+        const solicitacao = solicitacoes.find(s => s.id === solicitacaoAtual);
+        const coberturas = calcularCoberturasManual(funcionariosSelecionados, solicitacao);
+        
+        const response = await fetch(`${API_BASE}/coberturas`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            solicitacaoId: solicitacaoAtual,
+            coberturas: coberturas
+          })
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.erro);
+        }
+
+        showSuccessModal('Sucesso', 'Cobertura aplicada com sucesso usando seleção manual!');
+        fecharSelectorCobertura();
+        carregarCoberturas();
+      } catch (error) {
+        console.error('Erro:', error);
+        showErrorModal('Erro', error.message);
+      }
+    }
+
+    // Função para calcular coberturas baseado na seleção manual
+    function calcularCoberturasManual(funcionarios, solicitacao) {
+      const coberturas = [];
+      let dataAtual = new Date(solicitacao.dataInicio);
+      let diasRestantes = Math.ceil((new Date(solicitacao.dataFim) - new Date(solicitacao.dataInicio)) / (1000 * 60 * 60 * 24)) + 1;
+      
+      for (const funcionario of funcionarios) {
+        if (diasRestantes <= 0) break;
+        
+        const diasCobertura = Math.min(funcionario.diasDisponiveis, diasRestantes);
+        const dataFim = new Date(dataAtual);
+        dataFim.setDate(dataAtual.getDate() + diasCobertura - 1);
+        
+        coberturas.push({
+          funcionarioId: funcionario.funcionarioId,
+          funcionarioNome: funcionario.funcionarioNome,
+          dataInicio: dataAtual.toISOString().split('T')[0],
+          dataFim: dataFim.toISOString().split('T')[0],
+          diasCobertura: diasCobertura,
+          tipoCobertura: funcionario.equipe === 'extra' ? 'equipe_extra' : 'regular'
+        });
+        
+        diasRestantes -= diasCobertura;
+        dataAtual = new Date(dataFim);
+        dataAtual.setDate(dataAtual.getDate() + 1);
+      }
+      
+      return coberturas;
+    }
+
+    async function definirCobertura(solicitacaoId) {
+      const select = document.getElementById(`select-${solicitacaoId}`);
+      const funcionarioCobertura = select.value;
+      
+      if (!funcionarioCobertura) {
+        showErrorModal('Erro', 'Por favor, selecione um funcionário para cobertura.');
+        return;
+      }
+
+      try {
+        // Buscar dados da solicitação para criar a cobertura
+        const solicitacao = solicitacoes.find(s => s.id === parseInt(solicitacaoId));
+        if (!solicitacao) {
+          throw new Error('Solicitação não encontrada');
+        }
+
+        // Buscar dados do funcionário
+        const funcionario = funcionarios.find(f => f.id === parseInt(funcionarioCobertura));
+        if (!funcionario) {
+          throw new Error('Funcionário não encontrado');
+        }
+
+        // Calcular dias de cobertura
+        const diasCobertura = Math.ceil((new Date(solicitacao.dataFim) - new Date(solicitacao.dataInicio)) / (1000 * 60 * 60 * 24)) + 1;
+
+        // Criar objeto de cobertura no novo formato
+        const cobertura = {
+          funcionarioId: parseInt(funcionarioCobertura),
+          funcionarioNome: funcionario.nome,
+          dataInicio: solicitacao.dataInicio,
+          dataFim: solicitacao.dataFim,
+          diasCobertura: diasCobertura,
+          tipoCobertura: 'manual'
+        };
+
+        const response = await fetch(`${API_BASE}/coberturas`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            solicitacaoId: parseInt(solicitacaoId),
+            coberturas: [cobertura]
+          })
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.erro);
+        }
+
+        showSuccessModal('Sucesso', 'Cobertura definida com sucesso!');
+        carregarCoberturas();
+      } catch (error) {
+        console.error('Erro:', error);
+        showErrorModal('Erro', error.message);
+      }
+    }
+
+    async function editarCobertura(coberturaId, solicitacaoId) {
+      const select = document.getElementById(`select-edit-${solicitacaoId}`);
+      const funcionarioCobertura = select.value;
+      
+      if (!funcionarioCobertura) {
+        showErrorModal('Erro', 'Por favor, selecione um funcionário para cobertura.');
+        return;
+      }
+
+      try {
+        // Buscar dados da solicitação para criar a cobertura
+        const solicitacao = solicitacoes.find(s => s.id === parseInt(solicitacaoId));
+        if (!solicitacao) {
+          throw new Error('Solicitação não encontrada');
+        }
+
+        // Buscar dados do funcionário
+        const funcionario = funcionarios.find(f => f.id === parseInt(funcionarioCobertura));
+        if (!funcionario) {
+          throw new Error('Funcionário não encontrado');
+        }
+
+        // Calcular dias de cobertura
+        const diasCobertura = Math.ceil((new Date(solicitacao.dataFim) - new Date(solicitacao.dataInicio)) / (1000 * 60 * 60 * 24)) + 1;
+
+        // Criar objeto de cobertura no novo formato
+        const cobertura = {
+          funcionarioId: parseInt(funcionarioCobertura),
+          funcionarioNome: funcionario.nome,
+          dataInicio: solicitacao.dataInicio,
+          dataFim: solicitacao.dataFim,
+          diasCobertura: diasCobertura,
+          tipoCobertura: 'manual'
+        };
+
+        const response = await fetch(`${API_BASE}/coberturas/${coberturaId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            coberturas: [cobertura]
+          })
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.erro);
+        }
+
+        showSuccessModal('Sucesso', 'Cobertura editada com sucesso!');
+        carregarCoberturas();
+      } catch (error) {
+        console.error('Erro:', error);
+        showErrorModal('Erro', error.message);
+      }
+    }
+
+    // Adicionar indicador de última atualização
+    function mostrarUltimaAtualizacao() {
+      const agora = new Date().toLocaleTimeString('pt-BR');
+      const indicator = document.getElementById('ultima-atualizacao');
+      if (!indicator) {
+        const container = document.querySelector('.stats');
+        const div = document.createElement('div');
+        div.id = 'ultima-atualizacao';
+        div.style.cssText = 'text-align: center; color: #666; font-size: 0.9rem; margin-top: 1rem;';
+        div.innerHTML = `Última atualização: ${agora}`;
+        container.appendChild(div);
+      } else {
+        indicator.innerHTML = `Última atualização: ${agora}`;
+      }
+    }
+
+    // Atualizar indicador quando carrega dados
+    const carregarSolicitacoesOriginal = carregarSolicitacoes;
+    carregarSolicitacoes = async function () {
+      await carregarSolicitacoesOriginal();
+      mostrarUltimaAtualizacao();
+    };
+
+    // Verificação de autenticação
+    function verificarAutenticacao() {
+      const userType = localStorage.getItem('userType');
+      const userName = localStorage.getItem('userName');
+      
+      if (!userType || userType !== 'supervisor') {
+        alert('Acesso negado. Esta área é restrita a supervisores.');
+        window.location.href = '/login.html';
+        return;
+      }
+
+      // Atualizar nome do usuário no header
+      if (userName) {
+        document.getElementById('supervisor-nome').textContent = userName;
+      }
+    }
+
+    // Função de logout
+    function logout() {
+      if (confirm('Tem certeza que deseja sair do sistema?')) {
+        localStorage.clear();
+        window.location.href = '/login.html';
+      }
+    }
+
+    // Verificar autenticação ao carregar a página
+    document.addEventListener('DOMContentLoaded', () => {
+      verificarAutenticacao();
+      carregarSolicitacoes();
+      carregarFuncionarios();
+      carregarCoberturas();
+      
+      // Event listener para fechar modal ao clicar fora
+      window.onclick = function(event) {
+        const modal = document.getElementById('cobertura-modal');
+        if (event.target === modal) {
+          fecharSelectorCobertura();
+        }
+      };
+    });
+  </script>
+</body>
+
+</html>

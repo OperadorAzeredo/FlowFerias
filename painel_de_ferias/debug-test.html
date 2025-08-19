@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug - Teste de Conexão</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .result {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 15px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+        }
+        .error {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+        .success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Debug - Sistema de Férias</h1>
+        <p>Use este página para testar se o backend está funcionando corretamente.</p>
+        
+        <div class="test-section">
+            <h3>📡 Testes de API</h3>
+            <button class="btn" onclick="testarConexao()">Testar Conexão Backend</button>
+            <button class="btn" onclick="testarSolicitacoes()">Listar Solicitações</button>
+            <button class="btn" onclick="testarFuncionarios()">Listar Funcionários</button>
+            <button class="btn" onclick="testarEscalas()">Listar Escalas</button>
+            <button class="btn" onclick="criarSolicitacaoTeste()">Criar Solicitação de Teste</button>
+            <button class="btn" onclick="criarEscalaTeste()">Criar Escala de Teste</button>
+        </div>
+        
+        <div id="resultado" class="result" style="display: none;"></div>
+    </div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001/api';
+        
+        function mostrarResultado(conteudo, isError = false) {
+            const div = document.getElementById('resultado');
+            div.style.display = 'block';
+            div.className = `result ${isError ? 'error' : 'success'}`;
+            div.textContent = conteudo;
+        }
+        
+        async function testarConexao() {
+            try {
+                const response = await fetch(`${API_BASE}/funcionarios`);
+                if (response.ok) {
+                    mostrarResultado('✅ Backend está funcionando! Conexão estabelecida.');
+                } else {
+                    mostrarResultado(`❌ Backend respondeu com erro: ${response.status}`, true);
+                }
+            } catch (error) {
+                mostrarResultado(`❌ Erro de conexão: ${error.message}\n\nVerifique se o backend está rodando na porta 3001.`, true);
+            }
+        }
+        
+        async function testarSolicitacoes() {
+            try {
+                const response = await fetch(`${API_BASE}/ferias`);
+                if (response.ok) {
+                    const solicitacoes = await response.json();
+                    mostrarResultado(`✅ Solicitações carregadas com sucesso!\n\nTotal: ${solicitacoes.length} solicitações\n\nDados:\n${JSON.stringify(solicitacoes, null, 2)}`);
+                } else {
+                    mostrarResultado(`❌ Erro ao carregar solicitações: ${response.status}`, true);
+                }
+            } catch (error) {
+                mostrarResultado(`❌ Erro: ${error.message}`, true);
+            }
+        }
+        
+        async function testarFuncionarios() {
+            try {
+                const response = await fetch(`${API_BASE}/funcionarios`);
+                if (response.ok) {
+                    const funcionarios = await response.json();
+                    mostrarResultado(`✅ Funcionários carregados com sucesso!\n\nTotal: ${funcionarios.length} funcionários\n\nDados:\n${JSON.stringify(funcionarios, null, 2)}`);
+                } else {
+                    mostrarResultado(`❌ Erro ao carregar funcionários: ${response.status}`, true);
+                }
+            } catch (error) {
+                mostrarResultado(`❌ Erro: ${error.message}`, true);
+            }
+        }
+        
+        async function criarSolicitacaoTeste() {
+            try {
+                const novaSolicitacao = {
+                    funcionarioId: 1,
+                    dataInicio: '2025-08-01',
+                    dataFim: '2025-08-10',
+                    motivo: 'Teste de solicitação via debug'
+                };
+                
+                const response = await fetch(`${API_BASE}/ferias`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(novaSolicitacao)
+                });
+                
+                if (response.ok) {
+                    const resultado = await response.json();
+                    mostrarResultado(`✅ Solicitação de teste criada com sucesso!\n\nID: ${resultado.id}\n\nDados:\n${JSON.stringify(resultado, null, 2)}`);
+                } else {
+                    const erro = await response.json();
+                    mostrarResultado(`❌ Erro ao criar solicitação: ${erro.erro}`, true);
+                }
+            } catch (error) {
+                mostrarResultado(`❌ Erro: ${error.message}`, true);
+            }
+        }
+        
+        async function testarEscalas() {
+            try {
+                const response = await fetch(`${API_BASE}/escalas`);
+                if (response.ok) {
+                    const escalas = await response.json();
+                    mostrarResultado(`✅ Escalas carregadas com sucesso!\n\nTotal: ${escalas.length} escalas\n\nDados:\n${JSON.stringify(escalas, null, 2)}`);
+                } else {
+                    mostrarResultado(`❌ Erro ao carregar escalas: ${response.status}`, true);
+                }
+            } catch (error) {
+                mostrarResultado(`❌ Erro: ${error.message}`, true);
+            }
+        }
+        
+        async function criarEscalaTeste() {
+            try {
+                // Criar escala para hoje + 14 dias
+                const hoje = new Date();
+                const desembarque = new Date(hoje);
+                desembarque.setDate(hoje.getDate() + 13);
+                
+                const novaEscala = {
+                    funcionarioId: 1,
+                    dataEmbarque: hoje.toISOString().split('T')[0],
+                    dataDesembarque: desembarque.toISOString().split('T')[0]
+                };
+                
+                const response = await fetch(`${API_BASE}/escalas`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(novaEscala)
+                });
+                
+                if (response.ok) {
+                    const resultado = await response.json();
+                    mostrarResultado(`✅ Escala de teste criada com sucesso!\n\nID: ${resultado.id}\n\nDados:\n${JSON.stringify(resultado, null, 2)}`);
+                } else {
+                    const erro = await response.json();
+                    mostrarResultado(`❌ Erro ao criar escala: ${erro.erro}`, true);
+                }
+            } catch (error) {
+                mostrarResultado(`❌ Erro: ${error.message}`, true);
+            }
+        }
+    </script>
+</body>
+</html>
