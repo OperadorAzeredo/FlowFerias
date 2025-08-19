@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flow Férias - Gerenciar Escalas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --berkeley-blue: #1E3A5F;
+      --pacific-cyan: #25A3C1;
+      --yellow-green: #94C849;
+      --carrot-orange: #F3921F;
+      --butterscotch: #D89A48;
+      --white: #FFFFFF;
+      --light-gray: #F8F9FA;
+      --medium-gray: #E9ECEF;
+      --text-dark: #2C3E50;
+      --text-light: #6C757D;
+      --success: #28A745;
+      --warning: #FFC107;
+      --danger: #DC3545;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--light-gray);
+      min-height: 100vh;
+      color: var(--text-dark);
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--carrot-orange) 0%, var(--butterscotch) 100%);
+      color: white;
+      padding: 1.5rem 0;
+      box-shadow: 0 2px 10px rgba(243, 146, 31, 0.2);
+    }
+
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo-flow {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .wave-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      width: 30px;
+    }
+
+    .wave {
+      height: 4px;
+      border-radius: 2px;
+      animation: wave-flow 2s ease-in-out infinite;
+    }
+
+    .wave1 {
+      background: var(--white);
+      width: 28px;
+      animation-delay: 0s;
+    }
+
+    .wave2 {
+      background: rgba(255, 255, 255, 0.8);
+      width: 24px;
+      animation-delay: 0.3s;
+    }
+
+    .wave3 {
+      background: rgba(255, 255, 255, 0.6);
+      width: 20px;
+      animation-delay: 0.6s;
+    }
+
+    .flow-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .flow-main {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--white);
+    }
+
+    .flow-sub {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.9);
+      letter-spacing: 2px;
+      margin-top: 2px;
+    }
+
+    @keyframes wave-flow {
+      0%, 100% { transform: scaleX(1); opacity: 0.7; }
+      50% { transform: scaleX(1.2); opacity: 1; }
+    }
+
+    .header-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logout-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .logout-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+
+    .breadcrumb {
+      background: var(--white);
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .breadcrumb a {
+      color: var(--pacific-cyan);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--berkeley-blue);
+      margin-bottom: 0.5rem;
+    }
+
+    .page-subtitle {
+      color: var(--text-light);
+      margin-bottom: 2rem;
+    }
+
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .funcionarios-list {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      height: fit-content;
+    }
+
+    .funcionarios-list h3 {
+      color: var(--berkeley-blue);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .funcionario-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      border: 2px solid var(--medium-gray);
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .funcionario-item:hover {
+      border-color: var(--pacific-cyan);
+      background: #f8fcff;
+    }
+
+    .funcionario-item.selected {
+      border-color: var(--yellow-green);
+      background: rgba(148, 200, 73, 0.1);
+      box-shadow: 0 2px 8px rgba(148, 200, 73, 0.3);
+    }
+
+    .funcionario-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .funcionario-nome {
+      font-weight: 600;
+      color: var(--berkeley-blue);
+    }
+
+    .funcionario-sap {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
+
+    .funcionario-status {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .status-com-escala {
+      background: rgba(40, 167, 69, 0.1);
+      color: var(--success);
+    }
+
+    .status-sem-escala {
+      background: rgba(220, 53, 69, 0.1);
+      color: var(--danger);
+    }
+
+    .escala-editor {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .editor-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--medium-gray);
+    }
+
+    .editor-title {
+      color: var(--berkeley-blue);
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
+
+    .editor-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.9rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-warning {
+      background: var(--warning);
+      color: var(--berkeley-blue);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: var(--medium-gray);
+      color: var(--text-dark);
+    }
+
+    .escala-form {
+      display: none;
+    }
+
+    .escala-form.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--berkeley-blue);
+    }
+
+    .form-input,
+    .form-select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid var(--medium-gray);
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-input:focus,
+    .form-select:focus {
+      outline: none;
+      border-color: var(--pacific-cyan);
+    }
+
+    .form-input:read-only {
+      background: var(--light-gray);
+      color: var(--text-light);
+    }
+
+    .form-section {
+      margin-bottom: 2rem;
+    }
+
+    .horarios-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .dia-semana {
+      text-align: center;
+      padding: 1rem;
+      border: 2px solid var(--medium-gray);
+      border-radius: 8px;
+      background: var(--light-gray);
+      transition: all 0.3s ease;
+    }
+
+    .dia-semana.dia-folga {
+      background: rgba(220, 53, 69, 0.1);
+      border-color: var(--danger);
+    }
+
+    .dia-header {
+      font-weight: 600;
+      color: var(--berkeley-blue);
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .horario-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .horario-input {
+      padding: 0.25rem;
+      border: 1px solid var(--medium-gray);
+      border-radius: 4px;
+      font-size: 0.8rem;
+      text-align: center;
+    }
+
+    .horario-input:disabled {
+      background: var(--light-gray);
+      color: var(--text-light);
+    }
+
+    .folga-checkbox {
+      margin-top: 0.5rem;
+    }
+
+    .folga-checkbox label {
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      justify-content: center;
+    }
+
+    .escala-preview {
+      background: var(--light-gray);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .preview-title {
+      font-weight: 600;
+      color: var(--berkeley-blue);
+      margin-bottom: 0.5rem;
+    }
+
+    .preview-content {
+      font-family: monospace;
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      white-space: pre-line;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-light);
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .success-message,
+    .error-message {
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .success-message {
+      background: rgba(40, 167, 69, 0.1);
+      color: var(--success);
+      border: 1px solid rgba(40, 167, 69, 0.2);
+    }
+
+    .error-message {
+      background: rgba(220, 53, 69, 0.1);
+      color: var(--danger);
+      border: 1px solid rgba(220, 53, 69, 0.2);
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+
+      .horarios-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        padding: 1rem;
+      }
+
+      .header-content {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+
+      .editor-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="header">
+    <div class="header-content">
+      <div class="logo-container">
+        <div class="logo-flow">
+          <div class="wave-container">
+            <div class="wave wave1"></div>
+            <div class="wave wave2"></div>
+            <div class="wave wave3"></div>
+          </div>
+          <div class="flow-text">
+            <span class="flow-main">Flow</span>
+            <span class="flow-sub">FÉRIAS</span>
+          </div>
+        </div>
+        <div class="header-title">Gerenciar Escalas</div>
+      </div>
+      <div class="user-info">
+        <span id="userWelcome">Supervisor</span>
+        <button class="logout-btn" onclick="logout()">Sair</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="supervisor.html">← Voltar ao Painel</a>
+    </div>
+
+    <h1 class="page-title">📅 Gerenciamento de Escalas</h1>
+    <p class="page-subtitle">Cadastre e edite as escalas de trabalho dos funcionários para otimizar a cobertura durante férias</p>
+
+    <div id="messages"></div>
+
+    <div class="main-content">
+      <!-- Lista de Funcionários -->
+      <div class="funcionarios-list">
+        <h3>👥 Funcionários</h3>
+        <div id="funcionarios-container">
+          <div class="empty-state">
+            <div class="empty-state-icon">⏳</div>
+            <p>Carregando funcionários...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Editor de Escala -->
+      <div class="escala-editor">
+        <div class="editor-header">
+          <h3 class="editor-title">📋 Editor de Escala</h3>
+          <div class="editor-actions">
+            <button class="btn btn-success" onclick="salvarEscala()" id="salvar-btn" disabled>
+              💾 Salvar Escala
+            </button>
+            <button class="btn btn-warning" onclick="limparEscala()" id="limpar-btn" disabled>
+              🗑️ Limpar
+            </button>
+          </div>
+        </div>
+
+        <div id="editor-content">
+          <div class="empty-state">
+            <div class="empty-state-icon">👈</div>
+            <p>Selecione um funcionário para editar sua escala</p>
+          </div>
+        </div>
+
+        <!-- Formulário de Escala -->
+        <div class="escala-form" id="escala-form">
+          <div class="form-group">
+            <label class="form-label">Funcionário Selecionado:</label>
+            <input type="text" class="form-input" id="funcionario-nome" readonly>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Tipo de Escala:</label>
+            <select class="form-select" id="tipo-escala" onchange="atualizarFormulario()">
+              <option value="">Selecione o tipo de escala</option>
+              <option value="fixo">Horário Fixo</option>
+              <option value="semanal">Escala Semanal</option>
+              <option value="personalizado">Personalizado</option>
+            </select>
+          </div>
+
+          <!-- Horários Fixos -->
+          <div id="horario-fixo" class="form-section" style="display: none;">
+            <div class="form-group">
+              <label class="form-label">Horário de Entrada:</label>
+              <input type="time" class="form-input" id="entrada-fixo">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Horário de Saída:</label>
+              <input type="time" class="form-input" id="saida-fixo">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Dias da Semana:</label>
+              <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem;">
+                <label><input type="checkbox" value="1" class="dia-checkbox"> Segunda</label>
+                <label><input type="checkbox" value="2" class="dia-checkbox"> Terça</label>
+                <label><input type="checkbox" value="3" class="dia-checkbox"> Quarta</label>
+                <label><input type="checkbox" value="4" class="dia-checkbox"> Quinta</label>
+                <label><input type="checkbox" value="5" class="dia-checkbox"> Sexta</label>
+                <label><input type="checkbox" value="6" class="dia-checkbox"> Sábado</label>
+                <label><input type="checkbox" value="0" class="dia-checkbox"> Domingo</label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Escala Semanal -->
+          <div id="escala-semanal" class="form-section" style="display: none;">
+            <div class="horarios-grid">
+              <div class="dia-semana">
+                <div class="dia-header">Segunda</div>
+                <div class="horario-inputs">
+                  <input type="time" class="horario-input" id="seg-entrada" placeholder="Entrada">
+                  <input type="time" class="horario-input" id="seg-saida" placeholder="Saída">
+                </div>
+                <div class="folga-checkbox">
+                  <label><input type="checkbox" id="seg-folga" onchange="toggleFolga('seg')"> Folga</label>
+                </div>
+              </div>
+
+              <div class="dia-semana">
+                <div class="dia-header">Terça</div>
+                <div class="horario-inputs">
+                  <input type="time" class="horario-input" id="ter-entrada" placeholder="Entrada">
+                  <input type="time" class="horario-input" id="ter-saida" placeholder="Saída">
+                </div>
+                <div class="folga-checkbox">
+                  <label><input type="checkbox" id="ter-folga" onchange="toggleFolga('ter')"> Folga</label>
+                </div>
+              </div>
+
+              <div class="dia-semana">
+                <div class="dia-header">Quarta</div>
+                <div class="horario-inputs">
+                  <input type="time" class="horario-input" id="qua-entrada" placeholder="Entrada">
+                  <input type="time" class="horario-input" id="qua-saida" placeholder="Saída">
+                </div>
+                <div class="folga-checkbox">
+                  <label><input type="checkbox" id="qua-folga" onchange="toggleFolga('qua')"> Folga</label>
+                </div>
+              </div>
+
+              <div class="dia-semana">
+                <div class="dia-header">Quinta</div>
+                <div class="horario-inputs">
+                  <input type="time" class="horario-input" id="qui-entrada" placeholder="Entrada">
+                  <input type="time" class="horario-input" id="qui-saida" placeholder="Saída">
+                </div>
+                <div class="folga-checkbox">
+                  <label><input type="checkbox" id="qui-folga" onchange="toggleFolga('qui')"> Folga</label>
+                </div>
+              </div>
+
+              <div class="dia-semana">
+                <div class="dia-header">Sexta</div>
+                <div class="horario-inputs">
+                  <input type="time" class="horario-input" id="sex-entrada" placeholder="Entrada">
+                  <input type="time" class="horario-input" id="sex-saida" placeholder="Saída">
+                </div>
+                <div class="folga-checkbox">
+                  <label><input type="checkbox" id="sex-folga" onchange="toggleFolga('sex')"> Folga</label>
+                </div>
+              </div>
+
+              <div class="dia-semana">
+                <div class="dia-header">Sábado</div>
+                <div class="horario-inputs">
+                  <input type="time" class="horario-input" id="sab-entrada" placeholder="Entrada">
+                  <input type="time" class="horario-input" id="sab-saida" placeholder="Saída">
+                </div>
+                <div class="folga-checkbox">
+                  <label><input type="checkbox" id="sab-folga" onchange="toggleFolga('sab')"> Folga</label>
+                </div>
+              </div>
+
+              <div class="dia-semana">
+                <div class="dia-header">Domingo</div>
+                <div class="horario-inputs">
+                  <input type="time" class="horario-input" id="dom-entrada" placeholder="Entrada">
+                  <input type="time" class="horario-input" id="dom-saida" placeholder="Saída">
+                </div>
+                <div class="folga-checkbox">
+                  <label><input type="checkbox" id="dom-folga" onchange="toggleFolga('dom')"> Folga</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Preview da Escala -->
+          <div class="escala-preview" id="escala-preview" style="display: none;">
+            <div class="preview-title">📋 Preview da Escala</div>
+            <div class="preview-content" id="preview-content"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:3002';
+    let funcionarios = [];
+    let funcionarioSelecionado = null;
+    let escalas = {};
+
+    // Dados de funcionários para demonstração
+    const funcionariosDemo = [
+      { id: '12345', nome: 'João Silva', equipe: 'regular' },
+      { id: '11122', nome: 'Pedro Costa', equipe: 'regular' },
+      { id: '55566', nome: 'Ana Lima', equipe: 'regular' },
+      { id: '77788', nome: 'Carlos Santos', equipe: 'regular' },
+      { id: '99900', nome: 'Mariana Oliveira', equipe: 'regular' }
+    ];
+
+    // Verificar autenticação
+    document.addEventListener('DOMContentLoaded', () => {
+      verificarAutenticacao();
+      carregarFuncionarios();
+      carregarEscalas();
+    });
+
+    function verificarAutenticacao() {
+      const userType = localStorage.getItem('userType');
+      const userName = localStorage.getItem('userName');
+
+      if (userType !== 'supervisor') {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      document.getElementById('userWelcome').textContent = userName || 'Supervisor';
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = 'login.html';
+    }
+
+    function carregarFuncionarios() {
+      funcionarios = funcionariosDemo;
+      renderizarFuncionarios();
+    }
+
+    function carregarEscalas() {
+      // Carregar escalas do localStorage
+      const escalasStorage = localStorage.getItem('escalas');
+      if (escalasStorage) {
+        escalas = JSON.parse(escalasStorage);
+      }
+    }
+
+    function salvarEscalas() {
+      localStorage.setItem('escalas', JSON.stringify(escalas));
+    }
+
+    function renderizarFuncionarios() {
+      const container = document.getElementById('funcionarios-container');
+      
+      if (funcionarios.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">👥</div>
+            <p>Nenhum funcionário encontrado</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = funcionarios.map(func => {
+        const temEscala = escalas[func.id] ? 'com-escala' : 'sem-escala';
+        const statusText = escalas[func.id] ? 'Com escala' : 'Sem escala';
+        
+        return `
+          <div class="funcionario-item" onclick="selecionarFuncionario('${func.id}')">
+            <div class="funcionario-info">
+              <div class="funcionario-nome">👤 ${func.nome}</div>
+              <div class="funcionario-sap">SAP: ${func.id}</div>
+            </div>
+            <div class="funcionario-status status-${temEscala}">
+              ${statusText}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selecionarFuncionario(funcionarioId) {
+      // Remover seleção anterior
+      document.querySelectorAll('.funcionario-item').forEach(item => {
+        item.classList.remove('selected');
+      });
+
+      // Selecionar novo funcionário
+      event.target.closest('.funcionario-item').classList.add('selected');
+      
+      funcionarioSelecionado = funcionarios.find(f => f.id === funcionarioId);
+      
+      if (funcionarioSelecionado) {
+        mostrarEditor();
+        carregarEscalaFuncionario(funcionarioId);
+      }
+    }
+
+    function mostrarEditor() {
+      document.getElementById('editor-content').innerHTML = '';
+      document.getElementById('escala-form').classList.add('active');
+      document.getElementById('funcionario-nome').value = funcionarioSelecionado.nome;
+      document.getElementById('salvar-btn').disabled = false;
+      document.getElementById('limpar-btn').disabled = false;
+    }
+
+    function carregarEscalaFuncionario(funcionarioId) {
+      const escala = escalas[funcionarioId];
+      
+      if (escala) {
+        document.getElementById('tipo-escala').value = escala.tipo;
+        atualizarFormulario();
+        
+        if (escala.tipo === 'fixo') {
+          document.getElementById('entrada-fixo').value = escala.entrada;
+          document.getElementById('saida-fixo').value = escala.saida;
+          escala.dias.forEach(dia => {
+            const checkbox = document.querySelector(`.dia-checkbox[value="${dia}"]`);
+            if (checkbox) checkbox.checked = true;
+          });
+        } else if (escala.tipo === 'semanal') {
+          const dias = ['seg', 'ter', 'qua', 'qui', 'sex', 'sab', 'dom'];
+          dias.forEach((dia, index) => {
+            const diaEscala = escala.horarios[index];
+            if (diaEscala) {
+              if (diaEscala.folga) {
+                document.getElementById(`${dia}-folga`).checked = true;
+                toggleFolga(dia);
+              } else {
+                document.getElementById(`${dia}-entrada`).value = diaEscala.entrada || '';
+                document.getElementById(`${dia}-saida`).value = diaEscala.saida || '';
+              }
+            }
+          });
+        }
+        
+        gerarPreview();
+      } else {
+        limparFormulario();
+      }
+    }
+
+    function atualizarFormulario() {
+      const tipo = document.getElementById('tipo-escala').value;
+      
+      // Esconder todas as seções
+      document.getElementById('horario-fixo').style.display = 'none';
+      document.getElementById('escala-semanal').style.display = 'none';
+      document.getElementById('escala-preview').style.display = 'none';
+      
+      // Mostrar seção apropriada
+      if (tipo === 'fixo') {
+        document.getElementById('horario-fixo').style.display = 'block';
+      } else if (tipo === 'semanal') {
+        document.getElementById('escala-semanal').style.display = 'block';
+      }
+      
+      if (tipo) {
+        document.getElementById('escala-preview').style.display = 'block';
+        gerarPreview();
+      }
+    }
+
+    function toggleFolga(dia) {
+      const checkbox = document.getElementById(`${dia}-folga`);
+      const diaContainer = checkbox.closest('.dia-semana');
+      const entradaInput = document.getElementById(`${dia}-entrada`);
+      const saidaInput = document.getElementById(`${dia}-saida`);
+      
+      if (checkbox.checked) {
+        diaContainer.classList.add('dia-folga');
+        entradaInput.disabled = true;
+        saidaInput.disabled = true;
+        entradaInput.value = '';
+        saidaInput.value = '';
+      } else {
+        diaContainer.classList.remove('dia-folga');
+        entradaInput.disabled = false;
+        saidaInput.disabled = false;
+      }
+      
+      gerarPreview();
+    }
+
+    function gerarPreview() {
+      const tipo = document.getElementById('tipo-escala').value;
+      let preview = '';
+      
+      if (tipo === 'fixo') {
+        const entrada = document.getElementById('entrada-fixo').value;
+        const saida = document.getElementById('saida-fixo').value;
+        const dias = Array.from(document.querySelectorAll('.dia-checkbox:checked')).map(cb => {
+          const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sab'];
+          return diasSemana[parseInt(cb.value)];
+        });
+        
+        preview = `Horário Fixo:\n`;
+        preview += `Entrada: ${entrada || '--:--'}\n`;
+        preview += `Saída: ${saida || '--:--'}\n`;
+        preview += `Dias: ${dias.join(', ') || 'Nenhum dia selecionado'}`;
+        
+      } else if (tipo === 'semanal') {
+        const diasSemana = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+        const diasAbrev = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
+        
+        preview = 'Escala Semanal:\n\n';
+        
+        diasAbrev.forEach((dia, index) => {
+          const folga = document.getElementById(`${dia}-folga`).checked;
+          const entrada = document.getElementById(`${dia}-entrada`).value;
+          const saida = document.getElementById(`${dia}-saida`).value;
+          
+          preview += `${diasSemana[index]}: `;
+          if (folga) {
+            preview += 'FOLGA';
+          } else if (entrada && saida) {
+            preview += `${entrada} às ${saida}`;
+          } else {
+            preview += 'Não definido';
+          }
+          preview += '\n';
+        });
+      }
+      
+      document.getElementById('preview-content').textContent = preview;
+    }
+
+    function salvarEscala() {
+      if (!funcionarioSelecionado) {
+        mostrarMensagem('Nenhum funcionário selecionado', 'error');
+        return;
+      }
+      
+      const tipo = document.getElementById('tipo-escala').value;
+      if (!tipo) {
+        mostrarMensagem('Selecione o tipo de escala', 'error');
+        return;
+      }
+      
+      let escala = {
+        funcionarioId: funcionarioSelecionado.id,
+        funcionarioNome: funcionarioSelecionado.nome,
+        tipo: tipo,
+        criadaEm: new Date().toISOString(),
+        atualizadaEm: new Date().toISOString()
+      };
+      
+      if (tipo === 'fixo') {
+        const entrada = document.getElementById('entrada-fixo').value;
+        const saida = document.getElementById('saida-fixo').value;
+        const dias = Array.from(document.querySelectorAll('.dia-checkbox:checked')).map(cb => parseInt(cb.value));
+        
+        if (!entrada || !saida || dias.length === 0) {
+          mostrarMensagem('Preencha todos os campos do horário fixo', 'error');
+          return;
+        }
+        
+        escala.entrada = entrada;
+        escala.saida = saida;
+        escala.dias = dias;
+        
+      } else if (tipo === 'semanal') {
+        const diasAbrev = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
+        const horarios = [];
+        
+        let temHorarioValido = false;
+        
+        diasAbrev.forEach(dia => {
+          const folga = document.getElementById(`${dia}-folga`).checked;
+          const entrada = document.getElementById(`${dia}-entrada`).value;
+          const saida = document.getElementById(`${dia}-saida`).value;
+          
+          if (folga) {
+            horarios.push({ folga: true });
+          } else if (entrada && saida) {
+            horarios.push({ entrada, saida, folga: false });
+            temHorarioValido = true;
+          } else {
+            horarios.push({ folga: false });
+          }
+        });
+        
+        if (!temHorarioValido) {
+          mostrarMensagem('Defina pelo menos um horário ou folga para a escala semanal', 'error');
+          return;
+        }
+        
+        escala.horarios = horarios;
+      }
+      
+      // Salvar escala
+      escalas[funcionarioSelecionado.id] = escala;
+      salvarEscalas();
+      
+      // Atualizar interface
+      renderizarFuncionarios();
+      mostrarMensagem(`Escala de ${funcionarioSelecionado.nome} salva com sucesso!`, 'success');
+    }
+
+    function limparEscala() {
+      if (!funcionarioSelecionado) return;
+      
+      if (confirm(`Deseja realmente remover a escala de ${funcionarioSelecionado.nome}?`)) {
+        delete escalas[funcionarioSelecionado.id];
+        salvarEscalas();
+        renderizarFuncionarios();
+        limparFormulario();
+        mostrarMensagem(`Escala de ${funcionarioSelecionado.nome} removida com sucesso!`, 'success');
+      }
+    }
+
+    function limparFormulario() {
+      document.getElementById('tipo-escala').value = '';
+      document.getElementById('entrada-fixo').value = '';
+      document.getElementById('saida-fixo').value = '';
+      
+      document.querySelectorAll('.dia-checkbox').forEach(cb => cb.checked = false);
+      
+      const diasAbrev = ['dom', 'seg', 'ter', 'qua', 'qui', 'sex', 'sab'];
+      diasAbrev.forEach(dia => {
+        document.getElementById(`${dia}-folga`).checked = false;
+        document.getElementById(`${dia}-entrada`).value = '';
+        document.getElementById(`${dia}-saida`).value = '';
+        document.getElementById(`${dia}-entrada`).disabled = false;
+        document.getElementById(`${dia}-saida`).disabled = false;
+        const container = document.getElementById(`${dia}-folga`).closest('.dia-semana');
+        container.classList.remove('dia-folga');
+      });
+      
+      atualizarFormulario();
+    }
+
+    function mostrarMensagem(texto, tipo) {
+      const container = document.getElementById('messages');
+      const mensagem = document.createElement('div');
+      mensagem.className = `${tipo}-message`;
+      mensagem.textContent = texto;
+      
+      container.innerHTML = '';
+      container.appendChild(mensagem);
+      
+      setTimeout(() => {
+        mensagem.remove();
+      }, 5000);
+    }
+
+    // Event listeners para atualizar preview em tempo real
+    document.addEventListener('change', (e) => {
+      if (e.target.matches('#tipo-escala, .dia-checkbox, .horario-input, #entrada-fixo, #saida-fixo')) {
+        gerarPreview();
+      }
+    });
+
+    document.addEventListener('input', (e) => {
+      if (e.target.matches('.horario-input, #entrada-fixo, #saida-fixo')) {
+        gerarPreview();
+      }
+    });
+  </script>
+</body>
+
+</html>

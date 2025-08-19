@@ -610,7 +610,7 @@
       </div>
 
       <div class="back-link">
-        <a href="/">&larr; Voltar ao início</a>
+        <a href="index.html">&larr; Voltar ao início</a>
       </div>
     </div>
   </div>
@@ -655,9 +655,9 @@
           const data = await response.json();
           // Redirecionar baseado no tipo de usuário
           if (data.usuario.tipo === 'supervisor') {
-            window.location.href = '/supervisor.html';
+            window.location.href = 'supervisor.html';
           } else {
-            window.location.href = '/funcionario.html';
+            window.location.href = 'funcionario.html';
           }
         } else {
           // Token inválido, remover
@@ -772,9 +772,9 @@
             showError('Senha definida com sucesso! Redirecionando...');
             setTimeout(() => {
               if (data.usuario.tipo === 'supervisor') {
-                window.location.href = '/supervisor.html';
+                window.location.href = 'supervisor.html';
               } else {
-                window.location.href = '/funcionario.html';
+                window.location.href = 'funcionario.html';
               }
             }, 2000);
           } else {
@@ -785,9 +785,9 @@
             
             // Redirecionar para a página apropriada
             if (data.usuario.tipo === 'supervisor') {
-              window.location.href = '/supervisor.html';
+              window.location.href = 'supervisor.html';
             } else {
-              window.location.href = '/funcionario.html';
+              window.location.href = 'funcionario.html';
             }
           }
         } else {
@@ -893,15 +893,15 @@
 
       // Redirecionar para a página apropriada
       if (usuario.tipo === 'supervisor') {
-        window.location.href = '/supervisor.html';
+        window.location.href = 'supervisor.html';
       } else {
-        window.location.href = '/funcionario.html';
+        window.location.href = 'funcionario.html';
       }
     }
 
     // Link para administração
     function irParaAdmin() {
-      window.location.href = '/admin.html';
+      window.location.href = 'admin.html';
     }
 
     // Funções de login simples (como funcionava antes)
@@ -911,7 +911,7 @@
       localStorage.setItem('userId', '1');
       localStorage.setItem('userName', 'João Silva');
       localStorage.setItem('userSapId', '12345');
-      window.location.href = '/funcionario.html';
+      window.location.href = 'funcionario.html';
     }
 
     function loginAsSupervisor() {
@@ -920,13 +920,13 @@
       localStorage.setItem('userId', '2');
       localStorage.setItem('userName', 'Maria Santos');
       localStorage.setItem('userSapId', '98765');
-      window.location.href = '/supervisor.html';
+      window.location.href = 'supervisor.html';
     }
 
     // Função para logout
     function logout() {
       localStorage.clear();
-      window.location.href = '/';
+      window.location.href = 'index.html';
     }
   </script>
 </body>

@@ -1,783 +1,1755 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Escalas - Supervisor</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flow Férias - Gerenciar Escalas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --berkeley-blue: #1E3A5F;
+      --pacific-cyan: #25A3C1;
+      --yellow-green: #94C849;
+      --carrot-orange: #F3921F;
+      --butterscotch: #D89A48;
+      --white: #FFFFFF;
+      --light-gray: #F8F9FA;
+      --medium-gray: #E9ECEF;
+      --text-dark: #2C3E50;
+      --text-light: #6C757D;
+      --success: #28A745;
+      --warning: #FFC107;
+      --danger: #DC3545;
+    }
 
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
+    body {
+      font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: var(--light-gray);
+      min-height: 100vh;
+      color: var(--text-dark);
+    }
 
-        .header {
-            background: #FF0000;
-            color: white;
-            padding: 30px;
-            text-align: center;
-        }
+    .header {
+      background: linear-gradient(135deg, var(--carrot-orange) 0%, var(--butterscotch) 100%);
+      color: white;
+      padding: 1.5rem 0;
+      box-shadow: 0 2px 10px rgba(243, 146, 31, 0.2);
+    }
 
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
+    .header-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        .header p {
-            opacity: 0.9;
-            font-size: 1.1em;
-        }
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
 
-        .navigation {
-            background: #f8f9ff;
-            padding: 20px 30px;
-            border-bottom: 1px solid #e0e6ed;
-        }
+    .logo-flow {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
 
-        .nav-buttons {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
+    .wave-container {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      width: 30px;
+    }
 
-        .nav-btn, .action-btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
+    .wave {
+      height: 4px;
+      border-radius: 2px;
+      animation: wave-flow 2s ease-in-out infinite;
+    }
 
-        .nav-btn {
-            background: #667eea;
-            color: white;
-        }
+    .wave1 {
+      background: var(--white);
+      width: 28px;
+      animation-delay: 0s;
+    }
 
-        .nav-btn:hover {
-            background: #5a67d8;
-            transform: translateY(-2px);
-        }
+    .wave2 {
+      background: rgba(255, 255, 255, 0.8);
+      width: 24px;
+      animation-delay: 0.3s;
+    }
 
-        .action-btn.primary {
-            background: #4facfe;
-            color: white;
-        }
+    .wave3 {
+      background: rgba(255, 255, 255, 0.6);
+      width: 20px;
+      animation-delay: 0.6s;
+    }
 
-        .action-btn.success {
-            background: #48bb78;
-            color: white;
-        }
+    .flow-text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
 
-        .action-btn.danger {
-            background: #f56565;
-            color: white;
-        }
+    .flow-main {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--white);
+    }
 
-        .action-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-        }
+    .flow-sub {
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.9);
+      letter-spacing: 2px;
+      margin-top: 2px;
+    }
 
-        .content {
-            padding: 30px;
-        }
+    @keyframes wave-flow {
+      0%, 100% { transform: scaleX(1); opacity: 0.7; }
+      50% { transform: scaleX(1.2); opacity: 1; }
+    }
 
-        .funcionario-selector {
-            margin-bottom: 30px;
-        }
+    .header-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
 
-        .funcionario-selector h3 {
-            margin-bottom: 15px;
-            color: #333;
-        }
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
 
-        .funcionario-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-        }
+    .logout-btn {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
 
-        .funcionario-card {
-            padding: 15px;
-            border: 2px solid #e0e6ed;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            background: white;
-        }
+    .logout-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: translateY(-2px);
+    }
 
-        .funcionario-card:hover {
-            border-color: #4facfe;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
 
-        .funcionario-card.selected {
-            border-color: #FF0000;
-            background: #ffe0e0;
-        }
+    .breadcrumb {
+      background: var(--white);
+      padding: 1rem 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
 
-        .funcionario-name {
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 5px;
-        }
+    .breadcrumb a {
+      color: var(--pacific-cyan);
+      text-decoration: none;
+      font-weight: 500;
+    }
 
-        .funcionario-info {
-            font-size: 0.9em;
-            color: #666;
-        }
+    .breadcrumb a:hover {
+      text-decoration: underline;
+    }
 
-        .escala-editor {
-            display: none;
-            margin-top: 30px;
-        }
+    .page-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--berkeley-blue);
+      margin-bottom: 0.5rem;
+    }
 
-        .escala-editor.active {
-            display: block;
-        }
+    .page-subtitle {
+      color: var(--text-light);
+      margin-bottom: 2rem;
+    }
 
-        .editor-header {
-            background: linear-gradient(135deg, #FF0000 0%, #cc0000 100%);
-            color: white;
-            padding: 20px;
-            border-radius: 10px 10px 0 0;
-            margin-bottom: 0;
-        }
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
+      align-items: start;
+    }
 
-        .editor-content {
-            background: #f8f9ff;
-            border: 1px solid #e0e6ed;
-            border-top: none;
-            border-radius: 0 0 10px 10px;
-            padding: 20px;
-        }
+    .funcionarios-list {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      height: fit-content;
+    }
 
-        .escalas-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+    .funcionarios-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
 
-        .escala-item {
-            background: white;
-            border: 1px solid #e0e6ed;
-            border-radius: 8px;
-            padding: 20px;
-            position: relative;
-        }
+    .funcionarios-list h3 {
+      color: var(--berkeley-blue);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
 
-        .escala-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
+    .funcionario-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      border: 2px solid var(--medium-gray);
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
 
-        .escala-number {
-            font-weight: bold;
-            font-size: 1.2em;
-            color: #FF0000;
-        }
+    .funcionario-item:hover {
+      border-color: var(--pacific-cyan);
+      background: #f8fcff;
+    }
 
-        .delete-escala {
-            background: #f56565;
-            color: white;
-            border: none;
-            padding: 5px 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 0.9em;
-        }
+    .funcionario-item.selected {
+      border-color: var(--yellow-green);
+      background: rgba(148, 200, 73, 0.1);
+      box-shadow: 0 2px 8px rgba(148, 200, 73, 0.3);
+    }
 
-        .escala-fields {
-            display: grid;
-            grid-template-columns: 1fr 1fr 120px 120px;
-            gap: 15px;
-            align-items: center;
-        }
+    .funcionario-info {
+      display: flex;
+      flex-direction: column;
+    }
 
-        .field-group {
-            display: flex;
-            flex-direction: column;
-        }
+    .funcionario-nome {
+      font-weight: 600;
+      color: var(--berkeley-blue);
+    }
 
-        .field-label {
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 5px;
-            font-size: 0.9em;
-        }
+    .funcionario-sap {
+      font-size: 0.85rem;
+      color: var(--text-light);
+    }
 
-        .field-input {
-            padding: 10px;
-            border: 1px solid #e0e6ed;
-            border-radius: 5px;
-            font-size: 1em;
-        }
+    .funcionario-status {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
 
-        .field-input:focus {
-            outline: none;
-            border-color: #4facfe;
-        }
+    .status-com-escala {
+      background: rgba(40, 167, 69, 0.1);
+      color: var(--success);
+    }
 
-        .checkbox-field {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 20px;
-        }
+    .status-sem-escala {
+      background: rgba(220, 53, 69, 0.1);
+      color: var(--danger);
+    }
 
-        .checkbox-field input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-        }
+    .escala-editor {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 
-        .add-escala-btn {
-            background: #48bb78;
-            color: white;
-            border: none;
-            padding: 15px 30px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-top: 20px;
-            width: 100%;
-            font-size: 1.1em;
-        }
+    .editor-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 2px solid var(--medium-gray);
+    }
 
-        .add-escala-btn:hover {
-            background: #38a169;
-        }
+    .editor-title {
+      color: var(--berkeley-blue);
+      font-size: 1.3rem;
+      font-weight: 600;
+    }
 
-        .save-section {
-            margin-top: 30px;
-            padding: 20px;
-            background: #e6fffa;
-            border-left: 4px solid #48bb78;
-            border-radius: 8px;
-        }
+    .editor-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
 
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: #666;
-            display: none;
-        }
+    .btn {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.9rem;
+    }
 
-        .error, .success {
-            padding: 15px;
-            margin: 15px 0;
-            border-radius: 8px;
-            display: none;
-        }
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
 
-        .error {
-            background: #fed7d7;
-            color: #c53030;
-            border: 1px solid #feb2b2;
-        }
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
 
-        .success {
-            background: #c6f6d5;
-            color: #22543d;
-            border: 1px solid #9ae6b4;
-        }
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
+    .btn-warning {
+      background: var(--warning);
+      color: var(--berkeley-blue);
+    }
 
-        .stat-card {
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            border: 1px solid #e0e6ed;
-        }
+    .btn-danger {
+      background: var(--danger);
+      color: white;
+    }
 
-        .stat-number {
-            font-size: 2em;
-            font-weight: bold;
-            color: #4facfe;
-        }
+    .btn-secondary {
+      background: var(--medium-gray);
+      color: var(--text-dark);
+    }
 
-        .stat-label {
-            color: #666;
-            font-size: 0.9em;
-        }
+    .escala-form {
+      display: none;
+    }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            .container {
-                margin: 10px;
-            }
+    .escala-form.active {
+      display: block;
+    }
 
-            .content {
-                padding: 20px;
-            }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
 
-            .funcionario-grid {
-                grid-template-columns: 1fr;
-            }
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--berkeley-blue);
+    }
 
-            .escala-fields {
-                grid-template-columns: 1fr;
-            }
+    .form-input,
+    .form-select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid var(--medium-gray);
+      border-radius: 8px;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1rem;
+      transition: border-color 0.3s ease;
+    }
 
-            .nav-buttons {
-                flex-direction: column;
-                align-items: stretch;
-            }
-        }
-    </style>
+    .form-input:focus,
+    .form-select:focus {
+      outline: none;
+      border-color: var(--pacific-cyan);
+    }
+
+    .form-input:read-only {
+      background: var(--light-gray);
+      color: var(--text-light);
+    }
+
+    .form-section {
+      margin-bottom: 2rem;
+    }
+
+    .horarios-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .dia-semana {
+      text-align: center;
+      padding: 1rem;
+      border: 2px solid var(--medium-gray);
+      border-radius: 8px;
+      background: var(--light-gray);
+      transition: all 0.3s ease;
+    }
+
+    .dia-semana.dia-folga {
+      background: rgba(220, 53, 69, 0.1);
+      border-color: var(--danger);
+    }
+
+    .dia-header {
+      font-weight: 600;
+      color: var(--berkeley-blue);
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .horario-inputs {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .horario-input {
+      padding: 0.25rem;
+      border: 1px solid var(--medium-gray);
+      border-radius: 4px;
+      font-size: 0.8rem;
+      text-align: center;
+    }
+
+    .horario-input:disabled {
+      background: var(--light-gray);
+      color: var(--text-light);
+    }
+
+    .folga-checkbox {
+      margin-top: 0.5rem;
+    }
+
+    .folga-checkbox label {
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      justify-content: center;
+    }
+
+    .form-description {
+      color: var(--text-light);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .escalas-container {
+      border: 2px dashed var(--medium-gray);
+      border-radius: 8px;
+      padding: 1rem;
+      min-height: 100px;
+    }
+
+    .escala-item {
+      background: var(--white);
+      border: 2px solid var(--medium-gray);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .escala-item:hover {
+      border-color: var(--pacific-cyan);
+      box-shadow: 0 2px 8px rgba(37, 163, 193, 0.2);
+    }
+
+    .escala-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .escala-nome {
+      font-weight: 600;
+      color: var(--berkeley-blue);
+      margin-bottom: 0.25rem;
+    }
+
+    .escala-periodo {
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+
+    .escala-status {
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .status-ativa {
+      background: rgba(40, 167, 69, 0.1);
+      color: var(--success);
+    }
+
+    .status-inativa {
+      background: rgba(220, 53, 69, 0.1);
+      color: var(--danger);
+    }
+
+    .status-planejada {
+      background: rgba(255, 193, 7, 0.1);
+      color: var(--warning);
+    }
+
+    .escala-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+
+    .btn-small {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.8rem;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: var(--white);
+      border-radius: 12px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem;
+      border-bottom: 2px solid var(--medium-gray);
+    }
+
+    .modal-header h3 {
+      color: var(--berkeley-blue);
+      margin: 0;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-light);
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .modal-close:hover {
+      background: var(--medium-gray);
+      color: var(--danger);
+    }
+
+    .modal-body {
+      padding: 1.5rem;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      padding: 1.5rem;
+      border-top: 2px solid var(--medium-gray);
+    }
+
+    .date-selection {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .date-input-group {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .date-input-group label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--berkeley-blue);
+      margin-bottom: 0.5rem;
+    }
+
+    .periodo-info {
+      background: var(--light-gray);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+    }
+
+    .periodo-valido {
+      color: var(--success);
+      border: 2px solid rgba(40, 167, 69, 0.2);
+    }
+
+    .periodo-invalido {
+      color: var(--danger);
+      border: 2px solid rgba(220, 53, 69, 0.2);
+    }
+
+    /* Calendar Styles */
+    .calendar-container {
+      border: 2px solid var(--medium-gray);
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+
+    .calendar-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem;
+      background: var(--light-gray);
+    }
+
+    .calendar-nav-btn {
+      background: var(--pacific-cyan);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+
+    .calendar-nav-btn:hover {
+      background: var(--berkeley-blue);
+    }
+
+    .calendar-header {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      background: var(--berkeley-blue);
+    }
+
+    .calendar-day-header {
+      padding: 0.75rem;
+      text-align: center;
+      color: white;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1px;
+      background: var(--medium-gray);
+    }
+
+    .calendar-day {
+      background: var(--white);
+      padding: 0.75rem;
+      min-height: 45px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .calendar-day:hover {
+      background: var(--light-gray);
+    }
+
+    .calendar-day.other-month {
+      color: var(--text-light);
+      background: #fafafa;
+    }
+
+    .calendar-day.today {
+      background: rgba(37, 163, 193, 0.1);
+      color: var(--pacific-cyan);
+      font-weight: 600;
+    }
+
+    .calendar-day.selected {
+      background: var(--yellow-green);
+      color: white;
+      font-weight: 600;
+    }
+
+    .calendar-day.in-range {
+      background: rgba(148, 200, 73, 0.3);
+      color: var(--berkeley-blue);
+    }
+
+    .calendar-day.range-start {
+      background: var(--yellow-green);
+      color: white;
+      font-weight: 600;
+    }
+
+    .calendar-day.range-end {
+      background: var(--yellow-green);
+      color: white;
+      font-weight: 600;
+    }
+
+    .empty-escalas {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-light);
+    }
+
+    .empty-escalas-icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: var(--text-light);
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+    }
+
+    .success-message,
+    .error-message {
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      font-weight: 500;
+    }
+
+    .success-message {
+      background: rgba(40, 167, 69, 0.1);
+      color: var(--success);
+      border: 1px solid rgba(40, 167, 69, 0.2);
+    }
+
+    .error-message {
+      background: rgba(220, 53, 69, 0.1);
+      color: var(--danger);
+      border: 1px solid rgba(220, 53, 69, 0.2);
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+
+      .horarios-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        padding: 1rem;
+      }
+
+      .header-content {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+      }
+
+      .editor-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+      }
+    }
+
+    /* Estilos para notificações */
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(100%);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideOut {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(100%);
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>📅 Editar Escalas - Supervisor</h1>
-            <p>Gerencie as escalas 14x14 de todos os funcionários</p>
+  <div class="header">
+    <div class="header-content">
+      <div class="logo-container">
+        <div class="logo-flow">
+          <div class="wave-container">
+            <div class="wave wave1"></div>
+            <div class="wave wave2"></div>
+            <div class="wave wave3"></div>
+          </div>
+          <div class="flow-text">
+            <span class="flow-main">Flow</span>
+            <span class="flow-sub">FÉRIAS</span>
+          </div>
         </div>
+        <div class="header-title">Gerenciar Escalas</div>
+      </div>
+      <div class="user-info">
+        <span id="userWelcome">Supervisor</span>
+        <button class="logout-btn" onclick="logout()">Sair</button>
+      </div>
+    </div>
+  </div>
 
-        <div class="navigation">
-            <div class="nav-buttons">
-                <a href="/supervisor.html" class="nav-btn">
-                    ← Voltar ao Painel
-                </a>
-                <button class="nav-btn" onclick="carregarDados()">
-                    🔄 Atualizar Dados
-                </button>
-                <button class="action-btn success" onclick="salvarTodasEscalas()">
-                    💾 Salvar Todas as Alterações
-                </button>
-            </div>
-        </div>
-
-        <div class="content">
-            <div class="loading" id="loading">⏳ Carregando dados...</div>
-            <div class="error" id="error"></div>
-            <div class="success" id="success"></div>
-
-            <div class="funcionario-selector">
-                <h3>📋 Selecione um Funcionário para Editar</h3>
-                <div class="stats-grid" id="statsGrid"></div>
-                <div class="funcionario-grid" id="funcionarioGrid"></div>
-            </div>
-
-            <div class="escala-editor" id="escalaEditor">
-                <div class="editor-header">
-                    <h3 id="editorTitle">Editando Escalas</h3>
-                    <p id="editorSubtitle">Configure as escalas 14x14</p>
-                </div>
-                
-                <div class="editor-content">
-                    <div class="escalas-container" id="escalasContainer"></div>
-                    
-                    <button class="add-escala-btn" onclick="adicionarNovaEscala()">
-                        ➕ Adicionar Nova Escala
-                    </button>
-
-                    <div class="save-section">
-                        <h4>💾 Salvar Alterações</h4>
-                        <p>As alterações serão aplicadas imediatamente no sistema.</p>
-                        <div style="margin-top: 15px;">
-                            <button class="action-btn success" onclick="salvarEscalasFuncionario()">
-                                Salvar Escalas deste Funcionário
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="supervisor.html">← Voltar ao Painel</a>
     </div>
 
-    <script>
-        const API_BASE = 'http://localhost:3001/api';
+    <h1 class="page-title">📅 Gerenciamento de Escalas</h1>
+    <p class="page-subtitle">Cadastre e edite as escalas de trabalho dos funcionários para otimizar a cobertura durante férias</p>
+
+    <div id="messages"></div>
+
+    <div class="main-content">
+      <!-- Lista de Funcionários -->
+      <div class="funcionarios-list">
+        <div class="funcionarios-header">
+          <h3>👥 Funcionários</h3>
+          <button class="btn btn-success btn-small" onclick="abrirModalNovoFuncionario()">
+            ➕ Novo Funcionário
+          </button>
+        </div>
+        <div id="funcionarios-container">
+          <div class="empty-state">
+            <div class="empty-state-icon">⏳</div>
+            <p>Carregando funcionários...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Editor de Escala -->
+      <div class="escala-editor">
+        <div class="editor-header">
+          <h3 class="editor-title">📋 Editor de Escala</h3>
+          <div class="editor-actions">
+            <button class="btn btn-success" onclick="salvarEscala()" id="salvar-btn" disabled>
+              💾 Salvar Escala
+            </button>
+            <button class="btn btn-warning" onclick="limparEscala()" id="limpar-btn" disabled>
+              🗑️ Limpar
+            </button>
+          </div>
+        </div>
+
+        <div id="editor-content">
+          <div class="empty-state">
+            <div class="empty-state-icon">👈</div>
+            <p>Selecione um funcionário para editar sua escala</p>
+          </div>
+        </div>
+
+        <!-- Formulário de Escala -->
+        <div class="escala-form" id="escala-form">
+          <div class="form-group">
+            <label class="form-label">Funcionário Selecionado:</label>
+            <input type="text" class="form-input" id="funcionario-nome" readonly>
+          </div>
+
+          <!-- Escalas de 14 Dias -->
+          <div class="form-section">
+            <h4>📅 Escalas de 14 Dias</h4>
+            <p class="form-description">Cada escala deve ter exatamente 14 dias consecutivos. Clique em "Adicionar Nova Escala" para criar uma escala.</p>
+            
+            <div id="escalas-lista" class="escalas-container">
+              <!-- Escalas existentes serão listadas aqui -->
+            </div>
+            
+            <button type="button" class="btn btn-success" onclick="adicionarNovaEscala()" style="width: 100%; margin-top: 1rem;">
+              ➕ Adicionar Nova Escala 14x14
+            </button>
+          </div>
+
+          <!-- Modal para Criar/Editar Escala -->
+          <div id="escala-modal" class="modal-overlay" style="display: none;">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h3 id="modal-title">📅 Nova Escala 14x14</h3>
+                <button class="modal-close" onclick="fecharModalEscala()">&times;</button>
+              </div>
+              
+              <div class="modal-body">
+                <div class="form-group">
+                  <label class="form-label">Nome da Escala:</label>
+                  <input type="text" class="form-input" id="escala-nome" placeholder="Ex: Escala Janeiro 2025">
+                </div>
+                
+                <div class="form-group">
+                  <label class="form-label">Selecione o Período (14 dias consecutivos):</label>
+                  <div class="date-selection">
+                    <div class="date-input-group">
+                      <label>Data de Início:</label>
+                      <input type="date" class="form-input" id="escala-inicio" onchange="calcularDataFim()">
+                    </div>
+                    <div class="date-input-group">
+                      <label>Data de Fim (calculada automaticamente):</label>
+                      <input type="date" class="form-input" id="escala-fim" readonly>
+                    </div>
+                  </div>
+                  <div id="periodo-info" class="periodo-info"></div>
+                </div>
+
+                <!-- Calendário Visual -->
+                <div class="calendar-container">
+                  <div class="calendar-controls">
+                    <button type="button" class="calendar-nav-btn" onclick="mesAnterior()">&lt; Anterior</button>
+                    <h4 id="calendar-title-modal">Janeiro 2025</h4>
+                    <button type="button" class="calendar-nav-btn" onclick="proximoMes()">Próximo &gt;</button>
+                  </div>
+                  
+                  <div class="calendar-header">
+                    <div class="calendar-day-header">Dom</div>
+                    <div class="calendar-day-header">Seg</div>
+                    <div class="calendar-day-header">Ter</div>
+                    <div class="calendar-day-header">Qua</div>
+                    <div class="calendar-day-header">Qui</div>
+                    <div class="calendar-day-header">Sex</div>
+                    <div class="calendar-day-header">Sáb</div>
+                  </div>
+                  
+                  <div class="calendar-grid" id="calendar-grid-modal">
+                    <!-- Dias do calendário serão gerados dinamicamente -->
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Status da Escala:</label>
+                  <select class="form-select" id="escala-status">
+                    <option value="ativa">Ativa</option>
+                    <option value="inativa">Inativa</option>
+                    <option value="planejada">Planejada</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="fecharModalEscala()">Cancelar</button>
+                <button type="button" class="btn btn-success" onclick="salvarEscalaModal()" id="btn-salvar-modal">
+                  💾 Salvar Escala
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal para Novo Funcionário -->
+  <div id="funcionario-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>👤 Novo Funcionário</h3>
+        <button class="modal-close" onclick="fecharModalFuncionario()">&times;</button>
+      </div>
+      
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Nome Completo:</label>
+          <input type="text" class="form-input" id="funcionario-novo-nome" placeholder="Digite o nome completo do funcionário">
+        </div>
         
-        let funcionarios = [];
-        let escalasOriginais = {};
-        let funcionarioSelecionado = null;
-        let proximoTempId = -1;
+        <div class="form-group">
+          <label class="form-label">SAP ID:</label>
+          <input type="text" class="form-input" id="funcionario-novo-sap" placeholder="Digite o ID SAP (ex: 12345)">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Cargo:</label>
+          <input type="text" class="form-input" id="funcionario-novo-cargo" placeholder="Ex: Analista, Desenvolvedor, Gerente">
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Equipe:</label>
+          <select class="form-select" id="funcionario-novo-equipe">
+            <option value="regular">Regular</option>
+            <option value="desenvolvimento">Desenvolvimento</option>
+            <option value="gestao">Gestão</option>
+            <option value="ux-ui">UX/UI</option>
+            <option value="qa">QA</option>
+            <option value="infraestrutura">Infraestrutura</option>
+            <option value="agile">Agile</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="fecharModalFuncionario()">Cancelar</button>
+        <button type="button" class="btn btn-success" onclick="salvarNovoFuncionario()">
+          👤 Adicionar Funcionário
+        </button>
+      </div>
+    </div>
+  </div>
 
-        // Elementos DOM
-        const loading = document.getElementById('loading');
-        const error = document.getElementById('error');
-        const success = document.getElementById('success');
-        const funcionarioGrid = document.getElementById('funcionarioGrid');
-        const escalaEditor = document.getElementById('escalaEditor');
-        const escalasContainer = document.getElementById('escalasContainer');
-        const editorTitle = document.getElementById('editorTitle');
-        const editorSubtitle = document.getElementById('editorSubtitle');
-        const statsGrid = document.getElementById('statsGrid');
+  <script>
+    const API_BASE = 'http://localhost:3002';
+    let funcionarios = [];
+    let funcionarioSelecionado = null;
+    let escalas = {};
 
-        // Carregar dados iniciais
-        document.addEventListener('DOMContentLoaded', carregarDados);
+    // Dados de funcionários para demonstração
+    const funcionariosDemo = [
+      { id: '12345', nome: 'João Silva', equipe: 'regular' },
+      { id: '11122', nome: 'Pedro Costa', equipe: 'regular' },
+      { id: '55566', nome: 'Ana Lima', equipe: 'regular' },
+      { id: '77788', nome: 'Carlos Santos', equipe: 'regular' },
+      { id: '99900', nome: 'Mariana Oliveira', equipe: 'regular' }
+    ];
 
-        async function fazerRequisicao(url, options = {}) {
-            const response = await fetch(`${API_BASE}${url}`, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    ...options.headers
-                },
-                ...options
-            });
+    // Verificar autenticação
+    document.addEventListener('DOMContentLoaded', () => {
+      verificarAutenticacao();
+      carregarFuncionarios();
+      carregarEscalas();
+    });
 
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.erro || `Erro HTTP: ${response.status}`);
+    function verificarAutenticacao() {
+      const userType = localStorage.getItem('userType');
+      const userName = localStorage.getItem('userName');
+
+      if (userType !== 'supervisor') {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      document.getElementById('userWelcome').textContent = userName || 'Supervisor';
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = 'login.html';
+    }
+
+    function carregarFuncionarios() {
+      funcionarios = funcionariosDemo;
+      renderizarFuncionarios();
+    }
+
+    function carregarEscalas() {
+      // Carregar escalas do localStorage
+      const escalasStorage = localStorage.getItem('escalas');
+      if (escalasStorage) {
+        escalas = JSON.parse(escalasStorage);
+      }
+    }
+
+    function salvarEscalas() {
+      localStorage.setItem('escalas', JSON.stringify(escalas));
+    }
+
+    function renderizarFuncionarios() {
+      const container = document.getElementById('funcionarios-container');
+      
+      if (funcionarios.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">👥</div>
+            <p>Nenhum funcionário encontrado</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = funcionarios.map(func => {
+        const temEscala = escalas[func.id] ? 'com-escala' : 'sem-escala';
+        const statusText = escalas[func.id] ? 'Com escala' : 'Sem escala';
+        
+        return `
+          <div class="funcionario-item" onclick="selecionarFuncionario('${func.id}')">
+            <div class="funcionario-info">
+              <div class="funcionario-nome">👤 ${func.nome}</div>
+              <div class="funcionario-sap">SAP: ${func.id}</div>
+            </div>
+            <div class="funcionario-status status-${temEscala}">
+              ${statusText}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selecionarFuncionario(funcionarioId) {
+      // Remover seleção anterior
+      document.querySelectorAll('.funcionario-item').forEach(item => {
+        item.classList.remove('selected');
+      });
+
+      // Selecionar novo funcionário
+      event.target.closest('.funcionario-item').classList.add('selected');
+      
+      funcionarioSelecionado = funcionarios.find(f => f.id === funcionarioId);
+      
+      if (funcionarioSelecionado) {
+        mostrarEditor();
+        carregarEscalaFuncionario(funcionarioId);
+      }
+    }
+
+    function mostrarEditor() {
+      document.getElementById('editor-content').innerHTML = '';
+      document.getElementById('escala-form').classList.add('active');
+      document.getElementById('funcionario-nome').value = funcionarioSelecionado.nome;
+      document.getElementById('salvar-btn').disabled = false;
+      document.getElementById('limpar-btn').disabled = false;
+    }
+
+    function carregarEscalaFuncionario(funcionarioId) {
+      const escala = escalas[funcionarioId];
+      
+      if (escala) {
+        document.getElementById('tipo-escala').value = escala.tipo;
+        atualizarFormulario();
+        
+        if (escala.tipo === 'fixo') {
+          document.getElementById('entrada-fixo').value = escala.entrada;
+          document.getElementById('saida-fixo').value = escala.saida;
+          escala.dias.forEach(dia => {
+            const checkbox = document.querySelector(`.dia-checkbox[value="${dia}"]`);
+            if (checkbox) checkbox.checked = true;
+          });
+        } else if (escala.tipo === 'semanal') {
+          const dias = ['seg', 'ter', 'qua', 'qui', 'sex', 'sab', 'dom'];
+          dias.forEach((dia, index) => {
+            const diaEscala = escala.horarios[index];
+            if (diaEscala) {
+              if (diaEscala.folga) {
+                document.getElementById(`${dia}-folga`).checked = true;
+                toggleFolga(dia);
+              } else {
+                document.getElementById(`${dia}-entrada`).value = diaEscala.entrada || '';
+                document.getElementById(`${dia}-saida`).value = diaEscala.saida || '';
+              }
             }
+          });
+        }
+        
+        gerarPreview();
+      } else {
+        limparFormulario();
+      }
+    }
 
-            return await response.json();
+  <script>
+    const API_BASE = 'http://localhost:3002';
+    let funcionarios = [];
+    let funcionarioSelecionado = null;
+    let escalas = {};
+    
+    // Variáveis do calendário modal
+    let currentModalDate = new Date();
+    let selectedStartDate = null;
+    let selectedEndDate = null;
+    let editingEscalaId = null;
+
+    // Dados de funcionários para demonstração
+    const funcionariosDemo = [
+      { id: '12345', nome: 'João Silva', equipe: 'regular' },
+      { id: '11122', nome: 'Pedro Costa', equipe: 'regular' },
+      { id: '55566', nome: 'Ana Lima', equipe: 'regular' },
+      { id: '77788', nome: 'Carlos Santos', equipe: 'regular' },
+      { id: '99900', nome: 'Mariana Oliveira', equipe: 'regular' }
+    ];
+
+    // Verificar autenticação
+    document.addEventListener('DOMContentLoaded', () => {
+      verificarAutenticacao();
+      carregarFuncionarios();
+      carregarEscalas();
+    });
+
+    function verificarAutenticacao() {
+      const userType = localStorage.getItem('userType');
+      const userName = localStorage.getItem('userName');
+
+      if (userType !== 'supervisor') {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      document.getElementById('userWelcome').textContent = userName || 'Supervisor';
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = 'login.html';
+    }
+
+    function carregarFuncionarios() {
+      funcionarios = funcionariosDemo;
+      renderizarFuncionarios();
+    }
+
+    function carregarEscalas() {
+      // Carregar escalas do localStorage
+      const escalasStorage = localStorage.getItem('escalas');
+      if (escalasStorage) {
+        escalas = JSON.parse(escalasStorage);
+      }
+    }
+
+    function salvarEscalas() {
+      localStorage.setItem('escalas', JSON.stringify(escalas));
+    }
+
+    function renderizarFuncionarios() {
+      const container = document.getElementById('funcionarios-container');
+      
+      if (funcionarios.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">👥</div>
+            <p>Nenhum funcionário encontrado</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = funcionarios.map(func => {
+        const escalasFunc = escalas[func.id] || [];
+        const temEscala = escalasFunc.length > 0 ? 'com-escala' : 'sem-escala';
+        const statusText = escalasFunc.length > 0 ? `${escalasFunc.length} escala(s)` : 'Sem escalas';
+        
+        return `
+          <div class="funcionario-item" onclick="selecionarFuncionario('${func.id}')">
+            <div class="funcionario-info">
+              <div class="funcionario-nome">👤 ${func.nome}</div>
+              <div class="funcionario-sap">SAP: ${func.id}</div>
+            </div>
+            <div class="funcionario-status status-${temEscala}">
+              ${statusText}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selecionarFuncionario(funcionarioId) {
+      // Remover seleção anterior
+      document.querySelectorAll('.funcionario-item').forEach(item => {
+        item.classList.remove('selected');
+      });
+
+      // Selecionar novo funcionário
+      event.target.closest('.funcionario-item').classList.add('selected');
+      
+      funcionarioSelecionado = funcionarios.find(f => f.id === funcionarioId);
+      
+      if (funcionarioSelecionado) {
+        mostrarEditor();
+        carregarEscalasFuncionario(funcionarioId);
+      }
+    }
+
+    function mostrarEditor() {
+      document.getElementById('editor-content').innerHTML = '';
+      document.getElementById('escala-form').classList.add('active');
+      document.getElementById('funcionario-nome').value = funcionarioSelecionado.nome;
+      document.getElementById('salvar-btn').disabled = false;
+      document.getElementById('limpar-btn').disabled = false;
+    }
+
+    function carregarEscalasFuncionario(funcionarioId) {
+      const escalasFunc = escalas[funcionarioId] || [];
+      renderizarEscalas(escalasFunc);
+    }
+
+    function renderizarEscalas(escalasFunc) {
+      const container = document.getElementById('escalas-lista');
+      
+      if (escalasFunc.length === 0) {
+        container.innerHTML = `
+          <div class="empty-escalas">
+            <div class="empty-escalas-icon">📅</div>
+            <p>Nenhuma escala cadastrada</p>
+            <p>Clique em "Adicionar Nova Escala" para começar</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = escalasFunc.map((escala, index) => {
+        const dataInicio = new Date(escala.dataInicio).toLocaleDateString('pt-BR');
+        const dataFim = new Date(escala.dataFim).toLocaleDateString('pt-BR');
+        
+        return `
+          <div class="escala-item">
+            <div class="escala-info">
+              <div class="escala-nome">${escala.nome}</div>
+              <div class="escala-periodo">${dataInicio} até ${dataFim}</div>
+            </div>
+            <div class="escala-status status-${escala.status}">
+              ${escala.status.charAt(0).toUpperCase() + escala.status.slice(1)}
+            </div>
+            <div class="escala-actions">
+              <button class="btn btn-small btn-warning" onclick="editarEscala(${index})">✏️ Editar</button>
+              <button class="btn btn-small btn-danger" onclick="removerEscala(${index})">🗑️ Remover</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function adicionarNovaEscala() {
+      if (!funcionarioSelecionado) {
+        mostrarMensagem('Selecione um funcionário primeiro', 'error');
+        return;
+      }
+      
+      editingEscalaId = null;
+      selectedStartDate = null;
+      selectedEndDate = null;
+      
+      // Limpar campos
+      document.getElementById('modal-title').textContent = '📅 Nova Escala 14x14';
+      document.getElementById('escala-nome').value = '';
+      document.getElementById('escala-inicio').value = '';
+      document.getElementById('escala-fim').value = '';
+      document.getElementById('escala-status').value = 'ativa';
+      document.getElementById('periodo-info').innerHTML = '';
+      
+      // Mostrar modal
+      document.getElementById('escala-modal').style.display = 'flex';
+      
+      // Inicializar calendário
+      currentModalDate = new Date();
+      renderizarCalendarioModal();
+    }
+
+    function editarEscala(index) {
+      const escalasFunc = escalas[funcionarioSelecionado.id];
+      const escala = escalasFunc[index];
+      
+      editingEscalaId = index;
+      selectedStartDate = new Date(escala.dataInicio);
+      selectedEndDate = new Date(escala.dataFim);
+      
+      // Preencher campos
+      document.getElementById('modal-title').textContent = '✏️ Editar Escala 14x14';
+      document.getElementById('escala-nome').value = escala.nome;
+      document.getElementById('escala-inicio').value = escala.dataInicio;
+      document.getElementById('escala-fim').value = escala.dataFim;
+      document.getElementById('escala-status').value = escala.status;
+      
+      // Mostrar modal
+      document.getElementById('escala-modal').style.display = 'flex';
+      
+      // Inicializar calendário
+      currentModalDate = new Date(selectedStartDate);
+      renderizarCalendarioModal();
+      atualizarInfoPeriodo();
+    }
+
+    function removerEscala(index) {
+      if (confirm('Deseja realmente remover esta escala?')) {
+        const escalasFunc = escalas[funcionarioSelecionado.id];
+        escalasFunc.splice(index, 1);
+        
+        if (escalasFunc.length === 0) {
+          delete escalas[funcionarioSelecionado.id];
+        }
+        
+        salvarEscalas();
+        renderizarFuncionarios();
+        carregarEscalasFuncionario(funcionarioSelecionado.id);
+        mostrarMensagem('Escala removida com sucesso!', 'success');
+      }
+    }
+
+    function fecharModalEscala() {
+      document.getElementById('escala-modal').style.display = 'none';
+      selectedStartDate = null;
+      selectedEndDate = null;
+      editingEscalaId = null;
+    }
+
+    function calcularDataFim() {
+      const dataInicioInput = document.getElementById('escala-inicio');
+      const dataFimInput = document.getElementById('escala-fim');
+      
+      if (dataInicioInput.value) {
+        const dataInicio = new Date(dataInicioInput.value);
+        selectedStartDate = dataInicio;
+        
+        // Calcular data fim (13 dias após o início para dar 14 dias total)
+        const dataFim = new Date(dataInicio);
+        dataFim.setDate(dataFim.getDate() + 13);
+        selectedEndDate = dataFim;
+        
+        // Formatar para input date
+        dataFimInput.value = dataFim.toISOString().split('T')[0];
+        
+        // Atualizar calendário
+        renderizarCalendarioModal();
+        atualizarInfoPeriodo();
+      }
+    }
+
+    function atualizarInfoPeriodo() {
+      const infoContainer = document.getElementById('periodo-info');
+      
+      if (selectedStartDate && selectedEndDate) {
+        const diffTime = Math.abs(selectedEndDate - selectedStartDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+        
+        if (diffDays === 14) {
+          infoContainer.innerHTML = `
+            <div class="periodo-valido">
+              ✅ Período válido: ${diffDays} dias
+              <br>Escala de ${selectedStartDate.toLocaleDateString('pt-BR')} até ${selectedEndDate.toLocaleDateString('pt-BR')}
+            </div>
+          `;
+          infoContainer.className = 'periodo-info periodo-valido';
+        } else {
+          infoContainer.innerHTML = `
+            <div class="periodo-invalido">
+              ❌ Período inválido: ${diffDays} dias
+              <br>Uma escala deve ter exatamente 14 dias consecutivos
+            </div>
+          `;
+          infoContainer.className = 'periodo-info periodo-invalido';
+        }
+      }
+    }
+
+    // Funções do Calendário Modal
+    function mesAnterior() {
+      currentModalDate.setMonth(currentModalDate.getMonth() - 1);
+      renderizarCalendarioModal();
+    }
+
+    function proximoMes() {
+      currentModalDate.setMonth(currentModalDate.getMonth() + 1);
+      renderizarCalendarioModal();
+    }
+
+    function renderizarCalendarioModal() {
+      const monthNames = [
+        'Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+      ];
+
+      document.getElementById('calendar-title-modal').textContent = 
+        `${monthNames[currentModalDate.getMonth()]} ${currentModalDate.getFullYear()}`;
+
+      const firstDay = new Date(currentModalDate.getFullYear(), currentModalDate.getMonth(), 1);
+      const lastDay = new Date(currentModalDate.getFullYear(), currentModalDate.getMonth() + 1, 0);
+      const startDate = new Date(firstDay);
+      startDate.setDate(startDate.getDate() - firstDay.getDay());
+
+      const calendarGrid = document.getElementById('calendar-grid-modal');
+      calendarGrid.innerHTML = '';
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      for (let i = 0; i < 42; i++) {
+        const cellDate = new Date(startDate);
+        cellDate.setDate(startDate.getDate() + i);
+
+        const dayCell = document.createElement('div');
+        dayCell.className = 'calendar-day';
+        dayCell.textContent = cellDate.getDate();
+        dayCell.onclick = () => selecionarDataCalendario(cellDate);
+
+        if (cellDate.getMonth() !== currentModalDate.getMonth()) {
+          dayCell.classList.add('other-month');
         }
 
-        function mostrarLoading(show) {
-            loading.style.display = show ? 'block' : 'none';
+        if (cellDate.getTime() === today.getTime()) {
+          dayCell.classList.add('today');
         }
 
-        function mostrarErro(mensagem) {
-            error.textContent = mensagem;
-            error.style.display = 'block';
-            setTimeout(() => {
-                error.style.display = 'none';
-            }, 5000);
+        // Marcar datas selecionadas
+        if (selectedStartDate && selectedEndDate) {
+          const cellTime = cellDate.getTime();
+          const startTime = selectedStartDate.getTime();
+          const endTime = selectedEndDate.getTime();
+          
+          if (cellTime === startTime) {
+            dayCell.classList.add('range-start');
+          } else if (cellTime === endTime) {
+            dayCell.classList.add('range-end');
+          } else if (cellTime > startTime && cellTime < endTime) {
+            dayCell.classList.add('in-range');
+          }
         }
 
-        function mostrarSucesso(mensagem) {
-            success.textContent = mensagem;
-            success.style.display = 'block';
-            setTimeout(() => {
-                success.style.display = 'none';
-            }, 3000);
-        }
+        calendarGrid.appendChild(dayCell);
+      }
+    }
 
-        async function carregarDados() {
-            mostrarLoading(true);
-            try {
-                // Carregar funcionários e escalas
-                const [funcionariosData, escalasData] = await Promise.all([
-                    fazerRequisicao('/funcionarios'),
-                    fazerRequisicao('/escalas')
-                ]);
+    function selecionarDataCalendario(date) {
+      selectedStartDate = new Date(date);
+      
+      // Calcular data fim automaticamente
+      selectedEndDate = new Date(date);
+      selectedEndDate.setDate(selectedEndDate.getDate() + 13);
+      
+      // Atualizar inputs
+      document.getElementById('escala-inicio').value = selectedStartDate.toISOString().split('T')[0];
+      document.getElementById('escala-fim').value = selectedEndDate.toISOString().split('T')[0];
+      
+      // Atualizar calendário e info
+      renderizarCalendarioModal();
+      atualizarInfoPeriodo();
+    }
 
-                funcionarios = funcionariosData;
-                
-                // Organizar escalas por funcionário
-                escalasOriginais = {};
-                escalasData.forEach(escala => {
-                    if (!escalasOriginais[escala.funcionarioId]) {
-                        escalasOriginais[escala.funcionarioId] = [];
-                    }
-                    escalasOriginais[escala.funcionarioId].push(escala);
-                });
+    function salvarEscalaModal() {
+      const nome = document.getElementById('escala-nome').value.trim();
+      const status = document.getElementById('escala-status').value;
+      
+      if (!nome) {
+        mostrarMensagem('Digite um nome para a escala', 'error');
+        return;
+      }
+      
+      if (!selectedStartDate || !selectedEndDate) {
+        mostrarMensagem('Selecione o período da escala', 'error');
+        return;
+      }
+      
+      // Verificar se é exatamente 14 dias
+      const diffTime = Math.abs(selectedEndDate - selectedStartDate);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+      
+      if (diffDays !== 14) {
+        mostrarMensagem('A escala deve ter exatamente 14 dias consecutivos', 'error');
+        return;
+      }
+      
+      const novaEscala = {
+        nome: nome,
+        dataInicio: selectedStartDate.toISOString().split('T')[0],
+        dataFim: selectedEndDate.toISOString().split('T')[0],
+        status: status,
+        criadaEm: new Date().toISOString(),
+        atualizadaEm: new Date().toISOString()
+      };
+      
+      // Inicializar array se não existir
+      if (!escalas[funcionarioSelecionado.id]) {
+        escalas[funcionarioSelecionado.id] = [];
+      }
+      
+      if (editingEscalaId !== null) {
+        // Editar escala existente
+        escalas[funcionarioSelecionado.id][editingEscalaId] = novaEscala;
+        mostrarMensagem('Escala atualizada com sucesso!', 'success');
+      } else {
+        // Adicionar nova escala
+        escalas[funcionarioSelecionado.id].push(novaEscala);
+        mostrarMensagem('Escala adicionada com sucesso!', 'success');
+      }
+      
+      salvarEscalas();
+      renderizarFuncionarios();
+      carregarEscalasFuncionario(funcionarioSelecionado.id);
+      fecharModalEscala();
+    }
 
-                // Ordenar escalas por data
-                Object.keys(escalasOriginais).forEach(funcionarioId => {
-                    escalasOriginais[funcionarioId].sort((a, b) => 
-                        new Date(a.dataEmbarque) - new Date(b.dataEmbarque)
-                    );
-                });
+    function salvarEscala() {
+      if (!funcionarioSelecionado) {
+        mostrarMensagem('Nenhum funcionário selecionado', 'error');
+        return;
+      }
+      
+      const escalasFunc = escalas[funcionarioSelecionado.id] || [];
+      
+      if (escalasFunc.length === 0) {
+        mostrarMensagem('Adicione pelo menos uma escala antes de salvar', 'error');
+        return;
+      }
+      
+      mostrarMensagem(`Escalas de ${funcionarioSelecionado.nome} salvas com sucesso!`, 'success');
+    }
 
-                renderizarFuncionarios();
-                renderizarEstatisticas();
+    function limparEscala() {
+      if (!funcionarioSelecionado) return;
+      
+      if (confirm(`Deseja realmente remover todas as escalas de ${funcionarioSelecionado.nome}?`)) {
+        delete escalas[funcionarioSelecionado.id];
+        salvarEscalas();
+        renderizarFuncionarios();
+        carregarEscalasFuncionario(funcionarioSelecionado.id);
+        mostrarMensagem(`Todas as escalas de ${funcionarioSelecionado.nome} foram removidas!`, 'success');
+      }
+    }
 
-            } catch (error) {
-                console.error('Erro ao carregar dados:', error);
-                mostrarErro('Erro ao carregar dados: ' + error.message);
-            } finally {
-                mostrarLoading(false);
-            }
-        }
+    function mostrarMensagem(texto, tipo) {
+      const container = document.getElementById('messages');
+      const mensagem = document.createElement('div');
+      mensagem.className = `${tipo}-message`;
+      mensagem.textContent = texto;
+      
+      container.innerHTML = '';
+      container.appendChild(mensagem);
+      
+      setTimeout(() => {
+        mensagem.remove();
+      }, 5000);
+    }
 
-        function renderizarEstatisticas() {
-            const totalFuncionarios = funcionarios.length;
-            const totalEscalas = Object.values(escalasOriginais).flat().length;
-            const escalasAtivas = Object.values(escalasOriginais).flat().filter(e => e.ativo).length;
-            const funcionariosComEscala = Object.keys(escalasOriginais).length;
+    // Fechar modal ao clicar fora
+    document.addEventListener('click', (e) => {
+      const modal = document.getElementById('escala-modal');
+      if (e.target === modal) {
+        fecharModalEscala();
+      }
+    });
 
-            statsGrid.innerHTML = `
-                <div class="stat-card">
-                    <div class="stat-number">${totalFuncionarios}</div>
-                    <div class="stat-label">Funcionários</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">${totalEscalas}</div>
-                    <div class="stat-label">Total Escalas</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">${escalasAtivas}</div>
-                    <div class="stat-label">Escalas Ativas</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">${funcionariosComEscala}</div>
-                    <div class="stat-label">Com Escalas</div>
-                </div>
-            `;
-        }
+    // Gerenciar Modal de Novo Funcionário
+    function abrirModalNovoFuncionario() {
+      document.getElementById('funcionario-modal').style.display = 'flex';
+      // Limpar campos
+      document.getElementById('funcionario-novo-nome').value = '';
+      document.getElementById('funcionario-novo-sap').value = '';
+      document.getElementById('funcionario-novo-cargo').value = '';
+      document.getElementById('funcionario-novo-equipe').value = 'regular';
+    }
 
-        function renderizarFuncionarios() {
-            funcionarioGrid.innerHTML = funcionarios.map(funcionario => {
-                const escalasCount = escalasOriginais[funcionario.id]?.length || 0;
-                const escalasAtivas = escalasOriginais[funcionario.id]?.filter(e => e.ativo).length || 0;
-                
-                return `
-                    <div class="funcionario-card" onclick="selecionarFuncionario(${funcionario.id})">
-                        <div class="funcionario-name">${funcionario.nome}</div>
-                        <div class="funcionario-info">
-                            ${funcionario.cargo}<br>
-                            ${escalasCount} escalas (${escalasAtivas} ativas)
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
+    function fecharModalFuncionario() {
+      document.getElementById('funcionario-modal').style.display = 'none';
+    }
 
-        function selecionarFuncionario(funcionarioId) {
-            funcionarioSelecionado = funcionarioId;
-            
-            // Atualizar seleção visual
-            document.querySelectorAll('.funcionario-card').forEach(card => {
-                card.classList.remove('selected');
-            });
-            event.target.closest('.funcionario-card').classList.add('selected');
+    function salvarNovoFuncionario() {
+      const nome = document.getElementById('funcionario-novo-nome').value.trim();
+      const sap = document.getElementById('funcionario-novo-sap').value.trim();
+      const cargo = document.getElementById('funcionario-novo-cargo').value.trim();
+      const equipe = document.getElementById('funcionario-novo-equipe').value;
 
-            // Carregar escalas do funcionário
-            const funcionario = funcionarios.find(f => f.id === funcionarioId);
-            editorTitle.textContent = `Editando Escalas: ${funcionario.nome}`;
-            editorSubtitle.textContent = `${funcionario.cargo} - SAP ID: ${funcionario.sapid}`;
+      // Validar campos obrigatórios
+      if (!nome || !sap || !cargo) {
+        alert('Por favor, preencha todos os campos obrigatórios!');
+        return;
+      }
 
-            renderizarEscalasFuncionario();
-            escalaEditor.classList.add('active');
-        }
+      // Verificar se SAP ID já existe
+      if (funcionarios.some(f => f.id === sap)) {
+        alert('ID SAP já existe! Use um ID único.');
+        return;
+      }
 
-        function renderizarEscalasFuncionario() {
-            const escalas = escalasOriginais[funcionarioSelecionado] || [];
-            
-            escalasContainer.innerHTML = escalas.map((escala, index) => `
-                <div class="escala-item" data-escala-id="${escala.id}">
-                    <div class="escala-header">
-                        <div class="escala-number">Escala ${index + 1}</div>
-                        <button class="delete-escala" onclick="removerEscala(${escala.id})">
-                            🗑️ Remover
-                        </button>
-                    </div>
-                    
-                    <div class="escala-fields">
-                        <div class="field-group">
-                            <label class="field-label">Data Embarque</label>
-                            <input type="date" class="field-input" 
-                                   value="${escala.dataEmbarque}"
-                                   onchange="atualizarEscala(${escala.id}, 'dataEmbarque', this.value)">
-                        </div>
-                        
-                        <div class="field-group">
-                            <label class="field-label">Data Desembarque</label>
-                            <input type="date" class="field-input" 
-                                   value="${escala.dataDesembarque}"
-                                   onchange="atualizarEscala(${escala.id}, 'dataDesembarque', this.value)">
-                        </div>
-                        
-                        <div class="field-group">
-                            <label class="field-label">Status</label>
-                            <select class="field-input" 
-                                    onchange="atualizarEscala(${escala.id}, 'ativo', this.value === 'true')">
-                                <option value="true" ${escala.ativo ? 'selected' : ''}>Ativa</option>
-                                <option value="false" ${!escala.ativo ? 'selected' : ''}>Inativa</option>
-                            </select>
-                        </div>
-                        
-                        <div class="field-group">
-                            <label class="field-label">Renovação</label>
-                            <select class="field-input" 
-                                    onchange="atualizarEscala(${escala.id}, 'renovacaoAutomatica', this.value === 'true')">
-                                <option value="true" ${escala.renovacaoAutomatica ? 'selected' : ''}>Auto</option>
-                                <option value="false" ${!escala.renovacaoAutomatica ? 'selected' : ''}>Manual</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
+      // Criar novo funcionário
+      const novoFuncionario = {
+        id: sap,
+        nome: nome,
+        equipe: equipe,
+        cargo: cargo
+      };
 
-        function atualizarEscala(escalaId, campo, valor) {
-            const escalas = escalasOriginais[funcionarioSelecionado];
-            const escala = escalas.find(e => e.id === escalaId);
-            
-            if (escala) {
-                escala[campo] = valor;
-                
-                // Validar período de 14 dias se ambas as datas estão definidas
-                if (campo === 'dataEmbarque' || campo === 'dataDesembarque') {
-                    if (escala.dataEmbarque && escala.dataDesembarque) {
-                        const embarque = new Date(escala.dataEmbarque);
-                        const desembarque = new Date(escala.dataDesembarque);
-                        const diferencaDias = Math.ceil((desembarque - embarque) / (1000 * 60 * 60 * 24));
-                        
-                        if (diferencaDias !== 13) {
-                            mostrarErro(`Atenção: Escala deve ter exatamente 14 dias. Atual: ${diferencaDias + 1} dias.`);
-                        }
-                    }
-                }
-            }
-        }
+      // Adicionar ao array
+      funcionarios.push(novoFuncionario);
 
-        function adicionarNovaEscala() {
-            if (!funcionarioSelecionado) return;
+      // Salvar no localStorage
+      localStorage.setItem('funcionarios', JSON.stringify(funcionarios));
 
-            const novaEscala = {
-                id: proximoTempId--,
-                funcionarioId: funcionarioSelecionado,
-                dataEmbarque: '',
-                dataDesembarque: '',
-                ativo: true,
-                renovacaoAutomatica: true,
-                nova: true
-            };
+      // Atualizar interface
+      carregarFuncionarios();
 
-            if (!escalasOriginais[funcionarioSelecionado]) {
-                escalasOriginais[funcionarioSelecionado] = [];
-            }
-            
-            escalasOriginais[funcionarioSelecionado].push(novaEscala);
-            renderizarEscalasFuncionario();
-        }
+      // Fechar modal
+      fecharModalFuncionario();
 
-        async function removerEscala(escalaId) {
-            if (!confirm('Tem certeza que deseja remover esta escala?')) return;
+      // Feedback visual
+      mostrarNotificacao('Funcionário adicionado com sucesso!', 'success');
+    }
 
-            try {
-                if (escalaId > 0) {
-                    // Escala existente no servidor
-                    await fazerRequisicao(`/escalas/funcionario/${funcionarioSelecionado}/escala/${escalaId}`, {
-                        method: 'DELETE'
-                    });
-                }
+    function mostrarNotificacao(mensagem, tipo = 'info') {
+      // Criar elemento de notificação
+      const notif = document.createElement('div');
+      notif.className = `notificacao notificacao-${tipo}`;
+      notif.innerHTML = `
+        <div class="notificacao-content">
+          <span>${mensagem}</span>
+        </div>
+      `;
 
-                // Remover do array local
-                escalasOriginais[funcionarioSelecionado] = escalasOriginais[funcionarioSelecionado]
-                    .filter(e => e.id !== escalaId);
-                
-                renderizarEscalasFuncionario();
-                mostrarSucesso('Escala removida com sucesso!');
+      // Adicionar estilos
+      notif.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${tipo === 'success' ? '#28a745' : '#007bff'};
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+      `;
 
-            } catch (error) {
-                console.error('Erro ao remover escala:', error);
-                mostrarErro('Erro ao remover escala: ' + error.message);
-            }
-        }
+      // Adicionar ao body
+      document.body.appendChild(notif);
 
-        async function salvarEscalasFuncionario() {
-            if (!funcionarioSelecionado) return;
-
-            try {
-                mostrarLoading(true);
-                
-                const escalas = escalasOriginais[funcionarioSelecionado] || [];
-                const escalasParaSalvar = escalas.map(escala => ({
-                    id: escala.id > 0 ? escala.id : undefined,
-                    dataEmbarque: escala.dataEmbarque,
-                    dataDesembarque: escala.dataDesembarque,
-                    ativo: escala.ativo,
-                    renovacaoAutomatica: escala.renovacaoAutomatica
-                })).filter(escala => escala.dataEmbarque && escala.dataDesembarque);
-
-                await fazerRequisicao(`/escalas/funcionario/${funcionarioSelecionado}/batch`, {
-                    method: 'PUT',
-                    body: JSON.stringify({ escalas: escalasParaSalvar })
-                });
-
-                mostrarSucesso('Escalas salvas com sucesso!');
-                
-                // Recarregar dados para sincronizar
-                await carregarDados();
-                
-                // Reselecionar funcionário
-                if (funcionarioSelecionado) {
-                    selecionarFuncionario(funcionarioSelecionado);
-                }
-
-            } catch (error) {
-                console.error('Erro ao salvar escalas:', error);
-                mostrarErro('Erro ao salvar escalas: ' + error.message);
-            } finally {
-                mostrarLoading(false);
-            }
-        }
-
-        async function salvarTodasEscalas() {
-            if (!confirm('Salvar alterações de todos os funcionários? Esta ação não pode ser desfeita.')) return;
-
-            try {
-                mostrarLoading(true);
-                let sucessos = 0;
-                let erros = 0;
-
-                for (const funcionarioId in escalasOriginais) {
-                    try {
-                        const escalas = escalasOriginais[funcionarioId];
-                        const escalasParaSalvar = escalas.map(escala => ({
-                            id: escala.id > 0 ? escala.id : undefined,
-                            dataEmbarque: escala.dataEmbarque,
-                            dataDesembarque: escala.dataDesembarque,
-                            ativo: escala.ativo,
-                            renovacaoAutomatica: escala.renovacaoAutomatica
-                        })).filter(escala => escala.dataEmbarque && escala.dataDesembarque);
-
-                        if (escalasParaSalvar.length > 0) {
-                            await fazerRequisicao(`/escalas/funcionario/${funcionarioId}/batch`, {
-                                method: 'PUT',
-                                body: JSON.stringify({ escalas: escalasParaSalvar })
-                            });
-                            sucessos++;
-                        }
-                    } catch (error) {
-                        console.error(`Erro ao salvar funcionário ${funcionarioId}:`, error);
-                        erros++;
-                    }
-                }
-
-                if (sucessos > 0) {
-                    mostrarSucesso(`${sucessos} funcionário(s) salvos com sucesso! ${erros > 0 ? `${erros} erro(s).` : ''}`);
-                }
-                
-                if (erros > 0 && sucessos === 0) {
-                    mostrarErro(`Erro ao salvar. ${erros} funcionário(s) com problemas.`);
-                }
-
-                // Recarregar dados
-                await carregarDados();
-
-            } catch (error) {
-                console.error('Erro geral:', error);
-                mostrarErro('Erro ao salvar todas as escalas: ' + error.message);
-            } finally {
-                mostrarLoading(false);
-            }
-        }
-    </script>
+      // Remover após 3 segundos
+      setTimeout(() => {
+        notif.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+          if (notif.parentNode) {
+            notif.parentNode.removeChild(notif);
+          }
+        }, 300);
+      }, 3000);
+    }
+  </script>
+  </script>
 </body>
+
 </html>

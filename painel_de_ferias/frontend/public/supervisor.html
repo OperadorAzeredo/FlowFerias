@@ -1113,7 +1113,7 @@
     <div style="background: white; border-radius: 12px; padding: 20px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
       <h3 style="margin-bottom: 15px; color: #333;">🎯 Ações do Supervisor</h3>
       <div style="display: flex; gap: 15px; flex-wrap: wrap;">
-        <button onclick="window.location.href='/editar-escalas.html'" 
+        <button onclick="window.location.href='editar-escalas.html'" 
                 style="background: #FF0000; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;"
                 onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(0,0,0,0.2)'"
                 onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
@@ -2252,7 +2252,7 @@
       
       if (!userType || userType !== 'supervisor') {
         alert('Acesso negado. Esta área é restrita a supervisores.');
-        window.location.href = '/login.html';
+        window.location.href = 'login.html';
         return;
       }
 
@@ -2266,7 +2266,7 @@
     function logout() {
       if (confirm('Tem certeza que deseja sair do sistema?')) {
         localStorage.clear();
-        window.location.href = '/login.html';
+        window.location.href = 'login.html';
       }
     }
 

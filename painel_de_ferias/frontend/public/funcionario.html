@@ -948,7 +948,7 @@
         const userId = localStorage.getItem('userId');
         
         if (!userType || userType !== 'funcionario') {
-          window.location.href = '/login.html';
+          window.location.href = 'login.html';
           return;
         }
 
@@ -1553,14 +1553,14 @@
       const userName = localStorage.getItem('userName');
       
       if (!userType || !userId || !userName) {
-        window.location.href = '/login.html';
+        window.location.href = 'login.html';
         return;
       }
 
       if (userType !== 'funcionario') {
         showErrorModal('Acesso Negado', 'Esta área é restrita a funcionários.');
         setTimeout(() => {
-          window.location.href = '/login.html';
+          window.location.href = 'login.html';
         }, 2000);
         return;
       }
@@ -1576,7 +1576,7 @@
         'Tem certeza que deseja sair do sistema?',
         () => {
           localStorage.clear();
-          window.location.href = '/login.html';
+          window.location.href = 'login.html';
         }
       );
     }
